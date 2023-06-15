@@ -1,0 +1,129 @@
+#root {
+    margin: 0 auto;
+}
+
+.App {
+    overflow: hidden;
+}
+
+.App::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-image: url(assets/pexels-neosiam-593467.jpg);
+    background-size: cover;
+    filter: blur(2px);
+    z-index: -1;
+    animation: pan-image 15s linear infinite;
+}
+
+.App::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgb(var(--LightRGB), 10%);
+    background-size: cover;
+    filter: blur(5px);
+    z-index: -1;
+}
+
+
+
+.content {
+    margin: 0 auto;
+    padding: 2rem;
+    overflow: hidden;
+}
+
+.language-hamb {
+    background: transparent;
+    padding: 1rem;
+}
+
+.language-hamb,
+.language-selector {
+    position: absolute;
+    top: 0;
+    right: 0;
+    visibility: visible;
+    opacity: 1;
+}
+
+
+
+.hide {
+    visibility: hidden;
+    opacity: 0;
+    transition-delay: 0;
+    /* transition: visibility 0s 0.5s, opacity 0.5s linear; */
+}
+
+.bar {
+    width: 35px;
+    height: 5px;
+    background-color: rgb(250, 250, 250, 50%);
+    margin: 6px 0;
+}
+
+
+@keyframes pan-image {
+    0% {
+        background-position: 36% 42%;
+        background-size: 200%;
+    }
+
+    20% {
+        background-position: 30% 35%;
+        background-size: 220%;
+    }
+
+    20.0001% {
+        /* -- View 2 -- */
+        background-position: 60% 85%;
+        background-size: 220%;
+    }
+
+    40% {
+        background-position: 49% 61%;
+        background-size: 240%;
+    }
+
+    40.0001% {
+        /* -- View 3 -- */
+        background-position: 80% 42%;
+        background-size: 220%;
+    }
+
+    60% {
+        background-position: 74% 13%;
+        background-size: 250%;
+    }
+
+    60.0001% {
+        /* -- View 4 -- */
+        background-position: 0% 0%;
+        background-size: 300%;
+    }
+
+    80% {
+        background-position: 15% 14%;
+        background-size: 330%;
+    }
+
+    80.0001% {
+        /* -- View 5 -- */
+        background-position: 80% 10%;
+        background-size: 240%;
+    }
+
+    100% {
+        background-position: 72% 14%;
+        background-size: 280%;
+    }
+}

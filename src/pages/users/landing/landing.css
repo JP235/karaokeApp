@@ -1,0 +1,56 @@
+.user-landing {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    text-align: center;
+    gap: 5rem;
+    /* Set the animation properties */
+    animation-name: fadeIn;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+
+    /* Set the initial opacity to 0 */
+    opacity: 1;
+}
+
+.landingText {
+    display: grid;
+    grid-template-columns: 1fr;
+    font-size: 95px;
+    line-height: 1em;
+    text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000,
+               1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
+    font-family: 'Pacifico';
+}
+
+.room-code {
+    display: grid;
+    justify-items: center;
+    gap: 0.5rem;
+}
+
+.set-room {
+    height: max-content;
+    width: fit-content;
+    text-align: center;
+}
+
+input.set-room {
+    padding: 1rem;
+
+}
+
+button.set-room {
+    padding: 1rem 2rem;
+}
+
+/* Define a keyframe animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
