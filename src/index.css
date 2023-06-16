@@ -11,7 +11,9 @@
     --primary-rgb: 64, 121, 140;
     --accent1-rgb: 198, 216, 255;
     --accent2-rgb: 224, 141, 121;
+    --error-rgb: 211, 34, 34;
     --light-rgb: 240, 242, 239;
+
 
     --colorDark: rgb(var(--dark-rgb));
     --colorMain: rgb(var(--primary-rgb));
@@ -37,8 +39,14 @@ body {
 
 
 h1 {
-    font-size: 3.2em;
+    font-size: 2.2em;
     line-height: 1.1;
+}
+
+input {
+    border: 0;
+    height: calc(1rem + 4px);
+    padding: 0.5rem;
 }
 
 button {
@@ -48,13 +56,14 @@ button {
     font-size: 1em;
     font-weight: 500;
     font-family: inherit;
-    background-color: rgb(var(--dark-rgb));
+    background-color: rgb(var(--accent1-rgb), 50%);
+    color: rgb(var(--light-rgb));
     cursor: pointer;
     transition: border-color 0.25s;
 }
 
 button:hover {
-    border-color: #646cff;
+    border-color: rgb(var(--accent2-rgb));
 }
 
 button:focus,
@@ -62,17 +71,3 @@ button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-    :root {
-        color: #213547;
-        background-color: #ffffff;
-    }
-
-    a:hover {
-        color: #747bff;
-    }
-
-    button {
-        background-color: #f9f9f9;
-    }
-}

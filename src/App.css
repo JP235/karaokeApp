@@ -27,8 +27,7 @@
     right: 0;
     bottom: 0;
     left: 0;
-    background-color: rgb(var(--LightRGB), 10%);
-    background-size: cover;
+    background-color: rgb(var(--light-rgb), 8%);
     filter: blur(5px);
     z-index: -1;
 }

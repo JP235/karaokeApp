@@ -4,6 +4,9 @@ import UserLanding from './pages/users/landing/landing';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { LanguageContext } from './Contexts';
 import { useContext } from "react"
+import AdminLanding from './pages/admin/landing/landing';
+import LoginForm from './auth/auth';
+import AdminDashboard from './pages/admin/dashboard/dashboard';
 
 function App() {
 
@@ -14,6 +17,10 @@ function App() {
                 <BrowserRouter>
                     <Routes>
                         <Route path='/' element={<UserLanding />} />
+                        <Route path='/admin' element={<AdminLanding />}>
+                            <Route path="login" element={<LoginForm />} />
+                            <Route path="dashboard" element={<AdminDashboard />} />
+                        </Route>
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </BrowserRouter>
@@ -59,7 +66,6 @@ function HambButton() {
 
 export const clickAway = (event: MouseEvent, parentName: string, setter: Dispatch<SetStateAction<boolean>>) => {
     const target = event.target as HTMLElement
-
     if (!target.className.includes(parentName) && !target.parentElement?.className.includes(parentName)) {
         setter(false)
     }

@@ -1,0 +1,71 @@
+.admin-landing {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 4rem;
+}
+
+form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1em;
+    justify-items: center;
+}
+
+form label {
+    text-align: left;
+    position: relative;
+    width: 250px;
+    color: rgb(var(--accent2-rgb));
+    font-weight: 700;
+    display: grid;
+    grid-template-areas: "labelInput";
+    align-items: center;
+}
+
+.labelName,
+.labelInput {
+    grid-area: labelInput;
+    padding: 0.5rem;
+}
+
+.labelInput {
+    text-align: right;
+}
+
+
+.App::before {
+    background-position: 80% 42%;
+    background-size: 220%;
+    animation: unset
+}
+
+.create-room-dialog.open  {
+    position: absolute;
+    top: 20%;
+    width: 70vw;
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+    justify-items: center;
+
+}
+
+.create-room-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    padding: 1rem;
+    max-width: 300px;
+    justify-items: center;
+}
+
+.create-room-cancel {
+    background-color: rgb(var(--error-rgb), .8);
+    width: 100px;
+}
+
+.create-room-create {
+    background-color: rgb(var(--primary-rgb));
+    width: 100px;
+}
