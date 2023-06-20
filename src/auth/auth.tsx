@@ -7,16 +7,16 @@ import { ErrorsContext, LoadingStateContext, UserContext } from "../Contexts"
 import { useNavigate } from "react-router-dom"
 
 
- const LoginForm = () => {
+
+
+
+const LoginForm = () => {
     const navigate = useNavigate()
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const {
         setLoggedIn,
-        setUserName,
-        setPermissions,
-        setActiveRoom,
-        setSongsDBName
+        setUser
     } = useContext(UserContext)
     const { setLoadingState } = useContext(LoadingStateContext)
 
@@ -33,15 +33,7 @@ import { useNavigate } from "react-router-dom"
                 if (!user.exists) throw new Error("User Doc doesn't exist")
                 const userData = user.data() as unknown as UserData
 
-                console.log(userData["name"],
-                    userData["permissions"],
-                    userData["active_room"],
-                    userData["songs_db"]);
-
-                setUserName(userData["name"])
-                setPermissions(userData["permissions"])
-                setActiveRoom(userData["active_room"])
-                setSongsDBName(userData["songs_db"])
+                setUser({ ...userData })
                 setLoadingState("loaded")
                 setLoggedIn(true)
                 if (userData.permissions === "ALL") navigate("/admin/superadmin")

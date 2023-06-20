@@ -4,9 +4,10 @@ import UserLanding from './pages/users/landing/landing';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { LanguageContext } from './Contexts';
 import { useContext } from "react"
-import AdminLanding from './pages/admin/landing/landing';
+import AdminLanding from './pages/admin/AdminEntry/AdminEntry';
 import LoginForm from './auth/auth';
-import AdminDashboard from './pages/admin/dashboard/dashboard';
+import AdminDashboard from './pages/admin/AdminDashboard/AdminDashboard';
+import AdminRoom from './pages/admin/AdminRoom/AdminRoom';
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
                     <Routes>
                         <Route path='/' element={<UserLanding />} />
                         <Route path='/admin' element={<AdminLanding />}>
+                            <Route path=":roomId" element={<AdminRoom />} />
                             <Route path="login" element={<LoginForm />} />
                             <Route path="dashboard" element={<AdminDashboard />} />
                         </Route>

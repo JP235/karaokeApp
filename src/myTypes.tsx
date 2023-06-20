@@ -10,9 +10,11 @@ export type LoadignState = "idle" | "loading" | "loaded" | "error"
 
 export type UserData = {
     name: string;
+    email: string; 
     permissions: string;
     active_room: number;
-    songs_db: string
+    songs_db: string;
+    created_rooms: number
 };
 
 export type Room = {

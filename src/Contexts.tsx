@@ -1,5 +1,5 @@
-import React, { createContext,  useState } from 'react';
-import { Languages, LoadignState } from './myTypes';
+import React, { createContext, useState } from 'react';
+import { Languages, LoadignState, UserData } from './myTypes';
 
 // Define the shape of the language context value
 
@@ -97,49 +97,43 @@ export function RoomProvider({ children }: { children: React.ReactNode }) {
 
 interface UserContextValue {
     loggedIn: boolean;
-    setLoggedIn: (loggedIn: boolean) => void
-    userName: string;
-    setUserName: (userName: string) => void;
-    permissions: string;
-    setPermissions: (permissions: string) => void;
-    activeRoom: number;
-    setActiveRoom: (activeRoom: number) => void;
-    songsDBName: string
-    setSongsDBName: (songsDBName: string) => void;
+    setLoggedIn: (loggedIn: boolean) => void;
+    user: UserData;
+    setUser: (user: UserData) => void
+
 }
 
 export const UserContext = createContext<UserContextValue>({
     loggedIn: false,
     setLoggedIn: () => { },
-    userName: '',
-    setUserName: () => { },
-    permissions: '',
-    setPermissions: () => { },
-    activeRoom: 0,
-    setActiveRoom: () => { },
-    songsDBName: '',
-    setSongsDBName: () => { },
+    user: {
+        name: '',
+        email: '',
+        permissions: '',
+        active_room: -1,
+        songs_db: '',
+        created_rooms: -1
+    },
+    setUser: () => { }
 });
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
-    const [loggedIn, setLoggedIn] = useState(false)
-    const [userName, setUserName] = useState("")
-    const [permissions, setPermissions] = useState("")
-    const [activeRoom, setActiveRoom] = useState(-1)
-    const [songsDBName, setSongsDBName] = useState("")
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [user, setUser] = useState<UserData>({
+        name: "",
+        email: "",
+        permissions: "",
+        active_room: -1,
+        songs_db: "",
+        created_rooms: -1
+    });
 
     return (
         <UserContext.Provider value={{
             loggedIn,
             setLoggedIn,
-            userName,
-            setUserName,
-            permissions,
-            setPermissions,
-            activeRoom,
-            setActiveRoom,
-            songsDBName,
-            setSongsDBName
+            user,
+            setUser
         }}>
             {children}
         </UserContext.Provider>

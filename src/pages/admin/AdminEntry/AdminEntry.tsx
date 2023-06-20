@@ -1,4 +1,4 @@
-import "./landing.css"
+import "./adminEntry.css"
 import { Outlet } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { ErrorsContext, LoadingStateContext, UserContext } from "../../../Contexts";
