@@ -227,7 +227,7 @@ function UserRoom() {
                                         setSelectedGenre(event.target.value);
                                     }}
                                     list="genres"
-                                /><button className="searchButton" disabled={!info.artists.includes(selectedArtist)} type="button" title={"filter by genre"}
+                                /><button className="searchButton" disabled={!info.genres.includes(selectedGenre)} type="button" title={"filter by genre"}
                                     onClick={() => { filterByGenre() }}
                                 >
                                     <span className="search-span"></span>
