@@ -1,6 +1,6 @@
 import './App.css'
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
-import UserLanding from './pages/users/landing/landing';
+import UserLanding from './pages/users/landing/UserLanding';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { LanguageContext } from './Contexts';
 import { useContext } from "react"
@@ -8,6 +8,8 @@ import AdminLanding from './pages/admin/AdminEntry/AdminEntry';
 import LoginForm from './auth/auth';
 import AdminDashboard from './pages/admin/AdminDashboard/AdminDashboard';
 import AdminRoom from './pages/admin/AdminRoom/AdminRoom';
+import UserRoom from './pages/users/room/UserRoom';
+import { Language, TLanguages } from './myTypes';
 
 function App() {
 
@@ -17,17 +19,19 @@ function App() {
             <div className="content">
                 <BrowserRouter>
                     <Routes>
-                        <Route path='/' element={<UserLanding />} />
                         <Route path='/admin' element={<AdminLanding />}>
-                            <Route path=":roomId" element={<AdminRoom />} />
                             <Route path="login" element={<LoginForm />} />
                             <Route path="dashboard" element={<AdminDashboard />} />
+                            <Route path=":roomId" element={<AdminRoom />} />
                         </Route>
+                        <Route path='/' element={<UserLanding />} />
+                        <Route path='/sala/:roomId' element={<UserRoom />} />
+                        <Route path='/room/:roomId' element={<UserRoom />} />
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </BrowserRouter>
             </div>
-        </div>
+        </div >
     )
 }
 
@@ -51,9 +55,15 @@ function LanguageDropdown() {
                 <HambButton />
             </button>
             <div className={show ? "language-selector" : "language-selector hide"}>
-
-                <button type='button' onClick={() => setLanguage("ES")}>ES</button>
-                <button type='button' onClick={() => setLanguage("EN")}>EN</button>
+                {Object.keys(Language).map((key, i) => {
+                    const k = key as TLanguages
+                    return (
+                        <button key={i} onClick={() => setLanguage(k)}>
+                            {Language[k]}
+                        </button>
+                    )
+                })
+                }
             </div>
         </>)
 }

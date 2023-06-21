@@ -54,7 +54,38 @@
     opacity: 1;
 }
 
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
 
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes invert {
+    0% {
+        filter: invert(0.5);
+    }
+
+    50% {
+        filter: invert(1);
+    }
+
+    100% {
+        filter: invert(0.5);
+    }
+}
+
+.loading {
+    height: 2em;
+    width: 2em;
+    background-image: url(assets/loading.svg);
+    background-repeat: no-repeat;
+    background-size: contain;
+    animation: spin 1s linear infinite, invert 1.1s linear infinite;
+}
 
 .hide {
     visibility: hidden;

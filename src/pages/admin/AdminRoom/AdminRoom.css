@@ -1,0 +1,26 @@
+.admin.landingText {
+    font-size: 40px;
+}
+
+.content:has(.admin) {
+    height: 80vh;
+    width: max(calc(95vw - 1rem), calc(90vw + 1rem));
+    padding: 0.5rem;
+}
+
+.admin-queue {
+    width: 100%;
+}
+.queue-info {
+    display: flex;
+}
+.queue-info button {
+    padding: 0.5rem;
+    border-radius: 50%;
+    /* font-weight: 700; */
+    height: 2em;
+    width: 2em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,5 +1,7 @@
-import React, { createContext, useState } from 'react';
-import { Languages, LoadignState, UserData } from './myTypes';
+import React, { createContext, useEffect, useState } from 'react';
+import { TLanguages, LoadignState, Room, UserData } from './myTypes';
+import { fireAuth, usersCollectionRef } from './firebase-config';
+import { getDoc, doc } from 'firebase/firestore';
 
 // Define the shape of the language context value
 
@@ -29,7 +31,7 @@ export function LoadignStateProvider({ children }: { children: React.ReactNode }
 };
 interface ErrorsContextValue {
     error?: string
-    setError: (error: string) => void;
+    setError: (error: string | undefined) => void;
 }
 
 // Create a context for the language preference
@@ -52,8 +54,8 @@ export function ErrorsProvider({ children }: { children: React.ReactNode }) {
 };
 
 interface LanguageContextValue {
-    language: Languages
-    setLanguage: (language: Languages) => void;
+    language: TLanguages
+    setLanguage: (language: TLanguages) => void;
 }
 
 // Create a context for the language preference
@@ -65,7 +67,7 @@ export const LanguageContext = createContext<LanguageContextValue>({
 // Create a provider component for the language context
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
     // Set up state to store the language preference
-    const [language, setLanguage] = useState<Languages>("ES");
+    const [language, setLanguage] = useState<TLanguages>("ES");
 
     // Return the provider component with the language value and setter function
     return (
@@ -75,36 +77,46 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     );
 };
 
-interface RoomContextValue {
-    room: string;
-    setRoom: (room: string) => void;
-}
+// interface RoomContextValue {
+//     room: Room;
+//     setRoom: (room: Room) => void;
+// }
 
-export const RoomContext = createContext<RoomContextValue>({
-    room: 'NULL',
-    setRoom: () => { },
-});
+// export const RoomContext = createContext<RoomContextValue>({
+//     setRoom: () => { },
+//     room: {
+//         queue: [],
+//         created_by: '',
+//         song_db: ''
+//     }
+// });
 
-export function RoomProvider({ children }: { children: React.ReactNode }) {
-    const [room, setRoom] = useState<string>('NULL');
+// export function RoomProvider({ children }: { children: React.ReactNode }) {
+//     const [room, setRoom] = useState<Room>({
+//         queue: [],
+//         created_by: '',
+//         song_db: ''
+//     });
 
-    return (
-        <RoomContext.Provider value={{ room, setRoom }}>
-            {children}
-        </RoomContext.Provider>
-    );
-};
+//     return (
+//         <RoomContext.Provider value={{ room, setRoom }}>
+//             {children}
+//         </RoomContext.Provider>
+//     );
+// };
 
 interface UserContextValue {
     loggedIn: boolean;
     setLoggedIn: (loggedIn: boolean) => void;
     user: UserData;
-    setUser: (user: UserData) => void
+    setUser: (user: UserData) => void;
+    refreshUser: () => Promise<void>
 
 }
 
 export const UserContext = createContext<UserContextValue>({
     loggedIn: false,
+    refreshUser: async () => { },
     setLoggedIn: () => { },
     user: {
         name: '',
@@ -128,12 +140,27 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         created_rooms: -1
     });
 
+    useEffect(() => {
+        refreshUser()
+    }, [])
+
+    const refreshUser = async () => {
+        const currUser = fireAuth.currentUser
+        if (currUser?.email) {
+            const user = await getDoc(doc(usersCollectionRef, currUser.email))
+            if (!user.exists) throw new Error("User Doc doesn't exist")
+            const userData = user.data() as unknown as UserData
+
+            setUser({ ...userData })
+        }
+    }
+
     return (
         <UserContext.Provider value={{
             loggedIn,
             setLoggedIn,
             user,
-            setUser
+            setUser, refreshUser
         }}>
             {children}
         </UserContext.Provider>

@@ -1,4 +1,4 @@
-import "./adminEntry.css"
+import "./AdminEntry.css"
 import { Outlet } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { ErrorsContext, LoadingStateContext, UserContext } from "../../../Contexts";
@@ -23,7 +23,7 @@ function AdminLanding() {
 
     return (
         <div className="admin-landing">
-            <span className="landingText">
+            <span className="admin landingText">
                 Karaoke App
             </span>
             <Outlet />

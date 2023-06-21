@@ -1,23 +1,37 @@
-import { FormEvent, useContext, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { ErrorsContext, UserContext } from "../../../Contexts"
 import "./AdminDashboard.css"
 import { roomsCollectionRef, usersCollectionRef } from "../../../firebase-config";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, onSnapshot, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
+import { UserData } from "../../../myTypes";
 
 
 
 function AdminDashboard() {
     const navigate = useNavigate()
     const { setError } = useContext(ErrorsContext)
-    const { user } = useContext(UserContext)
+    const { user, setUser } = useContext(UserContext)
     const [creatingRoom, setCreatigRoom] = useState(false)
 
     const [roomCode, setRoomCode] = useState(generateRandomNumber())
     const [roomName, setRoomName] = useState("Karaoke")
 
+    useEffect(() => {
+        if (user.email) {
+            const unsubscribe =
+                onSnapshot(doc(usersCollectionRef, user.email), (snapshot) => {
+                    if (snapshot.exists()) {
+                        const userData = snapshot.data() as unknown as UserData
+                        setUser({ ...userData })
+                    }
+                });
+            return () => unsubscribe();
+        };
+
+    }, [user.email]);
+
     const createRoom = async () => {
-        console.log(roomCode, roomName);
         try {
             await setDoc(doc(roomsCollectionRef, String(roomCode)), {
                 queue: [],
@@ -58,7 +72,10 @@ function AdminDashboard() {
                         <button className="new-room" onClick={() => setCreatigRoom(true)}>
                             Crear Sala
                         </button> :
-                        <button className="goToRoom">
+                        <button className="goToRoom" onClick={() => {
+                            const url = "/admin/" + user.active_room
+                            navigate(url)
+                        }}>
                             Ir a Sala Activa
                         </button>
                     }
@@ -111,7 +128,5 @@ function AdminDashboard() {
 export default AdminDashboard
 
 function generateRandomNumber() {
-    const min = 1000;
-    const max = 9999;
-    return Math.floor(Math.random() * (max - min + 1))
+    return Math.floor(1000 + Math.random() * 9000)
 }
