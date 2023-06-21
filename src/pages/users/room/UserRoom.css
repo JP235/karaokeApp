@@ -1,3 +1,22 @@
+.user-room {
+    padding: 4rem 0 1rem;
+    display: grid;
+    justify-items: center;
+    gap: 1rem;
+    width: 100%
+}
+
+.user-room h1 {
+    margin: 0;
+}
+
+.user-room-content-wrapper {
+    background-color: rgb(var(--dark-rgb), 50%);
+    width: 95%;
+    margin: 0 3px;
+    padding: 3px;
+}
+
 .songs-table {
     position: relative;
     max-height: 500px;
@@ -10,7 +29,6 @@
 .song-list {
     background-color: rgb(var(--light-rgb), 10%);
     width: 100%;
-    margin: 5px;
     height: 100%;
     border-collapse: collapse;
 
@@ -52,7 +70,7 @@
 
 .collapse.filter-songs {
     /* padding: 0; */
-    background-color: rgb(var(--dark-rgb), 50%);
+    background-color: rgb(var(--dark-rgb));
 }
 
 .filter-form-title {
@@ -85,7 +103,7 @@
     display: grid;
     grid-template-rows: 1fr;
     grid-template-columns: 1fr;
-    transition: grid-template-rows 500ms, grid-template-columns 450ms, margin 500ms;
+    transition: grid-template-rows 500ms, margin 500ms;
 }
 
 .collapse .filter-form {
@@ -108,4 +126,65 @@
 .table-buttons {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+}
+.cancelButton,
+.searchButton,
+.prevButton,
+.nextbutton {
+    background-color: transparent;
+    padding: 0;
+    border-radius: 50%;
+}
+
+.prevButton:disabled span,
+.nextbutton:disabled span {
+    filter: invert(0.3);
+}
+
+.cancelButton-span,
+.search-span,
+.icon-prevButton,
+.icon-nextButton {
+    display: block;
+    height: 2em;
+    width: 2em;
+    margin: 0;
+    background-repeat: no-repeat;
+    background-size: contain;
+    filter: invert(0.9)
+}
+
+.icon-prevButton {
+
+    background-image: url(../../../assets/arrow-left-circle.svg);
+}
+
+.icon-nextButton {
+    background-image: url(../../../assets/arrow-right-circle.svg);
+}
+
+.search-span {
+    background-image: url(../../../assets/filter.svg);
+}
+
+.cancelButton-span {
+    background-image: url(../../../assets/delete-1.svg);
+}
+
+.filter-songs-form label {
+    display: grid;
+    grid-template-columns: 2em 1fr;
+    grid-template-areas: "del search search";
+    justify-items: end;
+
+}
+
+.filter-songs-form label :nth-child(1) {
+    grid-area: del;
+}
+
+.filter-songs-form label :nth-child(3),
+.filter-songs-form label :nth-child(2) {
+    grid-area: search;
 }

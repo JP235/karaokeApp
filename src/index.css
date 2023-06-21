@@ -34,7 +34,6 @@ body {
     place-items: center;
     min-width: 320px;
     min-height: 100vh;
-    overflow: hidden;
 }
 
 
@@ -65,12 +64,8 @@ button {
     transition: border-color 0.25s;
 }
 
-button:hover {
-    border-color: rgb(var(--accent2-rgb));
-}
-
 button:disabled {
-    background-color: gray;
+    /* background-color: gray; */
     color: rgb(var(--light-rgb),50%);
 }
 
