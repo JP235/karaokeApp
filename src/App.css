@@ -18,7 +18,7 @@
     right: 0;
     bottom: 0;
     left: 0;
-    background-image: url(assets/pexels-neosiam-593467.jpg);
+    background-image: url("/public/pexels-neosiam-593467.jpg");
     background-size: cover;
     filter: blur(2px);
     z-index: -1;

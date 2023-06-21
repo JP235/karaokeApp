@@ -4,7 +4,7 @@ import { doc, onSnapshot } from 'firebase/firestore';
 import { roomsCollectionRef } from '../../../firebase-config';
 import { useParams } from 'react-router-dom';
 import { UserContext } from '../../../Contexts';
-import { Room, QueueItem, formattedDate  } from "../../../myTypes";
+import { Room, QueueItem, formattedDate } from "../../../myTypes";
 
 const AdminRoom = () => {
     const { user } = useContext(UserContext)
@@ -22,7 +22,6 @@ const AdminRoom = () => {
 
                         const roomData = snapshot.data() as Room
                         setRoom(roomData)
-                        setQueue(roomData.queue);
                     }
                 });
             return () => unsubscribe();
