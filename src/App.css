@@ -3,7 +3,7 @@
 }
 
 .App {
-    overflow: hidden;
+    position: relative;
 }
 
 .App::before {
@@ -32,26 +32,59 @@
     z-index: -1;
 }
 
-
-
 .content {
-    margin: 0 auto;
-    padding: 2rem;
+    position: relative;
+    margin: 0;
+    padding: 5px;
+    width: 95vw;
+    height: 85vh;
+}
+
+.language-picker {
+    margin-left: auto;
+    margin-right: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    display: grid;
+    justify-items: end;
+    grid-template-areas: "a";
+}
+
+.language-selector {
+    display: grid;
+    grid-template-rows: 0fr;
+}
+
+.selector-buttons {
+    opacity: 0;
+    transition: opacity 600ms;
+}
+
+.show .selector-buttons {
+    opacity: 1;
+}
+
+.language-selector.show {
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 250ms;
+}
+
+.selector-buttons {
     overflow: hidden;
 }
 
 .language-hamb {
-    background: transparent;
-    padding: 1rem;
+    outline: 0;
+    border: 0;
+    padding: 0.5rem;
+    background-color: transparent;
 }
 
-.language-hamb,
-.language-selector {
-    position: absolute;
-    top: 0;
-    right: 0;
-    visibility: visible;
-    opacity: 1;
+button.language-hamb:focus,
+button.language-hamb:focus-visible {
+    outline: 0;
 }
 
 @keyframes spin {
@@ -79,26 +112,22 @@
 }
 
 .loading {
+    display: block;
     height: 2em;
     width: 2em;
+    margin: 0;
     background-image: url(assets/loading.svg);
     background-repeat: no-repeat;
     background-size: contain;
     animation: spin 1s linear infinite, invert 1.1s linear infinite;
 }
 
-.hide {
-    visibility: hidden;
-    opacity: 0;
-    transition-delay: 0;
-    /* transition: visibility 0s 0.5s, opacity 0.5s linear; */
-}
 
 .bar {
-    width: 35px;
-    height: 5px;
+    width: 30px;
+    height: 3px;
     background-color: rgb(250, 250, 250, 50%);
-    margin: 6px 0;
+    margin: 5px 0;
 }
 
 

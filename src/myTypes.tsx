@@ -1,3 +1,5 @@
+import { DocumentReference, DocumentData } from "firebase/firestore";
+
 export const Language = {
     EN: "EN",
     ES: "ES",
@@ -33,7 +35,7 @@ export type QueueItem = {
 }
 
 export type Room = {
-    queue: QueueItem[];
+    queue: DocumentReference<DocumentData> | null;
     created_by: string;
     song_db: string;
 }

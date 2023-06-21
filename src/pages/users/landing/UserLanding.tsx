@@ -5,12 +5,13 @@ import { useContext, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { doc, getDoc } from "firebase/firestore"
 import { roomsCollectionRef } from "../../../firebase-config"
+import { LoadignState } from "../../../myTypes"
 
 function UserLanding() {
     const navigate = useNavigate()
     const { setError } = useContext(ErrorsContext)
-    const { language } = useContext(LanguageContext)
     const { setLoadingState } = useContext(LoadingStateContext)
+    const { language } = useContext(LanguageContext)
     const [roomCode, setRoomCode] = useState("")
     const welcomeText = text.landing[language].split(" ")
 
@@ -47,12 +48,11 @@ function UserLanding() {
                     setError("Sala no encontrada")
                 }
             }).catch(e => {
-                if (e instanceof Error) {
-                    setError(e.message)
-                } else {
-                    setError("Error finding room")
-                }
-                setLoadingState("error")
+                catchError({
+                    e, fallbackMsg: "Error finding room",
+                    setLoadingState: setLoadingState,
+                    setError: setError
+                })
             })
     }
 
@@ -89,17 +89,26 @@ function UserLanding() {
 export default UserLanding
 
 
+export function catchError({ e, fallbackMsg, setLoadingState, setError }: { e: any; fallbackMsg: string; setLoadingState: (loadignState: LoadignState) => void; setError: (error: string | undefined) => void }) {
+    if (e instanceof Error) {
+        setError(e.message)
+    } else {
+        setError(fallbackMsg)
+    }
+    setLoadingState("error")
+}
+
 export function LoadingError() {
     const { error } = useContext(ErrorsContext)
     const { loadingState } = useContext(LoadingStateContext)
     return (
-        <>
+        <div className="loading-error-container">
             {loadingState === "loading" &&
                 <span className="loading" />
             }
             {error && <div className="error-msg">
                 {error}
             </div>}
-        </>
+        </div>
     )
 }

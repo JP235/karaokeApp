@@ -42,10 +42,13 @@ h1 {
     font-size: 2.2em;
     line-height: 1.1;
 }
-
+h3 {
+    margin: 0.5rem;
+}
+select,
 input {
     border: 0;
-    height: calc(1rem + 4px);
+    /* height: calc(1rem + 4px); */
     padding: 0.5rem;
 }
 
@@ -66,8 +69,8 @@ button:hover {
     border-color: rgb(var(--accent2-rgb));
 }
 
-button:focus,
-button:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
+button:disabled {
+    background-color: gray;
+    color: rgb(var(--light-rgb),50%);
 }
 

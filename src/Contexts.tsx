@@ -21,7 +21,10 @@ export const LoadingStateContext = createContext<LoadignStateContextValue>({
 export function LoadignStateProvider({ children }: { children: React.ReactNode }) {
     // Set up state to store the language preference
     const [loadingState, setLoadingState] = useState<LoadignState>("idle")
+    useEffect(() => {
+        console.log(loadingState);
 
+    }, [loadingState])
     // Return the provider component with the language value and setter function
     return (
         <LoadingStateContext.Provider value={{ loadingState, setLoadingState }}>

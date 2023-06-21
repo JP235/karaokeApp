@@ -5,14 +5,14 @@
     gap: 4rem;
 }
 
-form {
+.admin-landing form {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1em;
     justify-items: center;
 }
 
-form label {
+.admin-landing form label {
     text-align: left;
     position: relative;
     width: 250px;

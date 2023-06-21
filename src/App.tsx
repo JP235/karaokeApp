@@ -50,22 +50,24 @@ function LanguageDropdown() {
         };
     }, []);
     return (
-        <>
-            <button className={show ? "language-hamb hide" : "language-hamb"} type='button' onClick={() => setShow(p => !p)} title={language} >
+        <div className='language-picker'>
+            <button className="language-hamb" type='button' onClick={() => setShow(p => !p)} title={language} >
                 <HambButton />
             </button>
-            <div className={show ? "language-selector" : "language-selector hide"}>
-                {Object.keys(Language).map((key, i) => {
-                    const k = key as TLanguages
-                    return (
-                        <button key={i} onClick={() => setLanguage(k)}>
-                            {Language[k]}
-                        </button>
-                    )
-                })
-                }
+            <div className={show ? "language-selector show" : "language-selector"}>
+                <div className="selector-buttons">
+                    {Object.keys(Language).map((key, i) => {
+                        const k = key as TLanguages
+                        return (
+                            <button key={i} onClick={() => setLanguage(k)}>
+                                {Language[k]}
+                            </button>
+                        )
+                    })
+                    }
+                </div>
             </div>
-        </>)
+        </div>)
 }
 
 function HambButton() {
@@ -76,10 +78,18 @@ function HambButton() {
     </>)
 }
 
-export const clickAway = (event: MouseEvent, parentName: string, setter: Dispatch<SetStateAction<boolean>>) => {
-    const target = event.target as HTMLElement
-    if (!target.className.includes(parentName) && !target.parentElement?.className.includes(parentName)) {
-        setter(false)
+export const clickAway = (event: MouseEvent, elementName: string, setter: Dispatch<SetStateAction<boolean>>) => {
+    let target = event.target as HTMLElement;
+    let shouldSetFalse = true;
+    while (target && !target.className.includes('content')) {
+        if (target.className.includes(elementName)) {
+            shouldSetFalse = false;
+            break;
+        }
+        target = target.parentElement as HTMLElement;
+    }
+    if (shouldSetFalse) {
+        setter(false);
     }
 }
 function NotFound() {
