@@ -1,0 +1,59 @@
+.filter-songs-form {
+    display: grid;
+    gap: 1em;
+    justify-items: center;
+}
+
+
+.filter-songs-form label {
+    display: grid;
+    grid-template-columns: 2em 1fr;
+    grid-template-areas: "del textinput search";
+    justify-items: end;
+
+}
+
+.filter-songs-form button.cancelButton {
+    background-color: rgb(var(--accent1-rgb), 50%);
+    border-radius: 4px 0 0 4px;
+}
+
+.filter-songs-form button.searchButton {
+    background-color: rgb(var(--accent1-rgb), 50%);
+    border-radius: 0 4px 4px 0;
+}
+
+.filter-songs-form input {
+    border-radius: 0;
+}
+
+.filter-songs-form input:focus,
+.filter-songs-form input:focus-visible {
+    border-left: 0;
+    border-right: 0;
+    outline: 0;
+    background-color: rgb(50, 50,50);
+    font-weight: 600;
+}
+
+.filter-songs-form .searchButton>span {
+    transform: scale(0.8);
+}
+
+.filter-songs-form label :nth-child(1) {
+    grid-area: del;
+}
+
+.filter-songs-form label :nth-child(3) {
+    grid-area: search;
+}
+
+.filter-songs-form label :nth-child(2) {
+    grid-area: textinput;
+}
+
+
+.filter-songs-form label input {
+    text-align: center;
+    ;
+}

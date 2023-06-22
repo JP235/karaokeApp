@@ -10,6 +10,8 @@ import AdminDashboard from './pages/admin/AdminDashboard/AdminDashboard';
 import AdminRoom from './pages/admin/AdminRoom/AdminRoom';
 import UserRoom from './pages/users/room/UserRoom';
 import { Language, TLanguages } from './myTypes';
+import HambButton from './components/HambButton';
+import NotFound from './components/NotFound';
 
 function App() {
 
@@ -51,9 +53,7 @@ function LanguageDropdown() {
     }, []);
     return (
         <div className='language-picker'>
-            <button className="language-hamb" type='button' onClick={() => setShow(p => !p)} title={language} >
-                <HambButton />
-            </button>
+            <HambButton className="language-hamb" onClick={() => setShow(p => !p)} title={language} />
             <div className={show ? "language-selector show" : "language-selector"}>
                 <div className="selector-buttons">
                     {Object.keys(Language).map((key, i) => {
@@ -70,13 +70,7 @@ function LanguageDropdown() {
         </div>)
 }
 
-function HambButton() {
-    return (<>
-        <div className="bar"></div>
-        <div className="bar"></div>
-        <div className="bar"></div>
-    </>)
-}
+
 
 export const clickAway = (event: MouseEvent, elementName: string, setter: Dispatch<SetStateAction<boolean>>) => {
     let target = event.target as HTMLElement;
@@ -91,7 +85,4 @@ export const clickAway = (event: MouseEvent, elementName: string, setter: Dispat
     if (shouldSetFalse) {
         setter(false);
     }
-}
-function NotFound() {
-    return <h1>Not Found</h1>;
 }

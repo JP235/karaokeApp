@@ -1,7 +1,6 @@
 #root {
     margin: 0 auto;
-    height: 100vh;
-    width: 100vw;
+    height: 100%;
 }
 
 .App {
@@ -9,6 +8,9 @@
     margin: 0;
     min-width: 100%;
     min-height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .App::before {
@@ -18,7 +20,7 @@
     right: 0;
     bottom: 0;
     left: 0;
-    background-image: url("/public/pexels-neosiam-593467.jpg");
+    background-image: url("/pexels-neosiam-593467.jpg");
     background-size: cover;
     filter: blur(2px);
     z-index: -1;
@@ -40,6 +42,7 @@
 .content {
     position: relative;
     margin: 0;
+    width: 100%;
 }
 
 .language-picker {
@@ -84,9 +87,15 @@
     background-color: transparent;
 }
 
-button.language-hamb:focus,
-button.language-hamb:focus-visible {
-    outline: 0;
+
+.text-border-1px {
+    text-shadow: 1px 0 #000, -1px 0 #000, 0 1px #000, 0 -1px #000,
+        1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
+}
+
+.text-border-2px {
+    text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000,
+        1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
 }
 
 @keyframes spin {
@@ -113,10 +122,17 @@ button.language-hamb:focus-visible {
     }
 }
 
+.loading-error-container {
+    position: relative;
+    min-width: 2rem;
+    min-height: 2rem;
+}
+
 .loading {
+    position: absolute;
     display: block;
-    height: 2em;
-    width: 2em;
+    height: 2rem;
+    width: 2rem;
     margin: 0;
     background-image: url(assets/loading.svg);
     background-repeat: no-repeat;

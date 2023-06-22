@@ -1,0 +1,56 @@
+.cancelButton,
+.searchButton,
+.prevButton,
+.nextbutton {
+    background-color: transparent;
+    padding: 0;
+    border-radius: 50%;
+}
+
+.prevButton:disabled span,
+.nextbutton:disabled span {
+    filter: invert(0.3);
+    border: 0px
+}
+
+.cancelButton-span,
+.searchButton-span,
+.prevButton-span,
+.nextButton-span {
+    border-radius: 50%;
+    display: block;
+    height: 2em;
+    width: 2em;
+    margin: 0;
+    background-repeat: no-repeat;
+    background-size: contain;
+    filter: invert(0.9);
+}
+
+.cancelButton-span,
+.searchButton-span {
+    height: 1.5em;
+    width: 1.5em;
+    margin: 0.2rem;
+}
+
+button:has(.cancelButton-span):disabled,
+button:has(.searchButton-span):disabled {
+    background-color: transparent;
+}
+
+.prevButton-span {
+    background-image: url(../../assets/arrow-left-circle.svg);
+}
+
+.nextButton-span {
+    background-image: url(../../assets/arrow-right-circle.svg);
+}
+
+.searchButton-span {
+    background-image: url(../../assets/search.svg);
+}
+
+.cancelButton-span {
+    background-image: url(../../assets/delete-1.svg);
+}

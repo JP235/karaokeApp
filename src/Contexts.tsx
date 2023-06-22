@@ -3,29 +3,22 @@ import { TLanguages, LoadignState, Room, UserData } from './myTypes';
 import { fireAuth, usersCollectionRef } from './firebase-config';
 import { getDoc, doc } from 'firebase/firestore';
 
-// Define the shape of the language context value
-
-
 interface LoadignStateContextValue {
     loadingState: LoadignState
     setLoadingState: (loadignState: LoadignState) => void;
 }
 
-// Create a context for the language preference
 export const LoadingStateContext = createContext<LoadignStateContextValue>({
     loadingState: "idle",
     setLoadingState: () => { },
 });
 
-// Create a provider component for the language context
 export function LoadignStateProvider({ children }: { children: React.ReactNode }) {
-    // Set up state to store the language preference
     const [loadingState, setLoadingState] = useState<LoadignState>("idle")
     useEffect(() => {
         console.log(loadingState);
 
     }, [loadingState])
-    // Return the provider component with the language value and setter function
     return (
         <LoadingStateContext.Provider value={{ loadingState, setLoadingState }}>
             {children}

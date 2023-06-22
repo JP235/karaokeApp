@@ -48,7 +48,7 @@ function UserLanding() {
                     setError("Sala no encontrada")
                 }
             }).catch(e => {
-                catchError({
+                catchErrorFunction({
                     e, fallbackMsg: "Error finding room",
                     setLoadingState: setLoadingState,
                     setError: setError
@@ -57,13 +57,13 @@ function UserLanding() {
     }
 
     return <div className="user-landing">
-        <span className="landingText">
+        <span className="landingText text-border-1px">
             {welcomeText.map((w, i) =>
                 <span key={i} className="word" >{w}</span>
             )}
         </span>
-        <div className="room-code">
-            <form onSubmit={(event) => {
+        <div className="room-code-container">
+            <form className="room-code-form" onSubmit={(event) => {
                 event.preventDefault()
                 findRoom()
             }}>
@@ -89,7 +89,7 @@ function UserLanding() {
 export default UserLanding
 
 
-export function catchError({ e, fallbackMsg, setLoadingState, setError }: { e: any; fallbackMsg: string; setLoadingState: (loadignState: LoadignState) => void; setError: (error: string | undefined) => void }) {
+export function catchErrorFunction({ e, fallbackMsg, setLoadingState, setError }: { e: any; fallbackMsg: string; setLoadingState: (loadignState: LoadignState) => void; setError: (error: string | undefined) => void }) {
     if (e instanceof Error) {
         setError(e.message)
     } else {

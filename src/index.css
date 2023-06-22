@@ -28,12 +28,14 @@
     -webkit-text-size-adjust: 100%;
 }
 
+html {
+    height: 100vh;
+}
+
 body {
-    margin: -10px -10px;
-    display: flex;
-    place-items: center;
-    min-width: 320px;
-    min-height: 100vh;
+    margin: 0;
+    width: 100%;
+    height: 100%;
 }
 
 
@@ -41,31 +43,34 @@ h1 {
     font-size: 2.2em;
     line-height: 1.1;
 }
+
 h3 {
     margin: 0.5rem;
 }
+
 select,
 input {
     border: 0;
-    /* height: calc(1rem + 4px); */
+    border-radius: 4px;
+    font-size: 1rem;
     padding: 0.5rem;
 }
 
 button {
-    border-radius: 8px;
+    border-radius: 4px;
     border: 1px solid transparent;
-    padding: 0.6em 1.2em;
-    font-size: 1em;
+    padding: 0.5rem 1rem 0.6rem;
+    font-size: 1rem;
     font-weight: 500;
     font-family: inherit;
-    background-color: rgb(var(--accent1-rgb), 50%);
+    background-color: rgb(var(--accent1-rgb));
     color: rgb(var(--light-rgb));
     cursor: pointer;
     transition: border-color 0.25s;
 }
 
 button:disabled {
-    /* background-color: gray; */
-    color: rgb(var(--light-rgb),50%);
+    background-color: gray;
+    color: rgb(var(--light-rgb), 50%);
+    cursor: default;
 }
-
