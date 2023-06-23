@@ -34,11 +34,6 @@
     margin: 0.2rem;
 }
 
-button:has(.cancelButton-span):disabled,
-button:has(.searchButton-span):disabled {
-    background-color: transparent;
-}
-
 .prevButton-span {
     background-image: url(../../assets/arrow-left-circle.svg);
 }

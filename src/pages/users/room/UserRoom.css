@@ -83,8 +83,8 @@
 
 .songs-table {
     position: relative;
-    max-height: 100%;
-    /* overflow-y: scroll; */
+    max-height: 500px;
+    overflow-y: scroll;
     display: flex;
     flex-direction: column;
     justify-items: center;
