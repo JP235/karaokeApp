@@ -1,22 +1,25 @@
 import { FormEvent, useContext, useEffect, useState } from "react";
-import { ErrorsContext, UserContext } from "../../../Contexts"
+import { ErrorsContext, LoadingStateContext, UserContext } from "../../../Contexts"
 import "./AdminDashboard.css"
 import { roomsCollectionRef, usersCollectionRef } from "../../../firebase-config";
 import { doc, onSnapshot, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { UserData } from "../../../myTypes";
+import { catchErrorFunction } from "../../users/landing/UserLanding";
+import { changeRoomCode } from "../../../components/HelperFunctions";
 
 
 
 function AdminDashboard() {
     const navigate = useNavigate()
     const { setError } = useContext(ErrorsContext)
+    const { setLoadingState } = useContext(LoadingStateContext)
     const { user, setUser } = useContext(UserContext)
     const [creatingRoom, setCreatigRoom] = useState(false)
-
-    const [roomCode, setRoomCode] = useState(generateRandomNumber())
+    
+    const [roomCode, setRoomCode] = useState(String(generateRandomNumber()))
     const [roomName, setRoomName] = useState("Karaoke")
-
+    
     useEffect(() => {
         if (user.email) {
             const unsubscribe =
@@ -42,13 +45,12 @@ function AdminDashboard() {
             await setDoc(doc(usersCollectionRef, user.email), { created_rooms: user.created_rooms + 1, active_room: roomCode }, { merge: true })
             const url = "/admin/" + roomCode
             navigate(url)
-        } catch (error) {
-            if (error instanceof Error) {
-                const errorMessage = error.message;
-                setError(errorMessage)
-            } else {
-                setError("Error")
-            }
+        } catch (e) {
+            catchErrorFunction({
+                e, fallbackMsg: "Error creating room",
+                setLoadingState: setLoadingState,
+                setError: setError
+            })
         }
     }
     const handleSubmit = (event: FormEvent) => {
@@ -61,14 +63,14 @@ function AdminDashboard() {
             <div className="greeting">
                 <p>Hola {user.name} </p>
                 <p>Salar creadas: {user.created_rooms} </p>
-                {user.active_room === -1 ?
+                {user.active_room === "-1" ?
                     <p> No hay salas activas</p> :
                     <p>Codigo de sala activa:  {user.active_room} </p>
                 }
             </div>
             {(user.permissions === "active" || user.permissions === "ALL") &&
                 < div className="admin-dashboard">
-                    {user.active_room === -1 ?
+                    {user.active_room === "-1" ?
                         <button className="new-room" onClick={() => setCreatigRoom(true)}>
                             Crear Sala
                         </button> :
@@ -95,8 +97,7 @@ function AdminDashboard() {
                             type="number"
                             value={roomCode}
                             onChange={(event) => {
-                                if (event.target.value.length > 4) return
-                                setRoomCode(parseInt(event.target.value))
+                                setRoomCode(changeRoomCode(event.target.value))
                             }}
                         />
                         <span className="labelName">

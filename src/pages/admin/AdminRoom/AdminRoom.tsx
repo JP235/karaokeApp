@@ -4,14 +4,14 @@ import { doc, onSnapshot } from 'firebase/firestore';
 import { roomsCollectionRef } from '../../../firebase-config';
 import { useParams } from 'react-router-dom';
 import { UserContext } from '../../../Contexts';
-import { Room, QueueItem, formattedDate } from "../../../myTypes";
+import { Room, QueueItem } from "../../../myTypes";
+import { useSongs, useSongsQueue } from "../../../components/hooks";
 
 const AdminRoom = () => {
     const { user } = useContext(UserContext)
     const params = useParams()
     const roomId = params.roomId
     const [room, setRoom] = useState<Room>()
-    const [queue, setQueue] = useState<QueueItem[]>([]);
     const [addingToQueue, setAddingToQueue] = useState(false)
 
     useEffect(() => {
@@ -63,7 +63,7 @@ const AdminRoom = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {queue.map((s, index) => {
+                        {room?.currentQueue.map((s, index) => {
                             return (
                                 <tr key={index}>
                                     <th data-cell="Código">{s.song.id}</th>
@@ -87,7 +87,7 @@ const AdminRoom = () => {
                 </table>
             </div>
             {addingToQueue &&
-                <AddToQueueDialog roomId={roomId} open={addingToQueue} setOpen={setAddingToQueue} />}
+                <AdminAddToQueueDialog roomId={roomId} open={addingToQueue} setOpen={setAddingToQueue} />}
         </>
 
     );
@@ -95,53 +95,9 @@ const AdminRoom = () => {
 
 export default AdminRoom
 
-export const addToQueue = (roomId: string, data: Omit<QueueItem, 'created_at'>) => {
-    const created_at = formattedDate(new Date())
-    console.log(roomId, created_at, data);
-
-}
-
-// const SongSearchForm = ({ songs }: { songs: Song[] }) => {
-//     const [artist, setArtist] = useState('');
-//     const [genre, setGenre] = useState('');
-
-//     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-//         event.preventDefault();
-//         const filteredSongs = songs.filter(
-//             (song) =>
-//                 (!artist || song.artist === artist) &&
-//                 (!genre || song.genre === genre)
-//         );
-//         // do something with filteredSongs
-//     };
-
-//     return (
-//         <form onSubmit={handleSubmit}>
-//             <label>
-//                 Artist:
-//                 <input
-//                     type="text"
-//                     value={artist}
-//                     onChange={(event) => setArtist(event.target.value)}
-//                 />
-//             </label>
-//             <br />
-//             <label>
-//                 Genre:
-//                 <input
-//                     type="text"
-//                     value={genre}
-//                     onChange={(event) => setGenre(event.target.value)}
-//                 />
-//             </label>
-//             <br />
-//             <button type="submit">Search</button>
-//         </form>
-//     );
-// };
-
-function AddToQueueDialog({ roomId, open, setOpen }: { roomId: string, open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
-
+function AdminAddToQueueDialog({ roomId, open, setOpen }: { roomId: string, open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
+    const { addToQueue } = useSongsQueue(roomId, true)
+    const { songs, querySongs } = useSongs(roomId)
     const [data, setData] = useState<Omit<QueueItem, 'created_at'>>({
         singer: "",
         table: 0,
@@ -156,7 +112,7 @@ function AddToQueueDialog({ roomId, open, setOpen }: { roomId: string, open: boo
 
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault();
-        if (data) addToQueue(roomId, data)
+        if (data) addToQueue({ ...data })
     }
     return (
         <dialog id="queue-song-dialog" className={open ? "queue-song-dialog open" : "queue-song-dialog"} open={open}>
@@ -192,19 +148,6 @@ function AddToQueueDialog({ roomId, open, setOpen }: { roomId: string, open: boo
                         Canta
                     </span>
                 </label>
-                {/* <label>
-                    <input
-                        className="labelInput"
-                        type="text"
-                        value={data.song}
-                        onChange={(event) => {
-                            setData((d) => { return { ...d, singer: event.target.value } })
-                        }}
-                    />
-                    <span className="labelName">
-                        Canta
-                    </span>
-                </label> */}
                 <div className="create-room-buttons">
                     <button type="button" className="create-room-cancel" onClick={() => setOpen(false)} >Cancelar</button>
                     <button type="submit" value="Create" className="create-room-create" >Crear</button>

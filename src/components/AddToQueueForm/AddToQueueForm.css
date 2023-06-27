@@ -1,0 +1,22 @@
+.queue-song-dialog {
+    /* width: 100%; */
+    /* position: sticky; */
+    top: 0;
+}
+.queue-song-dialog form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1em;
+    justify-items: center;
+}
+
+.queue-song-dialog form label {
+    text-align: left;
+    position: relative;
+    width: 250px;
+    color: rgb(var(--accent2-rgb));
+    font-weight: 700;
+    display: grid;
+    grid-template-areas: "labelInput";
+    align-items: center;
+}

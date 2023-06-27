@@ -1,13 +1,13 @@
-import { getDoc, doc, collection, query, orderBy, limit, startAfter, DocumentData, Query, where, CollectionReference, QueryDocumentSnapshot, QueryFieldFilterConstraint, getDocs, getCountFromServer } from "firebase/firestore";
+import { getDoc, doc, collection, query, orderBy, limit, DocumentData, Query, where, CollectionReference, QueryDocumentSnapshot, QueryFieldFilterConstraint, getCountFromServer, arrayRemove, arrayUnion, updateDoc, onSnapshot, startAfter } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
 import { roomsCollectionRef, db } from "../firebase-config";
-import { Room, Song } from "../myTypes";
 import { catchErrorFunction } from "../pages/users/landing/UserLanding";
-import { getSongsFromQuery } from "./HelperFunctions";
+import { formattedDate, getSongsFromQuery } from "./HelperFunctions";
 import { LoadingStateContext, ErrorsContext } from "../Contexts";
+import { Song, Room, QueueItem } from "../myTypes";
 
 
-export const useSongs = (roomId: string | undefined) => {
+export const useSongs = (roomId: string | undefined, start?: boolean) => {
     const { setLoadingState } = useContext(LoadingStateContext)
     const { setError } = useContext(ErrorsContext)
     const [info, setInfo] = useState<{ artists: Array<string>, genres: Array<string>, open: Boolean }>({ artists: [], genres: [], open: false })
@@ -58,8 +58,10 @@ export const useSongs = (roomId: string | undefined) => {
     }, [roomId]);
 
     useEffect(() => {
-        if (songsCollection) {
+        if (songsCollection && start) {
             querySongs();
+        } else {
+            setLoadingState("loaded")
         }
     }, [songsCollection]);
 
@@ -79,7 +81,7 @@ export const useSongs = (roomId: string | undefined) => {
                     relevantInfo = info.genres
                         .filter(v => {
                             if (val === "BALADA") {
-                                return v.includes(val) || v.includes("B.")
+                                return v.includes(val) || v.includes("B.") || v.includes("B ")
                             }
                             return v.includes(val)
                         })
@@ -99,9 +101,11 @@ export const useSongs = (roomId: string | undefined) => {
 
             setCurrQuery(whereQ)
             const q = query(songsCollection!, ...whereQ, orderBy(field), limit(pageLimit))
-            const qcount = query(songsCollection!, ...whereQ)
+            const qcount = query(songsCollection!, ...whereQ, orderBy("ARTISTA"))
             const qcountdoc = getCountFromServer(qcount)
+            const fullData = getSongsFromQuery(qcount)
             console.log("count: ", (await qcountdoc).data().count)
+            console.log((await fullData).pageSongs)
             const { pageSongs, lastDoc } = await getSongsFromQuery(q)
 
             const nextq = query(songsCollection!, ...whereQ, orderBy("ARTISTA"), limit(pageLimit), startAfter(lastDoc))
@@ -130,7 +134,10 @@ export const useSongs = (roomId: string | undefined) => {
             // throw new Error(e)
         }
     }
+    const logSongs = () => {
+        console.log(songs);
 
+    }
     const nextPage = async () => {
         setLoadingState("loading")
         let next_songs: Song[] = []
@@ -147,12 +154,12 @@ export const useSongs = (roomId: string | undefined) => {
             next_songs = pageSongs
         }
         else {
-            next_songs = songs.next_page.slice(pageLimit)
+            next_songs = songs.next_page.slice(pageLimit + 1)
         }
         setSongs(prev => {
             return {
                 prev_page: [...prev.prev_page, ...prev.curr_page],
-                curr_page: [...prev.next_page.slice(0, pageLimit)],
+                curr_page: [...prev.next_page.slice(0, pageLimit + 1)],
                 next_page: [...next_songs]
             }
         })
@@ -160,7 +167,7 @@ export const useSongs = (roomId: string | undefined) => {
         setCurrPage(c => c + 1)
     }
     const prevPage = async () => {
-        if (songs.prev_page.length < pageLimit) return
+        if (songs.prev_page.length <= 0) return
         setSongs(prev => {
             return {
                 prev_page: [...prev.prev_page.slice(0, - pageLimit)],
@@ -173,6 +180,53 @@ export const useSongs = (roomId: string | undefined) => {
     }
 
     return {
-        songs, currPage, prevPage, nextPage, info, querySongs
+        songs, currPage, prevPage, nextPage, info, querySongs, logSongs
     }
-} 
+}
+
+
+export const useSongsQueue = (roomId: string, subscribe: boolean) => {
+    const [currQueue, setCurrQueue] = useState<QueueItem[]>([]);
+    const [pastQueue, setPastQueue] = useState<QueueItem[]>([]);
+
+    useEffect(() => {
+        if (subscribe) {
+            const roomRef = doc(roomsCollectionRef, roomId);
+            const unsubscribe = onSnapshot(roomRef, (roomSnap) => {
+                const roomData = roomSnap.data();
+                setCurrQueue(roomData?.currentQueue ?? []);
+                setPastQueue(roomData?.pastQueue ?? []);
+            });
+            return () => unsubscribe();
+        }
+    }, [roomId]);
+
+    async function addToQueue({ singer, song, tableNumber }: {
+        singer: string
+        song: Song, tableNumber?: number
+    }) {
+        const roomRef = doc(roomsCollectionRef, roomId);
+        const now = new Date()
+        const item: QueueItem = {
+            singer,
+            song,
+            table: tableNumber,
+            created_at: formattedDate(now)
+        }
+        await updateDoc(roomRef, {
+            currentQueue: arrayUnion(item)
+        });
+    }
+
+    async function markDone({ item }: { item: QueueItem; }) {
+        const roomRef = doc(roomsCollectionRef, roomId);
+        await updateDoc(roomRef, {
+            currentQueue: arrayRemove(item),
+            pastQueue: arrayUnion(item)
+        });
+    }
+
+    return {
+        addToQueue, markDone, currQueue, pastQueue
+    }
+}

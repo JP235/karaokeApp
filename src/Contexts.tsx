@@ -16,8 +16,7 @@ export const LoadingStateContext = createContext<LoadignStateContextValue>({
 export function LoadignStateProvider({ children }: { children: React.ReactNode }) {
     const [loadingState, setLoadingState] = useState<LoadignState>("idle")
     useEffect(() => {
-        console.log(loadingState);
-
+        // console.log(loadingState);
     }, [loadingState])
     return (
         <LoadingStateContext.Provider value={{ loadingState, setLoadingState }}>
@@ -118,7 +117,7 @@ export const UserContext = createContext<UserContextValue>({
         name: '',
         email: '',
         permissions: '',
-        active_room: -1,
+        active_room: "-1",
         songs_db: '',
         created_rooms: -1
     },
@@ -131,7 +130,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         name: "",
         email: "",
         permissions: "",
-        active_room: -1,
+        active_room: "-1",
         songs_db: "",
         created_rooms: -1
     });
@@ -162,3 +161,4 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         </UserContext.Provider>
     );
 };
+

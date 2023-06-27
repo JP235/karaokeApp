@@ -11,12 +11,13 @@ interface SongsTableParams {
         next_page: Song[];
     },
     currPage: number,
+    setSelectedSong: React.Dispatch<React.SetStateAction<Song | undefined>>,
     prevPage: () => void
     nextPage: () => void
 }
 
 
-function SongsTable({ songs, currPage, prevPage, nextPage }: SongsTableParams) {
+function SongsTable({ songs, currPage, prevPage, nextPage, setSelectedSong }: SongsTableParams) {
     const tableRef = useRef<HTMLTableElement>(null)
     const { loadingState } = useContext(LoadingStateContext)
 
@@ -44,7 +45,8 @@ function SongsTable({ songs, currPage, prevPage, nextPage }: SongsTableParams) {
                 <tbody>
                     {songs.curr_page.map((s, index) => {
                         return (
-                            <tr key={index}>
+                            <tr key={index} onClick={() => setSelectedSong(s)
+                            }>
                                 <td data-cell="Artista">{s.artist}</td>
                                 <td data-cell="Titulo">{s.song_name}</td>
                                 <td data-cell="Genero">{s.genre}</td>
@@ -53,7 +55,9 @@ function SongsTable({ songs, currPage, prevPage, nextPage }: SongsTableParams) {
                     })}
                     {songs.curr_page.length === 0 &&
                         <tr>
-                            <td style={{ textAlign: "center", fontStyle: "italic" }} colSpan={3} >-- no encontrado --</td>
+                            <td style={{ textAlign: "center", fontStyle: "italic" }} >--</td>
+                            <td style={{ textAlign: "center", fontStyle: "italic" }} >--</td>
+                            <td style={{ textAlign: "center", fontStyle: "italic" }} >--</td>
                         </tr >}
 
                 </tbody>
@@ -71,7 +75,7 @@ function SongsTable({ songs, currPage, prevPage, nextPage }: SongsTableParams) {
                     />
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 

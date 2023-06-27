@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom"
 import { doc, getDoc } from "firebase/firestore"
 import { roomsCollectionRef } from "../../../firebase-config"
 import { LoadignState } from "../../../myTypes"
+import { changeRoomCode } from "../../../components/HelperFunctions"
 
 function UserLanding() {
     const navigate = useNavigate()
@@ -15,25 +16,7 @@ function UserLanding() {
     const [roomCode, setRoomCode] = useState("")
     const welcomeText = text.landing[language].split(" ")
 
-    const changeRoomCode = (event: React.ChangeEvent<HTMLInputElement>) => {
-        // code too long
-        if (event.target.value.length > 4) return
-        // empty code
-        if (event.target.value.length <= 0) {
-            setRoomCode("")
-            return
-        }
-        let val: string = ""
 
-        // leading zeros
-        if (String(parseInt(event.target.value)).length < event.target.value.length) {
-            val = String(parseInt(event.target.value)).padStart(event.target.value.length, "0")
-        }
-        else {
-            val = String(parseInt(event.target.value))
-        }
-        setRoomCode(val)
-    }
 
     const findRoom = () => {
         setError(undefined)
@@ -73,7 +56,7 @@ function UserLanding() {
                     value={roomCode}
                     placeholder={text.roomCode[language]}
                     onChange={(event) => {
-                        changeRoomCode(event)
+                        setRoomCode(changeRoomCode(event.target.value))
                     }}
                 />
 

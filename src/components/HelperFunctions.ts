@@ -1,6 +1,8 @@
 import { Query, DocumentData, getDocs, QuerySnapshot } from "firebase/firestore";
 import { Song } from "../myTypes";
 
+export const formattedDate = (date: Date) => `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')} - ${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`
+
 export const getSongsFromQuery = async (q: Query<DocumentData>) => {
   const docSnapshots = await getDocs(q);
   if (docSnapshots.docs.length === 0) {
@@ -22,4 +24,25 @@ export const songListFromSnapshot = (documentSnapshots: QuerySnapshot<DocumentDa
     } as Song
     return song
   })
+}
+
+export const changeRoomCode = (value: string) => {
+  let val: string = ""
+
+  // code too long
+  if (value.length > 4) return val.slice(0,4)
+
+  // empty code
+  if (value.length <= 0) {
+    return val
+  }
+
+  // leading zeros
+  if (String(parseInt(value)).length < value.length) {
+    val = String(parseInt(value)).padStart(value.length, "0")
+  }
+  else {
+    val = String(parseInt(value))
+  }
+  return val
 }

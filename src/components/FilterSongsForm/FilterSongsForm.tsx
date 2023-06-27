@@ -29,7 +29,7 @@ function FilterSongsForm({ onSubmit, dataHints, selected, setSelected, title }: 
                     title={`${title}`} />
 
                 <datalist id={title}>
-                    {dataHints.map((val) => (
+                    {dataHints.sort().map((val) => (
                         <option key={val} value={val} />
                     ))}
                 </datalist>
