@@ -1,8 +1,13 @@
 .admin-landing {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     justify-items: center;
     text-align: center;
-    gap: 4rem;
+    flex-wrap: nowrap;
+    height: 100%;
+    gap: 2rem;
+    align-items: center;
+    justify-content: center;
 }
 
 .admin-landing form {
@@ -40,7 +45,7 @@
     animation: unset
 }
 
-.create-room-dialog.open  {
+.create-room-dialog.open {
     position: absolute;
     top: 20%;
     width: 70vw;
@@ -69,3 +74,4 @@
     background-color: rgb(var(--primary-rgb));
     width: 100px;
 }
+

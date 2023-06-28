@@ -21,3 +21,22 @@ export function SearchButton(props: React.ButtonHTMLAttributes<HTMLButtonElement
         <span className="searchButton-span"></span>
     </button>
 }
+
+export function DeleteButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+    return <button type='button' className="deleteButton"  {...props}  >
+        <span className="deleteButton-span"></span>
+    </button>
+}
+export function DoneButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+    return <button type='button' className="doneButton"  {...props}  >
+        <span className="doneButton-span"></span>
+    </button>
+}
+export function HambButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+    return (
+        <button type='button' {...props}  >
+            <div className="hamb-bar"></div>
+            <div className="hamb-bar"></div>
+            <div className="hamb-bar"></div>
+        </button>)
+}

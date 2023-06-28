@@ -1,9 +1,8 @@
 import "./AddToQueueForm.css"
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { Song } from "../../myTypes";
-import { roomCode } from "../../text";
 import { ErrorsContext, LoadingStateContext } from "../../Contexts";
-import { useSongsQueue } from "../hooks";
+import { useRoom } from "../hooks";
 import { LoadingError, catchErrorFunction } from "../../pages/users/landing/UserLanding";
 
 function AddToQueueForm({ roomId, song, close, admin, open }: { open: boolean, admin?: boolean, close: () => void, roomId: string, song?: Song }) {
@@ -11,7 +10,7 @@ function AddToQueueForm({ roomId, song, close, admin, open }: { open: boolean, a
     const [tableNumber, setTableNumber] = useState<number>(-1);
     const { setError } = useContext(ErrorsContext)
     const { setLoadingState } = useContext(LoadingStateContext)
-    const { addToQueue } = useSongsQueue(roomId, false)
+    const { addToQueue } = useRoom({ roomId, subscribe: false })
 
     useEffect(() => {
 

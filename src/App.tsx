@@ -10,8 +10,8 @@ import AdminDashboard from './pages/admin/AdminDashboard/AdminDashboard';
 import AdminRoom from './pages/admin/AdminRoom/AdminRoom';
 import UserRoom from './pages/users/room/UserRoom';
 import { Language, TLanguages } from './myTypes';
-import HambButton from './components/HambButton';
 import NotFound from './components/NotFound';
+import { HambButton } from './components/Buttons/Buttons';
 
 function App() {
 

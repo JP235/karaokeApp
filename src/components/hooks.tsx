@@ -1,4 +1,4 @@
-import { getDoc, doc, collection, query, orderBy, limit, DocumentData, Query, where, CollectionReference, QueryDocumentSnapshot, QueryFieldFilterConstraint, getCountFromServer, arrayRemove, arrayUnion, updateDoc, onSnapshot, startAfter } from "firebase/firestore";
+import { getDoc, doc, collection, query, orderBy, limit, DocumentData, Query, where, CollectionReference, QueryDocumentSnapshot, QueryFieldFilterConstraint, getCountFromServer, arrayRemove, arrayUnion, updateDoc, onSnapshot, startAfter, documentId } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
 import { roomsCollectionRef, db } from "../firebase-config";
 import { catchErrorFunction } from "../pages/users/landing/UserLanding";
@@ -12,11 +12,10 @@ export const useSongs = (roomId: string | undefined, start?: boolean) => {
     const { setError } = useContext(ErrorsContext)
     const [info, setInfo] = useState<{ artists: Array<string>, genres: Array<string>, open: Boolean }>({ artists: [], genres: [], open: false })
     const [songs, setSongs] = useState<{ prev_page: Song[], curr_page: Song[], next_page: Song[] }>({ prev_page: [], curr_page: [], next_page: [] })
-    const [pageLimit, setPageLimit] = useState(20)
+    const [pageLimit, setPageLimit] = useState(35)
 
     const [songsCollection, setSongsCollection] = useState<CollectionReference<DocumentData>>()
     const [currPage, setCurrPage] = useState(0)
-    const [currField, setCurrField] = useState<"GENERO" | "ARTISTA" | "TITULO" | "id">()
     const [currQuery, setCurrQuery] = useState<QueryFieldFilterConstraint[]>()
 
     const [lastSongInBatch, setLastSongInBatch] = useState<QueryDocumentSnapshot<DocumentData>>()
@@ -65,17 +64,15 @@ export const useSongs = (roomId: string | undefined, start?: boolean) => {
         }
     }, [songsCollection]);
 
-    const querySongs = async (field?: "GENERO" | "ARTISTA" | "TITULO", val?: string,) => {
+    const querySongs = async (field?: "GENERO" | "ARTISTA" | "TITULO" | "id", val?: string,) => {
         setLoadingState("loading")
         setCurrPage(0)
 
         if (!songsCollection) throw new Error("no songs collection")
 
-        const queryWithFieldValue = async (field: "GENERO" | "ARTISTA" | "TITULO", val: string) => {
-            setCurrField(field)
+        const queryWithFieldValue = async (field: "GENERO" | "ARTISTA" | "TITULO" | "id", val: string) => {
             let whereQ: QueryFieldFilterConstraint[]
             let relevantInfo: string[]
-            setCurrField(field)
             switch (field) {
                 case "GENERO":
                     relevantInfo = info.genres
@@ -93,6 +90,9 @@ export const useSongs = (roomId: string | undefined, start?: boolean) => {
                     break
                 case "TITULO":
                     whereQ = [where(field, ">=", val), where(field, "<", `${val}~`)]
+                    break
+                case "id":
+                    whereQ = [where(documentId(), ">=", val), where(field, "<", `${val}~`)]
                     break
                 default:
                     whereQ = []
@@ -185,17 +185,21 @@ export const useSongs = (roomId: string | undefined, start?: boolean) => {
 }
 
 
-export const useSongsQueue = (roomId: string, subscribe: boolean) => {
-    const [currQueue, setCurrQueue] = useState<QueueItem[]>([]);
+export const useRoom = ({ roomId, subscribe }: { roomId?: string; subscribe?: boolean; } = {}) => {
+    const [currentQueue, setCurrentQueue] = useState<QueueItem[]>([]);
     const [pastQueue, setPastQueue] = useState<QueueItem[]>([]);
+    const [room, setRoom] = useState<Omit<Room, "currentQueue" | "pastQueue">>()
 
     useEffect(() => {
-        if (subscribe) {
+        if (roomId && subscribe) {
             const roomRef = doc(roomsCollectionRef, roomId);
             const unsubscribe = onSnapshot(roomRef, (roomSnap) => {
-                const roomData = roomSnap.data();
-                setCurrQueue(roomData?.currentQueue ?? []);
-                setPastQueue(roomData?.pastQueue ?? []);
+                if (roomSnap.exists()) {
+                    const roomData = roomSnap.data() as Room
+                    setRoom({ created_by: roomData.created_by, song_db: roomData.song_db })
+                    setCurrentQueue(roomData.currentQueue ?? []);
+                    setPastQueue(roomData.pastQueue ?? []);
+                }
             });
             return () => unsubscribe();
         }
@@ -205,6 +209,7 @@ export const useSongsQueue = (roomId: string, subscribe: boolean) => {
         singer: string
         song: Song, tableNumber?: number
     }) {
+        if (!roomId) throw new Error("RoomId not defined")
         const roomRef = doc(roomsCollectionRef, roomId);
         const now = new Date()
         const item: QueueItem = {
@@ -219,6 +224,7 @@ export const useSongsQueue = (roomId: string, subscribe: boolean) => {
     }
 
     async function markDone({ item }: { item: QueueItem; }) {
+        if (!roomId) throw new Error("RoomId not defined")
         const roomRef = doc(roomsCollectionRef, roomId);
         await updateDoc(roomRef, {
             currentQueue: arrayRemove(item),
@@ -227,6 +233,6 @@ export const useSongsQueue = (roomId: string, subscribe: boolean) => {
     }
 
     return {
-        addToQueue, markDone, currQueue, pastQueue
+        addToQueue, markDone, currentQueue, pastQueue, room,setCurrentQueue
     }
 }

@@ -1,4 +1,3 @@
-import { DocumentReference, DocumentData } from "firebase/firestore";
 
 export const Language = {
     EN: "EN",

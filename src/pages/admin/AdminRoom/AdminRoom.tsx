@@ -1,102 +1,131 @@
 import "./AdminRoom.css"
 import { FormEvent, useContext, useEffect, useState } from 'react';
-import { doc, onSnapshot } from 'firebase/firestore';
-import { roomsCollectionRef } from '../../../firebase-config';
 import { useParams } from 'react-router-dom';
 import { UserContext } from '../../../Contexts';
-import { Room, QueueItem } from "../../../myTypes";
-import { useSongs, useSongsQueue } from "../../../components/hooks";
+import { QueueItem } from "../../../myTypes";
+import { useSongs, useRoom } from "../../../components/hooks";
+import { DeleteButton, DoneButton, HambButton } from "../../../components/Buttons/Buttons";
 
 const AdminRoom = () => {
     const { user } = useContext(UserContext)
     const params = useParams()
     const roomId = params.roomId
-    const [room, setRoom] = useState<Room>()
-    const [addingToQueue, setAddingToQueue] = useState(false)
+    const { room, currentQueue, markDone, setCurrentQueue } = useRoom({ roomId, subscribe: true })
+    const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+    const [dropTargetIndex, setDropTargetIndex] = useState<number | null>(null);
 
-    useEffect(() => {
-        if (roomId) {
-            const unsubscribe =
-                onSnapshot(doc(roomsCollectionRef, roomId), (snapshot) => {
-                    if (snapshot.exists()) {
+    const handleDragStart = (index: number) => {
+        setDraggedIndex(index);
+    };
 
-                        const roomData = snapshot.data() as Room
-                        setRoom(roomData)
-                    }
-                });
-            return () => unsubscribe();
-        };
+    const handleDragOver = (e: React.DragEvent<HTMLTableRowElement>, index: number) => {
+        e.preventDefault();
+        if (draggedIndex === null) return
+        setDropTargetIndex(index);
+    };
 
-    }, [roomId]);
-
+    const handleDrop = (e: React.DragEvent<HTMLTableRowElement>, index: number) => {
+        e.preventDefault();
+        if (draggedIndex === null) return
+        const newQueue = [...currentQueue];
+        newQueue.splice(index, 0, newQueue.splice(draggedIndex, 1)[0]);
+        setCurrentQueue(newQueue);
+        setDraggedIndex(null);
+        setDropTargetIndex(null);
+    };
 
     if (!roomId) {
-        return (
-            <h1 className="admin no-room">
-                Sala no encontrada
-            </h1>
-        )
+        return (<h1 className="admin no-room">Sala no encontrada </h1>)
     }
-
     return (
         <>
-            <div>
-                <h1>Codigo de Sala: {roomId}</h1>
-                <hr />
+            <h1>Sala {roomId}</h1>
+            <div className="queue-table-container">
                 <table className='admin-queue'>
                     <caption>
                         <div className="header">
-                            <div className='queue-info'>
-                                <div className="created_by">
-                                    Fila {room?.created_by} {user.songs_db}
-                                </div>
-                                <button onClick={() => { setAddingToQueue(true) }}>&#43;</button>
-                            </div>
+                            <h3 className="created_by">
+                                {/* Fila {room?.created_by} {user.songs_db}  */}
+                                {dropTargetIndex} - {draggedIndex}
+                            </h3>
                         </div>
                     </caption>
                     <thead>
-                        <tr>
-                            <th data-cell="Código">Codigo</th>
-                            <th data-cell="Info">Info</th>
-                            <th data-cell="Mesa">Mesa</th>
-                            <th data-cell="Canta">Canta</th>
+                        <tr className="queue-item">
+                            <th></th>
+                            <th><table className="header-data">
+                                <thead>
+                                    <tr>
+                                        <td data-cell="Código">Codigo</td>
+                                        <td data-cell="Mesa">Mesa</td>
+                                        <td data-cell="Canta">Canta</td>
+                                        <td data-cell="Cancion" >Cancion</td>
+                                    </tr>
+                                </thead>
+                            </table></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {room?.currentQueue.map((s, index) => {
+                        {currentQueue.map((s, index) => {
                             return (
-                                <tr key={index}>
-                                    <th data-cell="Código">{s.song.id}</th>
-                                    <th data-cell="Info">
-                                        <ul>
-                                            <li>
-                                                Titulo: {s.song.song_name}
-                                            </li>
-                                            <li>
-                                                Artista: {s.song.artist}
-                                            </li>
-                                        </ul>
-                                    </th>
-                                    {s.table && <th data-cell="Mesa">{s.table}</th>}
-                                    <th data-cell="Canta">{s.singer}</th>
-                                </tr >
+                                <>
+                                    {(dropTargetIndex! <= draggedIndex!) && (dropTargetIndex === index)
+                                        && <tr key={`top-preview-line ${index}`} className="preview-line" />}
+                                    <tr
+                                        key={index}
+                                        className="queue-item"
+                                        draggable="true"
+                                        onDragOver={(e) => handleDragOver(e, index)}
+                                        onDrop={(e) => handleDrop(e, index)}
+                                    >
+
+                                        <td data-cell="queue-song-move-col">
+                                            <div className="queue-song-move-container">
+                                                <HambButton
+                                                    className="queue-song-move"
+                                                    draggable="true"
+                                                    onDragStart={() => handleDragStart(index)}
+
+                                                />
+                                            </div>
+                                        </td>
+                                        <td><table className="row-data">
+                                            <tbody>
+                                                <tr>
+                                                    <td data-cell="Código">{s.song.id}</td>
+                                                    {s.table && <td data-cell="Mesa">{s.table}</td>}
+                                                    <td data-cell="Canta">{s.singer}</td>
+                                                    <td data-cell="Cancion"><ul><li><i>{s.song.song_name}</i></li>
+                                                        <li><strong>{s.song.artist}</strong></li>
+                                                    </ul>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table></td>
+                                        <td data-cell="queue-song-buttons-col">
+                                            <div className="queue-song-buttons-container">
+                                                <DeleteButton className="delete-from-queue-button" />
+                                                <DoneButton onClick={() => { markDone({ item: s }) }} className="mark-done-button " />
+                                            </div>
+                                        </td>
+                                    </tr >
+                                    {(dropTargetIndex! >= draggedIndex!) && (dropTargetIndex === index)
+                                        && <tr key={`bottom-preview-line ${index}`} className="preview-line" />}
+                                </>
                             )
                         })}
-
                     </tbody>
                 </table>
             </div>
-            {addingToQueue &&
-                <AdminAddToQueueDialog roomId={roomId} open={addingToQueue} setOpen={setAddingToQueue} />}
         </>
-
     );
 };
 
 export default AdminRoom
 
 function AdminAddToQueueDialog({ roomId, open, setOpen }: { roomId: string, open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
-    const { addToQueue } = useSongsQueue(roomId, true)
+    const { addToQueue } = useRoom({ roomId, subscribe: true })
     const { songs, querySongs } = useSongs(roomId)
     const [data, setData] = useState<Omit<QueueItem, 'created_at'>>({
         singer: "",
