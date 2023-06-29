@@ -1,36 +1,42 @@
+import { useState } from "react";
 import "./Buttons.css"
 
+interface MyButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+    baseClassName: string;
+}
+
+function MyButton({ baseClassName, className, ...props }: MyButtonProps) {
+    return (
+        <button
+            type="button"
+            className={`${baseClassName} ${className || ""}`}
+            {...props}
+        >
+            <span className={`${baseClassName}-span`}></span>
+        </button>
+    );
+}
+
 export function PrevButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
-    return <button type='button' className="nextbutton"  {...props}  >
-        <span className="prevButton-span"></span>
-    </button>
+    return <MyButton baseClassName="prevButton" {...props} />;
 }
 export function NextButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
-    return <button type='button' className="nextbutton"  {...props}  >
-        <span className="nextButton-span"></span>
-    </button>
+    return <MyButton baseClassName="nextButton"  {...props} />
 }
 
 export function CancelButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
-    return <button type='button' className="cancelButton"  {...props}  >
-        <span className="cancelButton-span"></span>
-    </button>
-}
-export function SearchButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
-    return <button type='button' className="searchButton"  {...props}  >
-        <span className="searchButton-span"></span>
-    </button>
+    return <MyButton baseClassName="cancelButton" {...props} />;
 }
 
-export function DeleteButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
-    return <button type='button' className="deleteButton"  {...props}  >
-        <span className="deleteButton-span"></span>
-    </button>
+export function SearchButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+    return <MyButton baseClassName="searchButton" {...props} />;
 }
+export function DeleteButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+    return <MyButton baseClassName="deleteButton" {...props} />;
+}
+
 export function DoneButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
-    return <button type='button' className="doneButton"  {...props}  >
-        <span className="doneButton-span"></span>
-    </button>
+    return <MyButton baseClassName="doneButton" {...props} />;
 }
 export function HambButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
     return (
@@ -39,4 +45,25 @@ export function HambButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>)
             <div className="hamb-bar"></div>
             <div className="hamb-bar"></div>
         </button>)
+}
+
+interface OnOffButtonProps {
+    onText: string;
+    offText: string;
+    onToggle: () => void;
+}
+
+export function OnOffButton({ onText, offText, onToggle }: OnOffButtonProps) {
+    const [isOn, setIsOn] = useState(false);
+
+    const handleToggle = () => {
+        setIsOn(!isOn);
+        onToggle();
+    };
+
+    return (
+        <button className="onOffButton" onClick={handleToggle}>
+            {isOn ? onText : offText}
+        </button>
+    );
 }

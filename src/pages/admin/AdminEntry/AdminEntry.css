@@ -1,4 +1,14 @@
-.admin-landing {
+.admin {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    text-align: center;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-login {
     display: flex;
     flex-direction: column;
     justify-items: center;
@@ -10,14 +20,14 @@
     justify-content: center;
 }
 
-.admin-landing form {
+.admin-login form {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1em;
     justify-items: center;
 }
 
-.admin-landing form label {
+.admin-login form label {
     text-align: left;
     position: relative;
     width: 250px;
@@ -55,7 +65,7 @@
     justify-items: center;
 
 }
- 
+
 .create-room-buttons {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -74,4 +84,3 @@
     background-color: rgb(var(--primary-rgb));
     width: 100px;
 }
-
