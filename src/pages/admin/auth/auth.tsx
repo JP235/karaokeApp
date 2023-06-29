@@ -1,9 +1,9 @@
 import { signInWithEmailAndPassword } from "firebase/auth"
 import { getDoc, doc } from "firebase/firestore"
-import { fireAuth, usersCollectionRef } from "../firebase-config"
-import { UserData } from "../myTypes"
+import { fireAuth, usersCollectionRef } from "../../../firebase-config"
+import { UserData } from "../../../myTypes"
 import { useState, FormEvent, useContext } from "react"
-import { ErrorsContext, LoadingStateContext, UserContext } from "../Contexts"
+import { ErrorsContext, LoadingStateContext, UserContext } from "../../../Contexts"
 import { useNavigate } from "react-router-dom"
 
 
@@ -58,31 +58,33 @@ const LoginForm = () => {
     };
 
     return (
-        <form className="login-form" onSubmit={handleSubmit}>
-            <label>
-                <span className="labelName">
-                    Email
-                </span>
-                <input
-                    className="labelInput"
-                    type="email"
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                />
-            </label>
-            <label>
-                <span className="labelName">
-                    Contraseña
-                </span>
-                <input
-                    className="labelInput"
-                    type="password"
-                    value={password}
-                    onChange={(event) => setPassword(event.target.value)}
-                />
-            </label>
-            <button type="submit" value="Sign In" >Enviar</button>
-        </form>
+        <div className="admin-login">
+            <form className="login-form" onSubmit={handleSubmit}>
+                <label>
+                    <span className="labelName">
+                        Email
+                    </span>
+                    <input
+                        className="labelInput"
+                        type="email"
+                        value={email}
+                        onChange={(event) => setEmail(event.target.value)}
+                    />
+                </label>
+                <label>
+                    <span className="labelName">
+                        Contraseña
+                    </span>
+                    <input
+                        className="labelInput"
+                        type="password"
+                        value={password}
+                        onChange={(event) => setPassword(event.target.value)}
+                    />
+                </label>
+                <button type="submit" value="Sign In" >Enviar</button>
+            </form>
+        </div>
     );
 };
 

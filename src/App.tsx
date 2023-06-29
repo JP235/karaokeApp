@@ -5,7 +5,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { LanguageContext } from './Contexts';
 import { useContext } from "react"
 import AdminLanding from './pages/admin/AdminEntry/AdminEntry';
-import LoginForm from './auth/auth';
+import LoginForm from './pages/admin/auth/auth';
 import AdminDashboard from './pages/admin/AdminDashboard/AdminDashboard';
 import AdminRoom from './pages/admin/AdminRoom/AdminRoom';
 import UserRoom from './pages/users/room/UserRoom';

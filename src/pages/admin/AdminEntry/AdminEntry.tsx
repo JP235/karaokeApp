@@ -22,10 +22,7 @@ function AdminLanding() {
     
 
     return (
-        <div className="admin-landing">
-            <span className="admin landingText">
-                Karaoke App
-            </span>
+        <div className="admin">
             <Outlet />
             {loadingState === "loading" && <span className="logginIn">Cargando...</span>}
             {error !== undefined && <div className="error"> {error} </div>}

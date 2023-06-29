@@ -3,14 +3,19 @@
 .cancelButton,
 .searchButton,
 .prevButton,
-.nextbutton {
+.nextButton {
     background-color: transparent;
     padding: 0;
     border-radius: 50%;
 }
 
+.onOffButton {
+    padding: 0.5rem;
+    border-radius: 4px;
+}
+
 .prevButton:disabled span,
-.nextbutton:disabled span {
+.nextButton:disabled span {
     filter: invert(0.3);
     border: 0px
 }

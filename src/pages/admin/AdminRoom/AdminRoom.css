@@ -2,16 +2,10 @@
     font-size: 40px;
 }
 
-.content:has(.admin) {
-    height: 80vh;
-    width: max(calc(95vw - 1rem), calc(90vw + 1rem));
-    padding: 0.5rem;
-}
-
 .queue-table-container {
     width: 100%;
     max-width: 700px;
-    max-height: 500px;
+    max-height: 700px;
     padding-bottom: 1em;
     border-radius: 15px;
     overflow-y: scroll;
@@ -20,15 +14,22 @@
 .admin-queue {
     width: 100%;
     max-width: 700px;
-    max-height: 300px;
     background-color: rgb(var(--light-rgb), 20%);
-    overflow: scroll;
+    overflow-y: scroll;
 }
 
 .admin-queue caption {
-    min-height: 2rem;
-    background-color: rgb(var(--dark-rgb), 80%);
+    /* min-height: 3rem; */
+    background-color: rgb(var(--primary-rgb), 95%);
+    padding: 1rem;
     color: rgb(var(--light-rgb));
+}
+
+.order-buttons-container {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-items: center;
 }
 
 .admin-queue thead {
@@ -107,13 +108,15 @@ button.queue-song-move {
     margin-right: 0.2rem;
 }
 
-.delete-from-queue-button {
+button.delete-from-queue-button {
     background-color: rgb(var(--accent2-rgb));
     filter: hue-rotate(10deg);
+    border-radius: 4px;
 }
 
-.mark-done-button {
+button.mark-done-button {
     background-color: rgb(var(--primary-rgb));
+    border-radius: 4px;
 }
 
 .mark-done-button>span,
@@ -137,10 +140,6 @@ button.queue-song-move {
     background-color: rgb(var(--accent1-rgb));
 }
 
-/* 
-table tbody {
-    position: relative;
-} */
 
 table table {
     width: 100%;
@@ -180,7 +179,7 @@ table table th:nth-child(2) {
 
     table table td {
         display: grid;
-        grid-template-columns: 5em 10em;
+        grid-template-columns: 5em 1fr;
         max-width: 100%;
         text-align: left;
         /* align-items: center; */

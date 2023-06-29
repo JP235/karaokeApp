@@ -1,16 +1,15 @@
 import "./AdminRoom.css"
-import { FormEvent, useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { UserContext } from '../../../Contexts';
 import { QueueItem } from "../../../myTypes";
 import { useSongs, useRoom } from "../../../components/hooks";
-import { DeleteButton, DoneButton, HambButton } from "../../../components/Buttons/Buttons";
+import { DeleteButton, DoneButton, HambButton, OnOffButton } from "../../../components/Buttons/Buttons";
+import React, { useState, FormEvent } from "react";
 
 const AdminRoom = () => {
-    const { user } = useContext(UserContext)
+
     const params = useParams()
     const roomId = params.roomId
-    const { room, currentQueue, markDone, setCurrentQueue } = useRoom({ roomId, subscribe: true })
+    const { currentQueue, markDone, setQueue, setSortMethod } = useRoom({ roomId, subscribe: true })
     const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
     const [dropTargetIndex, setDropTargetIndex] = useState<number | null>(null);
 
@@ -29,7 +28,7 @@ const AdminRoom = () => {
         if (draggedIndex === null) return
         const newQueue = [...currentQueue];
         newQueue.splice(index, 0, newQueue.splice(draggedIndex, 1)[0]);
-        setCurrentQueue(newQueue);
+        setQueue(newQueue);
         setDraggedIndex(null);
         setDropTargetIndex(null);
     };
@@ -43,11 +42,13 @@ const AdminRoom = () => {
             <div className="queue-table-container">
                 <table className='admin-queue'>
                     <caption>
-                        <div className="header">
-                            <h3 className="created_by">
-                                {/* Fila {room?.created_by} {user.songs_db}  */}
-                                {dropTargetIndex} - {draggedIndex}
-                            </h3>
+                        <div className="order-buttons-container">
+                            <span>
+                                Alternar Mesas
+                            </span>
+                            <OnOffButton onText={"ON"} offText={"OFF"} onToggle={() => {
+                                setSortMethod(p => p === "1" ? "2" : "1")
+                            }} />
                         </div>
                     </caption>
                     <thead>
@@ -59,7 +60,7 @@ const AdminRoom = () => {
                                         <td data-cell="Código">Codigo</td>
                                         <td data-cell="Mesa">Mesa</td>
                                         <td data-cell="Canta">Canta</td>
-                                        <td data-cell="Cancion" >Cancion</td>
+                                        <td data-cell="Canción" >Canción</td>
                                     </tr>
                                 </thead>
                             </table></th>
@@ -67,9 +68,9 @@ const AdminRoom = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {currentQueue.map((s, index) => {
+                        {currentQueue.map((item, index) => {
                             return (
-                                <>
+                                <React.Fragment key={item.created_at}>
                                     {(dropTargetIndex! <= draggedIndex!) && (dropTargetIndex === index)
                                         && <tr key={`top-preview-line ${index}`} className="preview-line" />}
                                     <tr
@@ -78,6 +79,7 @@ const AdminRoom = () => {
                                         draggable="true"
                                         onDragOver={(e) => handleDragOver(e, index)}
                                         onDrop={(e) => handleDrop(e, index)}
+
                                     >
 
                                         <td data-cell="queue-song-move-col">
@@ -93,11 +95,11 @@ const AdminRoom = () => {
                                         <td><table className="row-data">
                                             <tbody>
                                                 <tr>
-                                                    <td data-cell="Código">{s.song.id}</td>
-                                                    {s.table && <td data-cell="Mesa">{s.table}</td>}
-                                                    <td data-cell="Canta">{s.singer}</td>
-                                                    <td data-cell="Cancion"><ul><li><i>{s.song.song_name}</i></li>
-                                                        <li><strong>{s.song.artist}</strong></li>
+                                                    <td data-cell="Código">{item.song.id}</td>
+                                                    {item.table && <td data-cell="Mesa">{item.table}</td>}
+                                                    <td data-cell="Canta">{item.singer}</td>
+                                                    <td data-cell="Canción"><ul><li><i>{item.song.song_name}</i></li>
+                                                        <li><strong>{item.song.artist}</strong></li>
                                                     </ul>
                                                     </td>
                                                 </tr>
@@ -106,18 +108,18 @@ const AdminRoom = () => {
                                         <td data-cell="queue-song-buttons-col">
                                             <div className="queue-song-buttons-container">
                                                 <DeleteButton className="delete-from-queue-button" />
-                                                <DoneButton onClick={() => { markDone({ item: s }) }} className="mark-done-button " />
+                                                <DoneButton onClick={() => { markDone({ item: item }) }} className="mark-done-button " />
                                             </div>
                                         </td>
                                     </tr >
                                     {(dropTargetIndex! >= draggedIndex!) && (dropTargetIndex === index)
                                         && <tr key={`bottom-preview-line ${index}`} className="preview-line" />}
-                                </>
+                                </React.Fragment>
                             )
                         })}
                     </tbody>
                 </table>
-            </div>
+            </div >
         </>
     );
 };
