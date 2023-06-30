@@ -110,7 +110,6 @@ function QueueBodyCanEdit(
                         onDrop={(e) => handleDrop(e, index)}
 
                     >
-
                         <td data-cell="queue-song-move-col">
                             <div className="queue-song-move-container">
                                 <HambButton
@@ -146,6 +145,9 @@ function QueueBodyCanEdit(
                 </React.Fragment>
             )
         })}
+        <tr className="queueEnd queue-item"><td><table className="row-data">
+            
+        </table></td></tr>
     </tbody>)
 }
 function QueueBodyNoEdit({ currentQueue }: { currentQueue: QueueItem[] }) {

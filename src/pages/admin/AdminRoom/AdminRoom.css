@@ -54,9 +54,11 @@
 
 .admin-queue caption {
     /* min-height: 3rem; */
-    background-color: rgb(var(--primary-rgb), 95%);
+    background-color: rgb(var(--dark-rgb), 95%);
     padding: 1rem;
     color: rgb(var(--light-rgb));
+    border-radius: 15px;
+    border: 1px solid white;
 }
 
 .capltion-utils {

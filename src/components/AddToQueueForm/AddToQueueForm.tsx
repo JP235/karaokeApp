@@ -14,10 +14,9 @@ function AddToQueueForm({ roomId, song, close, admin, open }: { open: boolean, a
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault()
-        setLoadingState("loading")
         if (song === undefined || singer === "" || tableNumber === -1) return
+        setLoadingState("loading")
         try {
-            console.log(singer, tableNumber, song);
             await addToQueue({ singer, tableNumber, song })
             setLoadingState("loaded")
             close()

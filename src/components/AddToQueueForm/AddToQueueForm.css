@@ -9,4 +9,10 @@
     gap: 1em;
     justify-items: center;
 }
+.queue-song-dialog form>label {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+}
 
