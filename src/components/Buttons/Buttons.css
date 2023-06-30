@@ -1,3 +1,4 @@
+.plusButton,
 .doneButton,
 .deleteButton,
 .cancelButton,
@@ -5,8 +6,13 @@
 .prevButton,
 .nextButton {
     background-color: transparent;
+    border-color: transparent;
     padding: 0;
     border-radius: 50%;
+    height: 2em;
+    width: 2em;
+    margin: 0;
+    border: 0;
 }
 
 .onOffButton {
@@ -20,6 +26,7 @@
     border: 0px
 }
 
+.plusButton-span,
 .doneButton-span,
 .deleteButton-span,
 .cancelButton-span,
@@ -65,6 +72,10 @@
 
 .doneButton-span {
     background-image: url(../../assets/done.svg);
+}
+
+.plusButton-span {
+    background-image: url(../../assets/plus.svg);
 }
 
 .hamb-bar {

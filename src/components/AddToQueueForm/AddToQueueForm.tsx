@@ -2,8 +2,8 @@ import "./AddToQueueForm.css"
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { Song } from "../../myTypes";
 import { ErrorsContext, LoadingStateContext } from "../../Contexts";
-import { useRoom } from "../hooks";
 import { LoadingError, catchErrorFunction } from "../../pages/users/landing/UserLanding";
+import { useRoom } from "../Hooks/useRoom";
 
 function AddToQueueForm({ roomId, song, close, admin, open }: { open: boolean, admin?: boolean, close: () => void, roomId: string, song?: Song }) {
     const [singer, setSinger] = useState("");
@@ -11,10 +11,6 @@ function AddToQueueForm({ roomId, song, close, admin, open }: { open: boolean, a
     const { setError } = useContext(ErrorsContext)
     const { setLoadingState } = useContext(LoadingStateContext)
     const { addToQueue } = useRoom({ roomId, subscribe: false })
-
-    useEffect(() => {
-
-    }, []);
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault()

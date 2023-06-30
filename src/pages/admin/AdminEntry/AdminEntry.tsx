@@ -3,29 +3,24 @@ import { Outlet } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { ErrorsContext, LoadingStateContext, UserContext } from "../../../Contexts";
 import { useNavigate } from "react-router-dom";
+import { LoadingError } from "../../users/landing/UserLanding";
 
 function AdminLanding() {
     const navigate = useNavigate()
-    const { loadingState } = useContext(LoadingStateContext)
-    const { error } = useContext(ErrorsContext)
+    const { setLoadingState } = useContext(LoadingStateContext)
     const { loggedIn } = useContext(UserContext)
 
     useEffect(() => {
-        if (!loggedIn) {
-            navigate("/admin/login")
-        }    
-        
-      return () => {
-        ;
-      };
-    }, []);
-    
-
+        setLoadingState("loading")
+        if (loggedIn) {
+            setLoadingState("loaded")
+            navigate("/admin/dashboard", { replace: true })
+        }
+    }, [loggedIn])
     return (
         <div className="admin">
             <Outlet />
-            {loadingState === "loading" && <span className="logginIn">Cargando...</span>}
-            {error !== undefined && <div className="error"> {error} </div>}
+            <LoadingError />
         </div >
     )
 }

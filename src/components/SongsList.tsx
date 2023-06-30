@@ -2,6 +2,7 @@ import { useRef, useContext, useEffect } from "react";
 import { LoadingStateContext } from "../Contexts";
 import { Song } from "../myTypes";
 import { PrevButton, NextButton } from "./Buttons/Buttons";
+import { useSongs } from "./Hooks/useSongs";
 
 
 interface SongsTableParams {
@@ -10,16 +11,15 @@ interface SongsTableParams {
         curr_page: Song[];
         next_page: Song[];
     },
-    currPage: number,
+    roomId: string,
     setSelectedSong: React.Dispatch<React.SetStateAction<Song | undefined>>,
-    prevPage: () => void
-    nextPage: () => void
 }
 
 
-function SongsTable({ songs, currPage, prevPage, nextPage, setSelectedSong }: SongsTableParams) {
+function SongsTable({ songs, setSelectedSong, roomId }: SongsTableParams) {
     const tableRef = useRef<HTMLTableElement>(null)
     const { loadingState } = useContext(LoadingStateContext)
+    const { currPage, prevPage, nextPage } = useSongs(roomId)
 
     useEffect(() => {
         if (tableRef.current) {
