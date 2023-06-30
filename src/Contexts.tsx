@@ -1,7 +1,9 @@
 import React, { createContext, useEffect, useState } from 'react';
 import { TLanguages, LoadignState, Room, UserData } from './myTypes';
-import { fireAuth, usersCollectionRef } from './firebase-config';
 import { getDoc, doc } from 'firebase/firestore';
+import { User, getAuth, onAuthStateChanged } from 'firebase/auth';
+import { usersCollectionRef } from './firebase-config';
+import { usefireAuthProvider } from './components/Hooks/useFireAuth';
 
 interface LoadignStateContextValue {
     loadingState: LoadignState
@@ -105,13 +107,13 @@ interface UserContextValue {
     setLoggedIn: (loggedIn: boolean) => void;
     user: UserData;
     setUser: (user: UserData) => void;
-    refreshUser: () => Promise<void>
+    // refreshUser: () => Promise<void>
 
 }
 
 export const UserContext = createContext<UserContextValue>({
     loggedIn: false,
-    refreshUser: async () => { },
+    // refreshUser: async () => { },
     setLoggedIn: () => { },
     user: {
         name: '',
@@ -132,33 +134,71 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         permissions: "",
         active_room: "-1",
         songs_db: "",
-        created_rooms: -1
+        created_rooms: 0
     });
 
     useEffect(() => {
-        refreshUser()
+        const fireAuth = getAuth()
+        const unsub = onAuthStateChanged(fireAuth, currUser => {
+            if (currUser?.email) {
+                getDoc(doc(usersCollectionRef, currUser.email)).then(user => {
+                    if (!user.exists) throw new Error("User Doc doesn't exist")
+                    const userData = user.data() as unknown as UserData
+                    setLoggedIn(true)
+                    setUser({ ...userData })
+                })
+            }
+        })
+        return () => {
+            unsub()
+        }
     }, [])
 
-    const refreshUser = async () => {
-        const currUser = fireAuth.currentUser
-        if (currUser?.email) {
-            const user = await getDoc(doc(usersCollectionRef, currUser.email))
-            if (!user.exists) throw new Error("User Doc doesn't exist")
-            const userData = user.data() as unknown as UserData
-
-            setUser({ ...userData })
-        }
-    }
 
     return (
         <UserContext.Provider value={{
             loggedIn,
             setLoggedIn,
             user,
-            setUser, refreshUser
+            setUser
         }}>
             {children}
         </UserContext.Provider>
     );
 };
+
+interface AuthContextValue {
+    user: User | null;
+    signinWithGoogle: (callback: VoidFunction) => void;
+    signInWithPassword: ({ callback, email, password }: { callback: VoidFunction, email: string, password: string }) => void
+    signout: (callback: VoidFunction) => void;
+}
+
+export const AuthContext = React.createContext<AuthContextValue>(null!);
+
+
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+    const fireAuthProvider = usefireAuthProvider()
+
+    const signinWithGoogle = (callback: VoidFunction) => {
+        return fireAuthProvider.signinWithGoogle({ callback });
+    };
+    const signInWithPassword = ({ callback, email, password }: { callback: VoidFunction, email: string, password: string }) => fireAuthProvider.signInWithPassword({ callback, email, password });
+
+    const signout = (callback: VoidFunction) => {
+        return fireAuthProvider.signout(() => {
+            callback();
+        });
+    };
+
+    const value = { user: fireAuthProvider.user, signInWithPassword, signinWithGoogle, signout };
+    // console.log(value.user);
+    // console.log(fireAuthProvider.user);
+
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
+
+export function useAuth() {
+    return React.useContext(AuthContext);
+}
 

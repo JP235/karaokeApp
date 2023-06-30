@@ -4,17 +4,18 @@ import { useParams } from "react-router-dom";
 import { clickAway } from "../../../App";
 import FilterSongsForm from "../../../components/FilterSongsForm/FilterSongsForm";
 import SongsTable from "../../../components/SongsList";
-import { useSongs } from "../../../components/hooks";
 import { LoadingError } from "../landing/UserLanding";
 import { Song } from "../../../myTypes";
 import AddToQueueForm from "../../../components/AddToQueueForm/AddToQueueForm";
+import { useSongs } from "../../../components/Hooks/useSongs";
 
 
 function UserRoom() {
     const { roomId } = useParams()
     const [filter, setFilter] = useState(false)
 
-    const { songs, currPage, prevPage, nextPage, info, querySongs, logSongs } = useSongs(roomId)
+    const { info, songs, filterByArtist,
+        filterByGenre } = useSongs(roomId)
 
     const [selectedArtist, setSelectedArtist] = useState("")
     const [selectedGenre, setSelectedGenre] = useState("");
@@ -28,16 +29,6 @@ function UserRoom() {
         };
     }, []);
 
-    const filterByArtist = () => {
-        if (!info.artists.includes(selectedArtist)) return
-        // filterSongs("ARTISTA", selectedArtist)
-        querySongs("ARTISTA", selectedArtist)
-    }
-    const filterByGenre = () => {
-        if (!info.genres.includes(selectedGenre)) return
-        querySongs("GENERO", selectedGenre)
-    }
-
     return (
         <div className="user-room">
             <h1>{roomId}</h1>
@@ -47,34 +38,37 @@ function UserRoom() {
                     <span className="filter-form-title">
                         <span className="searchButton-span"></span>
                         <h3>Filtrar</h3>
-                        <div className="dummy" />
+                        <div className="dummy space-fill" />
                     </span>
                     <div className="filter-forms">
                         <FilterSongsForm
                             onSubmit={(e) => {
                                 e.preventDefault()
                                 setSelectedGenre("")
-                                filterByArtist()
+                                filterByArtist(selectedArtist)
                             }} dataHints={info.artists} selected={selectedArtist} setSelected={setSelectedArtist} title={"Filtrar por Artista"} />
                         <FilterSongsForm
                             onSubmit={(e) => {
                                 e.preventDefault()
                                 setSelectedArtist("")
-                                filterByGenre()
+                                filterByGenre(selectedGenre)
                             }}
                             dataHints={info.genres} selected={selectedGenre} setSelected={setSelectedGenre} title={"Filtrar por Genero"} />
 
                     </div>
                 </div>
-                <SongsTable setSelectedSong={setSelectedSong} songs={songs} currPage={currPage} prevPage={prevPage} nextPage={nextPage} />
-                <AddToQueueForm
-                    song={selectedSong}
-                    close={() => {
-                        setSelectedSong(undefined);
-                    }}
-                    roomId={roomId ?? ""}
-                    open={selectedSong ? true : false}
-                />
+                {roomId && <>
+                    <SongsTable setSelectedSong={setSelectedSong} roomId={roomId} songs={songs} />
+                    <AddToQueueForm
+                        song={selectedSong}
+                        close={() => {
+                            setSelectedSong(undefined);
+                        }}
+                        roomId={roomId}
+                        open={selectedSong ? true : false}
+                    />
+                </>
+                }
             </div>
             <LoadingError />
         </div>

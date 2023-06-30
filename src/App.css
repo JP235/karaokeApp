@@ -35,6 +35,23 @@
     filter: blur(5px);
     z-index: -1;
 }
+.navbar {
+    width: 100%;
+    position: absolute;
+    top: 0;
+
+
+}
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+nav li {
+    margin: 0 10px;
+}
 
 .content {
     position: relative;

@@ -4,7 +4,7 @@ import { CancelButton, SearchButton } from "../Buttons/Buttons";
 
 interface FilterFormProps {
     onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-    dataHints: string[];
+    dataHints?: string[];
     selected: string;
     setSelected: (value: string) => void;
     title: string
@@ -21,15 +21,14 @@ function FilterSongsForm({ onSubmit, dataHints, selected, setSelected, title }: 
                     onChange={(event) => {
                         setSelected(event.target.value)
                     }}
-                    list={title}
+                    list={dataHints ? title : undefined}
                     placeholder={`${title}`} />
                 <SearchButton
-                    disabled={!dataHints.includes(selected)}
+                    disabled={dataHints === undefined ? false : !dataHints.includes(selected)}
                     type="submit"
                     title={`${title}`} />
-
                 <datalist id={title}>
-                    {dataHints.sort().map((val) => (
+                    {dataHints && dataHints.sort().map((val) => (
                         <option key={val} value={val} />
                     ))}
                 </datalist>

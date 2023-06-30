@@ -38,6 +38,9 @@ export function DeleteButton(props: React.ButtonHTMLAttributes<HTMLButtonElement
 export function DoneButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
     return <MyButton baseClassName="doneButton" {...props} />;
 }
+export function PlusButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+    return <MyButton baseClassName="plusButton" {...props} />;
+}
 export function HambButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
     return (
         <button type='button' {...props}  >
@@ -54,7 +57,7 @@ interface OnOffButtonProps {
 }
 
 export function OnOffButton({ onText, offText, onToggle }: OnOffButtonProps) {
-    const [isOn, setIsOn] = useState(false);
+    const [isOn, setIsOn] = useState(true);
 
     const handleToggle = () => {
         setIsOn(!isOn);

@@ -1,12 +1,10 @@
-import { getDoc, doc, collection, query, orderBy, limit, DocumentData, Query, where, CollectionReference, QueryDocumentSnapshot, QueryFieldFilterConstraint, getCountFromServer, arrayRemove, arrayUnion, updateDoc, onSnapshot, startAfter, documentId } from "firebase/firestore";
-import { useContext, useEffect, useState } from "react";
-import { roomsCollectionRef, db } from "../firebase-config";
-import { catchErrorFunction } from "../pages/users/landing/UserLanding";
-import { formattedDate, getSongsFromQuery } from "./HelperFunctions";
-import { LoadingStateContext, ErrorsContext } from "../Contexts";
-import { Song, Room, QueueItem } from "../myTypes";
-
-
+import { CollectionReference, DocumentData, QueryFieldFilterConstraint, QueryDocumentSnapshot, getDoc, doc, collection, where, documentId, query, orderBy, limit, getCountFromServer, startAfter, Query, FieldPath } from "firebase/firestore"
+import { useContext, useState, useEffect } from "react"
+import { LoadingStateContext, ErrorsContext } from "../../Contexts"
+import { roomsCollectionRef, db } from "../../firebase-config"
+import { Song, Room } from "../../myTypes"
+import { catchErrorFunction } from "../../pages/users/landing/UserLanding"
+import { getSongsFromQuery } from "../HelperFunctions"
 
 export const useSongs = (roomId: string | undefined, start?: boolean) => {
     const { setLoadingState } = useContext(LoadingStateContext)
@@ -71,9 +69,10 @@ export const useSongs = (roomId: string | undefined, start?: boolean) => {
 
         if (!songsCollection) throw new Error("no songs collection")
 
-        const queryWithFieldValue = async (field: "GENERO" | "ARTISTA" | "TITULO" | "id", val: string) => {
+        const queryWithFieldValue = async (field: "GENERO" | "ARTISTA" | "TITULO", val: string) => {
             let whereQ: QueryFieldFilterConstraint[]
             let relevantInfo: string[]
+
             switch (field) {
                 case "GENERO":
                     relevantInfo = info.genres
@@ -92,9 +91,6 @@ export const useSongs = (roomId: string | undefined, start?: boolean) => {
                 case "TITULO":
                     whereQ = [where(field, ">=", val), where(field, "<", `${val}~`)]
                     break
-                case "id":
-                    whereQ = [where(documentId(), ">=", val), where(field, "<", `${val}~`)]
-                    break
                 default:
                     whereQ = []
                     break;
@@ -104,9 +100,7 @@ export const useSongs = (roomId: string | undefined, start?: boolean) => {
             const q = query(songsCollection!, ...whereQ, orderBy(field), limit(pageLimit))
             const qcount = query(songsCollection!, ...whereQ, orderBy("ARTISTA"))
             const qcountdoc = getCountFromServer(qcount)
-            const fullData = getSongsFromQuery(qcount)
             console.log("count: ", (await qcountdoc).data().count)
-            console.log((await fullData).pageSongs)
             const { pageSongs, lastDoc } = await getSongsFromQuery(q)
 
             const nextq = query(songsCollection!, ...whereQ, orderBy("ARTISTA"), limit(pageLimit), startAfter(lastDoc))
@@ -126,8 +120,30 @@ export const useSongs = (roomId: string | undefined, start?: boolean) => {
 
         try {
             // "preload" next page
+            if (field == "id") {
+                const songq = await getDoc(doc(songsCollection, val))
+                if (songq.exists()) {
+                    const data = songq.data()
+                    const song = {
+                        id: val,
+                        artist: String(data.ARTISTA),
+                        song_name: String(data.TITULO).toLowerCase(),
+                        genre: String(data.GENERO).toLowerCase()
+                    } as Song
+                    setSongs({ prev_page: [], curr_page: [song], next_page: [] })
+                    setLoadingState("loaded")
+                }
+                return {
+                    id: "",
+                    artist: "",
+                    song_name: "",
+                    genre: ""
+                }
+            }
             const { pageSongs, page2Songs, lastDoc2 } = (field && val) ? await queryWithFieldValue(field, val) : await queryAllSongs()
+
             setSongs({ prev_page: [], curr_page: [...pageSongs], next_page: page2Songs })
+            console.log(pageSongs);
             setLastSongInBatch(lastDoc2)
             setLoadingState("loaded")
         } catch (e) {
@@ -135,6 +151,22 @@ export const useSongs = (roomId: string | undefined, start?: boolean) => {
             // throw new Error(e)
         }
     }
+
+    const filterByArtist = (selectedArtist: string) => {
+        if (!info.artists.includes(selectedArtist)) return
+        // filterSongs("ARTISTA", selectedArtist)
+        querySongs("ARTISTA", selectedArtist)
+    }
+    const filterByGenre = (selectedGenre: string) => {
+        console.log(selectedGenre)
+
+        if (!info.genres.includes(selectedGenre)) return
+        querySongs("GENERO", selectedGenre)
+    }
+    const filterByID = (id: string) => {
+        querySongs("id", id)
+    }
+
     const logSongs = () => {
         console.log(songs);
 
@@ -181,130 +213,7 @@ export const useSongs = (roomId: string | undefined, start?: boolean) => {
     }
 
     return {
-        songs, currPage, prevPage, nextPage, info, querySongs, logSongs
-    }
-}
-
-
-
-export const useRoom = ({ roomId, subscribe }: { roomId?: string; subscribe?: boolean; }) => {
-    const [currentQueue, setCurrentQueue] = useState<QueueItem[]>([]);
-    const [pastQueue, setPastQueue] = useState<QueueItem[]>([]);
-    const [room, setRoom] = useState<Omit<Room, "currentQueue" | "pastQueue">>()
-    const [sortMethod, setSortMethod] = useState<"1" | "2">()
-
-    useEffect(() => {
-        if (roomId && subscribe) {
-            const roomRef = doc(roomsCollectionRef, roomId);
-            const unsubscribe = onSnapshot(roomRef, (roomSnap) => {
-                if (roomSnap.exists()) {
-                    const roomData = roomSnap.data() as Room
-                    setRoom({ created_by: roomData.created_by, song_db: roomData.song_db })
-                    setPastQueue(roomData.pastQueue ?? []);
-                    setCurrentQueue(roomData.currentQueue ?? []);
-                }
-            });
-            return () => unsubscribe();
-        }
-    }, [roomId]);
-
-    useEffect(() => {
-        switch (sortMethod) {
-            case "1":
-                setCurrentQueue(sortWithAlternatingTables(currentQueue) ?? []);
-                break;
-            case "2":
-                setCurrentQueue(sortByTime(currentQueue) ?? []);
-                break;
-            default:
-                console.log("here");
-                break;
-        }
-    }, [sortMethod, currentQueue.length])
-
-
-    async function addToQueue({ singer, song, tableNumber }: {
-        singer: string
-        song: Song, tableNumber?: number
-    }) {
-        if (!roomId) throw new Error("RoomId not defined")
-        const roomRef = doc(roomsCollectionRef, roomId);
-        const now = new Date()
-        const item: QueueItem = {
-            singer,
-            song,
-            table: tableNumber,
-            created_at: formattedDate(now)
-        }
-        await updateDoc(roomRef, {
-            currentQueue: arrayUnion(item)
-        });
-    }
-
-    async function markDone({ item }: { item: QueueItem; }) {
-        if (!roomId) throw new Error("RoomId not defined")
-        const roomRef = doc(roomsCollectionRef, roomId);
-        await updateDoc(roomRef, {
-            currentQueue: arrayRemove(item),
-            pastQueue: arrayUnion(item)
-        });
-    }
-
-    async function setQueue(queue: QueueItem[]) {
-        if (!roomId) throw new Error("RoomId not defined");
-        if (!queue) return
-        const roomRef = doc(roomsCollectionRef, roomId);
-        await updateDoc(roomRef, { currentQueue: queue });
-    }
-
-    function sortByTime(currQueue: QueueItem[]) {
-        const sortedQueue = [...currQueue];
-        sortedQueue.sort((a, b) => a.created_at.localeCompare(b.created_at));
-        return sortedQueue
-    }
-
-    function sortWithAlternatingTables(currQueue: QueueItem[]) {
-        // Create a copy of the queue array
-        const sortedQueue = [...currQueue];
-
-        // Sort the queue by created_at
-        sortedQueue.sort((a, b) => a.created_at.localeCompare(b.created_at));
-
-        // Group the queue items by table
-        const groups = new Map<number, QueueItem[]>();
-        for (const item of sortedQueue) {
-            if (item.table !== undefined) {
-                if (!groups.has(item.table)) {
-                    groups.set(item.table, []);
-                }
-                groups.get(item.table)!.push(item);
-            }
-        }
-
-        // Create a new queue with alternating tables
-        const result: QueueItem[] = [];
-        let done = false;
-        while (!done) {
-            done = true;
-            for (const group of groups.values()) {
-                if (group.length > 0) {
-                    result.push(group.shift()!);
-                    done = false;
-                }
-            }
-        }
-
-        // Add any remaining items without a table to the end of the queue
-        for (const item of sortedQueue) {
-            if (item.table === undefined) {
-                result.push(item);
-            }
-        }
-
-        return result;
-    }
-
-    return {
-        addToQueue, markDone, currentQueue, pastQueue, room, setCurrentQueue, setQueue, setSortMethod
+        songs, currPage, prevPage, nextPage, info, querySongs, logSongs, filterByArtist
+        , filterByGenre, filterByID
     }
 }

@@ -30,7 +30,7 @@ export type QueueItem = {
     singer: string;
     song: Song;
     table?: number;
-    created_at: string;
+    created_at: number;
 }
 
 export type Room = {
