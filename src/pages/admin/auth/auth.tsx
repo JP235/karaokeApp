@@ -1,19 +1,54 @@
-import { signInWithEmailAndPassword } from "firebase/auth"
+import { browserLocalPersistence, getAuth, setPersistence, signInWithEmailAndPassword } from "firebase/auth"
 import { getDoc, doc } from "firebase/firestore"
-import { fireAuth, usersCollectionRef } from "../../../firebase-config"
+import { usersCollectionRef } from "../../../firebase-config"
 import { UserData } from "../../../myTypes"
-import { useState, FormEvent, useContext } from "react"
-import { ErrorsContext, LoadingStateContext, UserContext } from "../../../Contexts"
-import { useNavigate } from "react-router-dom"
+import { useState, FormEvent, useContext, useEffect } from "react"
+import { ErrorsContext, LoadingStateContext, UserContext, useAuth } from "../../../Contexts"
+import { Navigate, Outlet, useLocation, useNavigate } from "react-router-dom"
+import { usefireAuthProvider } from "../../../components/Hooks/useFireAuth"
 
+export function RequireAuth() {
+    const auth = useAuth();
+    const location = useLocation();
 
+    if (!auth.user) {
+        // Redirect them to the /login page, but save the current location they were
+        // trying to go to when they were redirected. This allows us to send them
+        // along to that page after they login, which is a nicer user experience
+        // than dropping them off on the home page.
+        return <Navigate to="/login" state={{ from: location }
+        } />;
+    }
 
-
+    return <Outlet />;
+}
 
 const LoginForm = () => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const location = useLocation();
+    const state = location.state as { from: Location };
+    const from = state ? state.from.pathname : '/';
+    const [redirecting, setRedirecting] = useState(false)
+    const callback = () => navigate(from, { replace: true })
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const auth = usefireAuthProvider(
+        {
+            loggedInCallback: () => navigate(from, { replace: true }),
+            notLoggedInCallback: () => navigate("/", { replace: true })
+        }
+
+    );
+    useEffect(() => {
+        if (redirecting) return
+        if (auth.user) {
+            setRedirecting(true)
+            navigate(from, { replace: true });
+        }
+    }, [auth.user])
+
+
     const {
         setLoggedIn,
         setUser
@@ -26,6 +61,8 @@ const LoginForm = () => {
     const login = async ({ email, password }: { email: string, password: string }) => {
         setLoadingState("loading")
         try {
+            const fireAuth = getAuth()
+            await setPersistence(fireAuth, browserLocalPersistence)
             const userCredential = await signInWithEmailAndPassword(fireAuth, email, password)
             const useremail = userCredential.user.email
             if (useremail) {
@@ -54,7 +91,7 @@ const LoginForm = () => {
     }
     const handleSubmit = (event: FormEvent) => {
         event.preventDefault();
-        login({ email, password });
+        auth.signInWithPassword({ email, password, callback });
     };
 
     return (
@@ -84,8 +121,15 @@ const LoginForm = () => {
                 </label>
                 <button type="submit" value="Sign In" >Enviar</button>
             </form>
+            OR
+            <button onClick={() => auth.signinWithGoogle({ callback })}>
+                login with google
+            </button>
         </div>
     );
 };
+
+
+
 
 export default LoginForm
