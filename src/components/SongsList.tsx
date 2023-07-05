@@ -39,7 +39,7 @@ function SongsTable({ songs, setSelectedSong, roomId }: SongsTableParams) {
                     <tr>
                         <th data-cell="Artista">Artista</th>
                         <th data-cell="Titulo">Titulo</th>
-                        <th data-cell="Genero">Genero</th>
+                        {/* <th data-cell="Genero">Genero</th> */}
                     </tr>
                 </thead>
                 <tbody>
@@ -49,7 +49,7 @@ function SongsTable({ songs, setSelectedSong, roomId }: SongsTableParams) {
                             }>
                                 <td data-cell="Artista">{s.artist}</td>
                                 <td data-cell="Titulo">{s.song_name}</td>
-                                <td data-cell="Genero">{s.genre}</td>
+                                {/* <td data-cell="Genero">{s.genre}</td> */}
                             </tr >
                         )
                     })}
@@ -57,7 +57,7 @@ function SongsTable({ songs, setSelectedSong, roomId }: SongsTableParams) {
                         <tr>
                             <td style={{ textAlign: "center", fontStyle: "italic" }} >--</td>
                             <td style={{ textAlign: "center", fontStyle: "italic" }} >--</td>
-                            <td style={{ textAlign: "center", fontStyle: "italic" }} >--</td>
+                            {/* <td style={{ textAlign: "center", fontStyle: "italic" }} >--</td> */}
                         </tr >}
 
                 </tbody>

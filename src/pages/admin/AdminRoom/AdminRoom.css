@@ -3,14 +3,14 @@
 }
 
 .admin-add-song-container {
-    /* position: relative; */
-    width: 100%;
     max-width: 700px
 }
 
-.admin-add-song-container .queue-song-dialog {
-    width: 100%;
-    max-width: 700px;
+.admin-add-song-container,
+.admin-queue-song-dialog,
+.queue-song-dialog {
+    width: auto;
+    max-width: 500px;
 }
 
 .admin-add-song-header {

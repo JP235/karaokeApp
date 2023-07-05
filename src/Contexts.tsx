@@ -4,6 +4,22 @@ import { getDoc, doc } from 'firebase/firestore';
 import { User, getAuth, onAuthStateChanged } from 'firebase/auth';
 import { usersCollectionRef } from './firebase-config';
 import { usefireAuthProvider } from './components/Hooks/useFireAuth';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+import { TouchBackend } from 'react-dnd-touch-backend';
+
+
+export function DndProviderTouchAndMouse({ children }: { children: React.ReactNode }) {
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const backend = isTouchDevice ? TouchBackend : HTML5Backend;
+
+    return (
+        <DndProvider backend={backend}>
+            {children}
+        </DndProvider>
+    );
+
+}
 
 interface LoadignStateContextValue {
     loadingState: LoadignState

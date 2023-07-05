@@ -4,8 +4,9 @@ import { Song } from "../../myTypes";
 import { ErrorsContext, LoadingStateContext } from "../../Contexts";
 import { LoadingError, catchErrorFunction } from "../../pages/users/landing/UserLanding";
 import { useRoom } from "../Hooks/useRoom";
+import DialogWrapped from "../DialogWrapped/DialogWrapped";
 
-function AddToQueueForm({ roomId, song, close, admin, open }: { open: boolean, admin?: boolean, close: () => void, roomId: string, song?: Song }) {
+function AddToQueueForm({ roomId, song, close, admin, open, onSubmit }: { onSubmit?: VoidFunction, open: boolean, admin?: boolean, close: () => void, roomId: string, song?: Song }) {
     const [singer, setSinger] = useState("");
     const [tableNumber, setTableNumber] = useState<number>(-1);
     const { setError } = useContext(ErrorsContext)
@@ -23,12 +24,13 @@ function AddToQueueForm({ roomId, song, close, admin, open }: { open: boolean, a
         } catch (e) {
             catchErrorFunction({ e, fallbackMsg: "error adding song to queue", setLoadingState, setError })
         }
-
+        onSubmit && onSubmit()
     }
 
-
     return (
-        <dialog id="queue-song-dialog" className={open ? "queue-song-dialog open" : "queue-song-dialog"} open={open ? true : false}>
+        <DialogWrapped id="queue-song-dialog" className={open ? "queue-song-dialog open" : "queue-song-dialog"} open={open ? true : false}
+            onClose={() => close()}
+        >
             <div >
                 <h3>
                     Añadir a la fila
@@ -74,7 +76,7 @@ function AddToQueueForm({ roomId, song, close, admin, open }: { open: boolean, a
                 </div>
             </form>
             <LoadingError />
-        </dialog >
+        </DialogWrapped >
     )
 }
 

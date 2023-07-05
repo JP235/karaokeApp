@@ -8,6 +8,7 @@ import SongsList from "../../../components/SongsList";
 import SongsQueue from "../../../components/SongsQueue";
 import { Song } from "../../../myTypes";
 import "./AdminRoom.css"
+import DialogWrapped from "../../../components/DialogWrapped/DialogWrapped";
 
 
 const AdminRoom = () => {
@@ -43,7 +44,11 @@ function AdminAddToQueueDialog({ roomId, open, close }: { roomId: string, open: 
 
     return (
         <div className="admin-add-song-container">
-            <dialog id="queue-song-dialog" className={open ? "queue-song-dialog open" : "queue-song-dialog"} open={open}>
+            <DialogWrapped
+                id="admin-queue-song-dialog"
+                className={open ? "admin-queue-song-dialog open" : "admin-queue-song-dialog"}
+                open={open}
+                onClose={() => close()}>
                 <div className="admin-add-song-header">
                     <h1>
                         Añadir Cancion
@@ -85,13 +90,13 @@ function AdminAddToQueueDialog({ roomId, open, close }: { roomId: string, open: 
                 <AddToQueueForm
                     song={selectedSong}
                     admin={true}
+                    onSubmit={close}
                     open={selectedSong !== undefined && selectedSong.song_name !== ""}
-                    close={() => { 
-                        setSelectedSong(undefined) 
-                        close()
+                    close={() => {
+                        setSelectedSong(undefined)
                     }}
                     roomId={roomId} />
-            </dialog >
+            </DialogWrapped >
         </div>
     )
 }
