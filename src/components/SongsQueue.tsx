@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { OnOffButton, HambButton, DeleteButton, DoneButton } from "./Buttons/Buttons";
 import { useRoom } from "./Hooks/useRoom";
 import { QueueItem } from "../myTypes";
@@ -44,7 +44,7 @@ function SongsQueue({ roomId, canEdit, children: addSongButton }: { roomId: stri
         <div className="queue-table-container">
             <table className='admin-queue'>
                 {canEdit && (<caption>
-                    <div className="capltion-utils">
+                    <div className="caption-utils">
                         <div className="order-buttons-container">
                             <span>
                                 Alternar Mesas
@@ -80,29 +80,6 @@ function QueueBodyCanEdit(
         updatedQueue.splice(hoverIndex, 0, draggedItem);
         setQueue(updatedQueue);
     };
-
-    // const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-    // const [dropTargetIndex, setDropTargetIndex] = useState<number | null>(null);
-    // const handleDragStart = (e: React.DragEvent<HTMLButtonElement>, index: number) => {
-    //     e.stopPropagation()
-    //     setDraggedIndex(index);
-    // };
-
-    // const handleDragOver = (e: React.DragEvent<HTMLTableRowElement>, index: number) => {
-    //     e.preventDefault();
-    //     if (draggedIndex === null) return
-    //     setDropTargetIndex(index);
-    // };
-
-    // const handleDrop = (e: React.DragEvent<HTMLTableRowElement>, index: number) => {
-    //     e.preventDefault();
-    //     if (draggedIndex === null) return
-    //     const newQueue = [...currentQueue];
-    //     newQueue.splice(index, 0, newQueue.splice(draggedIndex, 1)[0]);
-    //     setQueue(newQueue);
-    //     setDraggedIndex(null);
-    //     setDropTargetIndex(null);
-    // };
 
     const RenderQueueItems = () => {
         return currentQueue.map((item, index) => {
@@ -152,24 +129,23 @@ function QueueItem({ index, item, moveItem, markDone }: { index: number, item: Q
             }),
         }), [index]);
 
-    // drag(drop(ref));
     const opacity = isDragging ? 0.5 : 1;
+
 
     return (
         <>
-            {(isOver && (isAbove || isSame))
-                && <tr key={`top-preview-line ${index}`} className="preview-line" />}
+            {(isOver && (isAbove || isSame)) && <tr key={`top-preview-line ${index}`} className="preview-line top-line show "
+            />}
             <tr
                 ref={drop}
                 className="queue-item"
-                style={{ opacity, }}
+                style={{ opacity }}
             >
                 <td data-cell="queue-song-move-col"
                     ref={drag}
                     draggable="true">
                     <div className="queue-song-move-container" >
                         <HambButton
-
                             className="queue-song-move"
                         />
                     </div>
@@ -194,49 +170,10 @@ function QueueItem({ index, item, moveItem, markDone }: { index: number, item: Q
                     </div>
                 </td>
             </tr>
-            {(isOver && (isBelow || isSame))
-                && <tr key={`bottom-preview-line ${index}`} className="preview-line" />}
+            {(isOver && (isBelow || isSame)) && <tr key={`bottom-preview-line ${index}`} className="preview-line bottom-line show " />}
         </>
     );
 }
-
-// function QueueItemOld(index: number, item: QueueItem) {
-//     return <tr
-//         className="queue-item"
-//         draggable="true"
-//         onDragOver={(e) => handleDragOver(e, index)}
-//         onDrop={(e) => handleDrop(e, index)}
-
-//     >
-//         <td data-cell="queue-song-move-col">
-//             <div className="queue-song-move-container">
-//                 <HambButton
-//                     className="queue-song-move"
-//                     draggable="true"
-//                     onDragStart={(e) => handleDragStart(e, index)} />
-//             </div>
-//         </td>
-//         <td><table className="row-data">
-//             <tbody>
-//                 <tr>
-//                     <td data-cell="Código">{item.song.id}</td>
-//                     {item.table && <td data-cell="Mesa">{item.table}</td>}
-//                     <td data-cell="Canta">{item.singer}</td>
-//                     <td data-cell="Canción"><ul><li><i>{item.song.song_name}</i></li>
-//                         <li><strong>{item.song.artist}</strong></li>
-//                     </ul>
-//                     </td>
-//                 </tr>
-//             </tbody>
-//         </table></td>
-//         <td data-cell="queue-song-buttons-col">
-//             <div className="queue-song-buttons-container">
-//                 <DeleteButton className="delete-from-queue-button" />
-//                 <DoneButton onClick={() => { markDone({ item: item }); }} className="mark-done-button " />
-//             </div>
-//         </td>
-//     </tr>;
-// }
 
 function QueueBodyNoEdit({ currentQueue }: { currentQueue: QueueItem[] }) {
     return (<tbody>
