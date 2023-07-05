@@ -143,7 +143,6 @@ export const useSongs = (roomId: string | undefined, start?: boolean) => {
             const { pageSongs, page2Songs, lastDoc2 } = (field && val) ? await queryWithFieldValue(field, val) : await queryAllSongs()
 
             setSongs({ prev_page: [], curr_page: [...pageSongs], next_page: page2Songs })
-            console.log(pageSongs);
             setLastSongInBatch(lastDoc2)
             setLoadingState("loaded")
         } catch (e) {
@@ -158,8 +157,6 @@ export const useSongs = (roomId: string | undefined, start?: boolean) => {
         querySongs("ARTISTA", selectedArtist)
     }
     const filterByGenre = (selectedGenre: string) => {
-        console.log(selectedGenre)
-
         if (!info.genres.includes(selectedGenre)) return
         querySongs("GENERO", selectedGenre)
     }
