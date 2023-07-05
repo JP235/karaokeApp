@@ -35,7 +35,8 @@ const AdminRoom = () => {
 export default AdminRoom
 
 function AdminAddToQueueDialog({ roomId, open, close }: { roomId: string, open: boolean, close: VoidFunction }) {
-    const { info, songs, filterByArtist, filterByGenre, filterByID } = useSongs(roomId)
+    const songs = useSongs(roomId)
+    const { info, filterByArtist, filterByGenre, filterByID } = songs
     const [selectedId, setSelectedId] = useState("")
     const [selectedArtist, setSelectedArtist] = useState("")
     const [selectedGenre, setSelectedGenre] = useState("");

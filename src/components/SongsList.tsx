@@ -2,24 +2,20 @@ import { useRef, useContext, useEffect } from "react";
 import { LoadingStateContext } from "../Contexts";
 import { Song } from "../myTypes";
 import { PrevButton, NextButton } from "./Buttons/Buttons";
-import { useSongs } from "./Hooks/useSongs";
+import { UseSongsReturntype, useSongs } from "./Hooks/useSongs";
 
 
 interface SongsTableParams {
-    songs: {
-        prev_page: Song[];
-        curr_page: Song[];
-        next_page: Song[];
-    },
+    songs: UseSongsReturntype,
     roomId: string,
     setSelectedSong: React.Dispatch<React.SetStateAction<Song | undefined>>,
 }
 
 
-function SongsTable({ songs, setSelectedSong, roomId }: SongsTableParams) {
+function SongsTable({ songs, setSelectedSong }: SongsTableParams) {
     const tableRef = useRef<HTMLTableElement>(null)
+    const { paginatedSongs, currPage, prevPage, nextPage } = songs
     const { loadingState } = useContext(LoadingStateContext)
-    const { currPage, prevPage, nextPage } = useSongs(roomId)
 
     useEffect(() => {
         if (tableRef.current) {
@@ -43,7 +39,7 @@ function SongsTable({ songs, setSelectedSong, roomId }: SongsTableParams) {
                     </tr>
                 </thead>
                 <tbody>
-                    {songs.curr_page.map((s, index) => {
+                    {paginatedSongs.curr_page.map((s, index) => {
                         return (
                             <tr key={index} onClick={() => setSelectedSong(s)
                             }>
@@ -53,7 +49,7 @@ function SongsTable({ songs, setSelectedSong, roomId }: SongsTableParams) {
                             </tr >
                         )
                     })}
-                    {songs.curr_page.length === 0 &&
+                    {paginatedSongs.curr_page.length === 0 &&
                         <tr>
                             <td style={{ textAlign: "center", fontStyle: "italic" }} >--</td>
                             <td style={{ textAlign: "center", fontStyle: "italic" }} >--</td>
@@ -70,7 +66,7 @@ function SongsTable({ songs, setSelectedSong, roomId }: SongsTableParams) {
                     Pagina {currPage + 1}
                     <NextButton
                         title={"next page"}
-                        disabled={loadingState != "loaded" || (songs.next_page.length === 0)}
+                        disabled={loadingState != "loaded" || (paginatedSongs.next_page.length === 0)}
                         onClick={() => nextPage()}
                     />
                 </div>
