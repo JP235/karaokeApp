@@ -1,7 +1,6 @@
 import "./UserRoom.css"
-import { useState, useEffect } from "react";
+import { useState  } from "react";
 import { useParams } from "react-router-dom";
-import { clickAway } from "../../../App";
 import FilterSongsForm from "../../../components/FilterSongsForm/FilterSongsForm";
 import SongsTable from "../../../components/SongsList";
 import { LoadingError } from "../landing/UserLanding";
@@ -12,22 +11,21 @@ import { useSongs } from "../../../components/Hooks/useSongs";
 
 function UserRoom() {
     const { roomId } = useParams()
-    const [filter, setFilter] = useState(false)
+    const [filter, setFilter] = useState(true)
 
-    const { info, songs, filterByArtist,
-        filterByGenre } = useSongs(roomId)
+    const songs = useSongs(roomId, true)
 
     const [selectedArtist, setSelectedArtist] = useState("")
     const [selectedGenre, setSelectedGenre] = useState("");
     const [selectedSong, setSelectedSong] = useState<Song>()
 
-    useEffect(() => {
-        document.addEventListener("click", (e) => clickAway(e, "filter-songs", setFilter));
+    // useEffect(() => {
+    //     document.addEventListener("click", (e) => clickAway(e, "filter-songs", setFilter));
 
-        return () => {
-            document.addEventListener("click", (e) => clickAway(e, "filter-songs", setFilter));
-        };
-    }, []);
+    //     return () => {
+    //         document.addEventListener("click", (e) => clickAway(e, "filter-songs", setFilter));
+    //     };
+    // }, []);
 
     return (
         <div className="user-room">
@@ -45,15 +43,15 @@ function UserRoom() {
                             onSubmit={(e) => {
                                 e.preventDefault()
                                 setSelectedGenre("")
-                                filterByArtist(selectedArtist)
-                            }} dataHints={info.artists} selected={selectedArtist} setSelected={setSelectedArtist} title={"Filtrar por Artista"} />
+                                songs.filterByArtist(selectedArtist)
+                            }} dataHints={songs.info.artists} selected={selectedArtist} setSelected={setSelectedArtist} title={"Filtrar por Artista"} />
                         <FilterSongsForm
                             onSubmit={(e) => {
                                 e.preventDefault()
                                 setSelectedArtist("")
-                                filterByGenre(selectedGenre)
+                                songs.filterByGenre(selectedGenre)
                             }}
-                            dataHints={info.genres} selected={selectedGenre} setSelected={setSelectedGenre} title={"Filtrar por Genero"} />
+                            dataHints={songs.info.genres} selected={selectedGenre} setSelected={setSelectedGenre} title={"Filtrar por Genero"} />
 
                     </div>
                 </div>

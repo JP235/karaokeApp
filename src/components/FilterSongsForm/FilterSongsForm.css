@@ -6,6 +6,8 @@
 
 
 .filter-songs-form label {
+    border-radius: 4px;
+    border-width: 2px;
     display: grid;
     grid-template-columns: 2em 1fr;
     grid-template-areas: "del textinput search";
@@ -17,6 +19,18 @@
     background-color: rgb(var(--accent1-rgb), 50%);
     border-radius: 4px 0 0 4px;
 }
+
+.filter-songs-form:hover button {
+    box-shadow: none;
+}
+
+.filter-songs-form label:has(input:focus) {
+    border-bottom: 1px solid white;
+}
+
+/* .filter-songs-form label:has(input:focus) button {
+    filter: hue-rotate(315deg);
+} */
 
 .filter-songs-form button.searchButton {
     background-color: rgb(var(--accent1-rgb), 50%);
@@ -32,7 +46,7 @@
     border-left: 0;
     border-right: 0;
     outline: 0;
-    background-color: rgb(50, 50,50);
+    background-color: rgb(50, 50, 50);
     font-weight: 600;
 }
 
@@ -40,15 +54,15 @@
     transform: scale(0.8);
 }
 
-.filter-songs-form label :nth-child(1) {
+.filter-songs-form label>:nth-child(1) {
     grid-area: del;
 }
 
-.filter-songs-form label :nth-child(3) {
+.filter-songs-form label>:nth-child(3) {
     grid-area: search;
 }
 
-.filter-songs-form label :nth-child(2) {
+.filter-songs-form label>:nth-child(2) {
     grid-area: textinput;
 }
 

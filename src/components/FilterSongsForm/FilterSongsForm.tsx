@@ -17,6 +17,7 @@ function FilterSongsForm({ onSubmit, dataHints, selected, setSelected, title }: 
             <label>
                 <CancelButton title={`cancel ${title}`} onClick={() => { setSelected("") }} />
                 <input type="text"
+                    className="input-without-arrow"
                     value={selected}
                     onChange={(event) => {
                         setSelected(event.target.value)
