@@ -66,6 +66,8 @@
 
 .cancelButton-span {
     background-image: url(../../assets/delete-1.svg);
+    transform: scale(1.3) translate(0, 1px)
+
 }
 
 .deleteButton-span {

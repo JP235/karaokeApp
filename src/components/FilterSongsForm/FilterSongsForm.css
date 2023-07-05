@@ -20,12 +20,16 @@
     border-radius: 4px 0 0 4px;
 }
 
+.filter-songs-form button.cancelButton>span {
+    transform: none;
+}
+
 .filter-songs-form:hover button {
     box-shadow: none;
 }
 
 .filter-songs-form label:has(input:focus) {
-    border-bottom: 1px solid white;
+    background-color: rgb(var(--accent1-rgb), 50%) !important;
 }
 
 /* .filter-songs-form label:has(input:focus) button {
