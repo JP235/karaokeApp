@@ -1,11 +1,14 @@
-import React, { useRef } from "react";
+import React, { useContext } from "react";
 import { OnOffButton, HambButton, DeleteButton, DoneButton } from "./Buttons/Buttons";
 import { useRoom } from "./Hooks/useRoom";
 import { QueueItem } from "../myTypes";
 import { useDrag, useDrop } from 'react-dnd';
+import { LanguageContext } from "../Contexts";
+import * as text from "../Language/text";
 
 function SongsQueue({ roomId, canEdit, children: addSongButton }: { roomId: string, canEdit: boolean, children: JSX.Element }) {
     const { currentQueue, markDone, setQueue, setSortMethod } = useRoom({ roomId, subscribe: true })
+    const { language } = useContext(LanguageContext);
 
     const tableHead = () => {
         return canEdit ? (
@@ -15,24 +18,24 @@ function SongsQueue({ roomId, canEdit, children: addSongButton }: { roomId: stri
                     <th><table className="header-data">
                         <thead>
                             <tr>
-                                <td data-cell="Código">Codigo</td>
-                                <td data-cell="Mesa">Mesa</td>
-                                <td data-cell="Canta">Canta</td>
-                                <td data-cell="Canción" >Canción</td>
+                                <td data-cell={text.code[language]}   > {text.code[language]}</td>
+                                <td data-cell={text.table[language]}  >{text.table[language]}</td>
+                                <td data-cell={text.singers[language]}> {text.singers[language]}</td>
+                                <td data-cell={text.song[language]}   > {text.song[language]}</td>
                             </tr>
                         </thead>
-                    </table></th>
+                    </table ></th >
                     <th></th>
-                </tr>
-            </thead>
+                </tr >
+            </thead >
         ) : (<thead>
             <tr className="queue-item">
                 <th><table className="header-data">
                     <thead>
                         <tr>
-                            <td data-cell="Mesa">Mesa</td>
-                            <td data-cell="Canta">Canta</td>
-                            <td data-cell="Canción" >Canción</td>
+                            <td data-cell={text.table[language]} >{text.table[language]}</td>
+                            <td data-cell={text.singers[language]}> {text.singers[language]}</td>
+                            <td data-cell={text.song[language]}> {text.song[language]}</td>
                         </tr>
                     </thead>
                 </table></th>
@@ -47,7 +50,7 @@ function SongsQueue({ roomId, canEdit, children: addSongButton }: { roomId: stri
                     <div className="caption-utils">
                         <div className="order-buttons-container">
                             <span>
-                                Alternar Mesas
+                                {text.alternatingTables[language]}
                             </span>
                             <OnOffButton onText={"ON"} offText={"OFF"} onToggle={() => {
                                 setSortMethod(p => p === "1" ? "2" : "1")
@@ -108,6 +111,7 @@ function QueueBodyCanEdit(
 
 
 function QueueItem({ index, item, moveItem, markDone }: { index: number, item: QueueItem, moveItem: (dragIndex: number, hoverIndex: number) => void, markDone: ({ item }: { item: QueueItem }) => Promise<void> }) {
+    const { language } = useContext(LanguageContext);
     const [{ isDragging }, drag] = useDrag(() => ({
         type: 'queue-item',
         item: { index },
@@ -153,10 +157,10 @@ function QueueItem({ index, item, moveItem, markDone }: { index: number, item: Q
                 <td><table className="row-data">
                     <tbody>
                         <tr>
-                            <td data-cell="Código">{item.song.id}</td>
-                            {item.table && <td data-cell="Mesa">{item.table}</td>}
-                            <td data-cell="Canta">{item.singer}</td>
-                            <td data-cell="Canción"><ul><li><i>{item.song.song_name}</i></li>
+                            <td data-cell={text.code[language]}   >{item.song.id}</td>
+                            {item.table && <td data-cell={text.table[language]}  >{item.table}</td>}
+                            <td data-cell={text.singers[language]}>{item.singer}</td>
+                            <td data-cell={text.song[language]}   ><ul><li><i>{item.song.song_name}</i></li>
                                 <li><strong>{item.song.artist}</strong></li>
                             </ul>
                             </td>

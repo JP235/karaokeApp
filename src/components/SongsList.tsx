@@ -1,9 +1,9 @@
 import { useRef, useContext, useEffect } from "react";
-import { LoadingStateContext } from "../Contexts";
+import { LanguageContext, LoadingStateContext } from "../Contexts";
 import { Song } from "../myTypes";
 import { PrevButton, NextButton } from "./Buttons/Buttons";
 import { UseSongsReturntype, useSongs } from "./Hooks/useSongs";
-
+import * as text from "../Language/text";
 
 interface SongsTableParams {
     songs: UseSongsReturntype,
@@ -16,7 +16,7 @@ function SongsTable({ songs, setSelectedSong }: SongsTableParams) {
     const tableRef = useRef<HTMLTableElement>(null)
     const { paginatedSongs, currPage, prevPage, nextPage } = songs
     const { loadingState } = useContext(LoadingStateContext)
-
+    const { language } = useContext(LanguageContext)
     useEffect(() => {
         if (tableRef.current) {
             tableRef.current.scrollTop = -10;
@@ -28,14 +28,14 @@ function SongsTable({ songs, setSelectedSong }: SongsTableParams) {
             <table id="song-list-table" className='song-list'>
                 <caption>
                     <h3 className="header">
-                        Canciones
+                        {text.songs[language]}
                     </h3>
                 </caption>
                 <thead>
                     <tr>
-                        <th data-cell="Artista">Artista</th>
-                        <th data-cell="Titulo">Titulo</th>
-                        {/* <th data-cell="Genero">Genero</th> */}
+                        <th data-cell={text.artist[language]}>{text.artist[language]}</th>
+                        <th data-cell={text.title[language]}>{text.title[language]}</th>
+                        {/* <th data-cell="Genero">{text.genre[language]}</th> */}
                     </tr>
                 </thead>
                 <tbody>
@@ -43,9 +43,9 @@ function SongsTable({ songs, setSelectedSong }: SongsTableParams) {
                         return (
                             <tr key={index} onClick={() => setSelectedSong(s)
                             }>
-                                <td data-cell="Artista">{s.artist}</td>
-                                <td data-cell="Titulo">{s.song_name}</td>
-                                {/* <td data-cell="Genero">{s.genre}</td> */}
+                                <td data-cell={text.artist[language]}>{s.artist}</td>
+                                <td data-cell={text.title[language]}>{s.song_name}</td>
+                                {/* <td data-cell={text.genre[language]}>{s.genre}</td> */}
                             </tr >
                         )
                     })}
@@ -60,12 +60,12 @@ function SongsTable({ songs, setSelectedSong }: SongsTableParams) {
             </table>
             <div className="toolbar">
                 <div className="table-buttons">
-                    <PrevButton title={"previus page"}
+                    <PrevButton title={text.previousPage[language]}
                         disabled={loadingState != "loaded" || currPage <= 0}
                         onClick={() => prevPage()} />
-                    Pagina {currPage + 1}
+                    {text.page[language]} {currPage + 1}
                     <NextButton
-                        title={"next page"}
+                        title={text.nextPage[language]}
                         disabled={loadingState != "loaded" || (paginatedSongs.next_page.length === 0)}
                         onClick={() => nextPage()}
                     />

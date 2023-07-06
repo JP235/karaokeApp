@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import AddToQueueForm from "../../../components/AddToQueueForm/AddToQueueForm";
 import { PlusButton, CancelButton } from "../../../components/Buttons/Buttons";
@@ -9,20 +9,23 @@ import SongsQueue from "../../../components/SongsQueue";
 import { Song } from "../../../myTypes";
 import "./AdminRoom.css"
 import DialogWrapped from "../../../components/DialogWrapped/DialogWrapped";
-
+import { LanguageContext } from "../../../Contexts";
+import * as text from "../../../Language/text";
 
 const AdminRoom = () => {
     const params = useParams()
     const roomId = params.roomId
     const [addingSong, setAddingSong] = useState(false);
+    const { language } = useContext(LanguageContext);
+
 
 
     if (!roomId) {
-        return (<h1 className="admin no-room">Sala no encontrada </h1>)
+        return (<h1 className="admin no-room">{text.roomNotFound[language]}</h1>)
     }
     return (
         <>
-            <h1>Sala {roomId}</h1>
+            <h1>{text.room[language]} {roomId}</h1>
             <SongsQueue roomId={roomId} canEdit={true} >
                 <PlusButton className="add-song-to-queue" onClick={() => setAddingSong(true)} />
             </SongsQueue>
@@ -36,6 +39,7 @@ export default AdminRoom
 
 function AdminAddToQueueDialog({ roomId, open, close }: { roomId: string, open: boolean, close: VoidFunction }) {
     const songs = useSongs(roomId)
+    const { language } = useContext(LanguageContext);
     const { info, filterByArtist, filterByGenre, filterByID } = songs
     const [selectedId, setSelectedId] = useState("")
     const [selectedArtist, setSelectedArtist] = useState("")
@@ -52,7 +56,7 @@ function AdminAddToQueueDialog({ roomId, open, close }: { roomId: string, open: 
                 onClose={() => close()}>
                 <div className="admin-add-song-header">
                     <h1>
-                        Añadir Cancion
+                        {text.addSong[language]}
                     </h1>
                     <CancelButton className="close-admin-add-song" onClick={() => close()} />
                 </div>
@@ -64,7 +68,7 @@ function AdminAddToQueueDialog({ roomId, open, close }: { roomId: string, open: 
                             setSelectedGenre("")
                             filterByID(selectedId)
                         }}
-                        selected={selectedId} setSelected={setSelectedId} title={"Buscar por ID"} />
+                        selected={selectedId} setSelected={setSelectedId} title={text.searchByID[language]} />
                     <FilterSongsForm
                         onSubmit={(e) => {
                             e.preventDefault()
@@ -72,7 +76,7 @@ function AdminAddToQueueDialog({ roomId, open, close }: { roomId: string, open: 
                             setSelectedId("")
                             filterByArtist(selectedArtist)
                         }}
-                        dataHints={info.artists} selected={selectedArtist} setSelected={setSelectedArtist} title={"Filtrar por Artista"} />
+                        dataHints={info.artists} selected={selectedArtist} setSelected={setSelectedArtist} title={text.filterByArtist[language]} />
                     <FilterSongsForm
                         onSubmit={(e) => {
                             e.preventDefault()
@@ -80,7 +84,7 @@ function AdminAddToQueueDialog({ roomId, open, close }: { roomId: string, open: 
                             setSelectedId("")
                             filterByGenre(selectedGenre)
                         }}
-                        dataHints={info.genres} selected={selectedGenre} setSelected={setSelectedGenre} title={"Filtrar por Genero"} />
+                        dataHints={info.genres} selected={selectedGenre} setSelected={setSelectedGenre} title={text.filterByGenre[language]} />
 
                 </div>
                 <SongsList

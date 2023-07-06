@@ -7,6 +7,7 @@ import { usefireAuthProvider } from './components/Hooks/useFireAuth';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { TouchBackend } from 'react-dnd-touch-backend';
+import useLanguageOrLocal from './components/Hooks/useLanguage';
 
 
 export function DndProviderTouchAndMouse({ children }: { children: React.ReactNode }) {
@@ -73,15 +74,15 @@ interface LanguageContextValue {
 
 // Create a context for the language preference
 export const LanguageContext = createContext<LanguageContextValue>({
-    language: "ES",
+    language: "es",
     setLanguage: () => { },
 });
 
 // Create a provider component for the language context
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
     // Set up state to store the language preference
-    const [language, setLanguage] = useState<TLanguages>("ES");
-
+    const [language, setLanguage] = useLanguageOrLocal()
+    
     // Return the provider component with the language value and setter function
     return (
         <LanguageContext.Provider value={{ language, setLanguage }}>

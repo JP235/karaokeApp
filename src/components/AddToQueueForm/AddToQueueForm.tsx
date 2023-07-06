@@ -1,12 +1,14 @@
 import "./AddToQueueForm.css"
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { Song } from "../../myTypes";
-import { ErrorsContext, LoadingStateContext } from "../../Contexts";
+import { ErrorsContext, LanguageContext, LoadingStateContext } from "../../Contexts";
 import { LoadingError, catchErrorFunction } from "../../pages/users/landing/UserLanding";
 import { useRoom } from "../Hooks/useRoom";
 import DialogWrapped from "../DialogWrapped/DialogWrapped";
+import * as text from "../../Language/text";
 
 function AddToQueueForm({ roomId, song, close, admin, open, onSubmit }: { onSubmit?: VoidFunction, open: boolean, admin?: boolean, close: () => void, roomId: string, song?: Song }) {
+    const { language } = useContext(LanguageContext)
     const [singer, setSinger] = useState("");
     const [tableNumber, setTableNumber] = useState<number>(-1);
     const { setError } = useContext(ErrorsContext)
@@ -33,7 +35,7 @@ function AddToQueueForm({ roomId, song, close, admin, open, onSubmit }: { onSubm
         >
             <div >
                 <h3>
-                    Añadir a la fila
+                    {text.addToQueue[language]}
                     <p>
                         <i>{song?.song_name.toLocaleUpperCase()} </i>
                     </p>
@@ -56,7 +58,7 @@ function AddToQueueForm({ roomId, song, close, admin, open, onSubmit }: { onSubm
                         }}
                     />
                     <span className="labelName">
-                        Mesa
+                        {text.table[language]}
                     </span>
                 </label>
                 <label>
@@ -67,12 +69,12 @@ function AddToQueueForm({ roomId, song, close, admin, open, onSubmit }: { onSubm
                         onChange={(event) => setSinger(event.target.value)}
                     />
                     <span className="labelName">
-                        Cantantes
+                        {text.singers[language]}
                     </span>
                 </label>
                 <div className="create-room-buttons">
-                    <button type="button" className="create-room-cancel" onClick={() => close()} >Cancelar</button>
-                    <button type="submit" value="Create" className="create-room-create" >Añadir</button>
+                    <button type="button" className="create-room-cancel" onClick={() => close()} >{text.cancel[language]}</button>
+                    <button type="submit" value="Create" className="create-room-create" >{text.add[language]}</button>
                 </div>
             </form>
             <LoadingError />
