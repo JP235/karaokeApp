@@ -5,6 +5,9 @@
 .searchButton,
 .prevButton,
 .nextButton {
+    display: grid;
+    justify-content: center;
+    align-items: center;
     background-color: transparent;
     border-color: transparent;
     padding: 0;
@@ -47,7 +50,6 @@
 .searchButton-span {
     height: 1.5em;
     width: 1.5em;
-    margin: 0.2rem;
 }
 
 .prevButton-span {
@@ -64,6 +66,8 @@
 
 .cancelButton-span {
     background-image: url(../../assets/delete-1.svg);
+    transform: scale(1.3) translate(0, 1px)
+
 }
 
 .deleteButton-span {

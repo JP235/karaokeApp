@@ -6,11 +6,11 @@ import { Song, Room } from "../../myTypes"
 import { catchErrorFunction } from "../../pages/users/landing/UserLanding"
 import { getSongsFromQuery } from "../HelperFunctions"
 
-export const useSongs = (roomId: string | undefined, start?: boolean) => {
+export const useSongs = (roomId?: string, start?: boolean) => {
     const { setLoadingState } = useContext(LoadingStateContext)
     const { setError } = useContext(ErrorsContext)
     const [info, setInfo] = useState<{ artists: Array<string>, genres: Array<string>, open: Boolean }>({ artists: [], genres: [], open: false })
-    const [songs, setSongs] = useState<{ prev_page: Song[], curr_page: Song[], next_page: Song[] }>({ prev_page: [], curr_page: [], next_page: [] })
+    const [paginatedSongs, setPaginatedSongs] = useState<{ prev_page: Song[], curr_page: Song[], next_page: Song[] }>({ prev_page: [], curr_page: [], next_page: [] })
     const [pageLimit, setPageLimit] = useState(35)
 
     const [songsCollection, setSongsCollection] = useState<CollectionReference<DocumentData>>()
@@ -130,7 +130,7 @@ export const useSongs = (roomId: string | undefined, start?: boolean) => {
                         song_name: String(data.TITULO).toLowerCase(),
                         genre: String(data.GENERO).toLowerCase()
                     } as Song
-                    setSongs({ prev_page: [], curr_page: [song], next_page: [] })
+                    setPaginatedSongs({ prev_page: [], curr_page: [song], next_page: [] })
                     setLoadingState("loaded")
                 }
                 return {
@@ -142,7 +142,7 @@ export const useSongs = (roomId: string | undefined, start?: boolean) => {
             }
             const { pageSongs, page2Songs, lastDoc2 } = (field && val) ? await queryWithFieldValue(field, val) : await queryAllSongs()
 
-            setSongs({ prev_page: [], curr_page: [...pageSongs], next_page: page2Songs })
+            setPaginatedSongs({ prev_page: [], curr_page: [...pageSongs], next_page: page2Songs })
             setLastSongInBatch(lastDoc2)
             setLoadingState("loaded")
         } catch (e) {
@@ -165,14 +165,14 @@ export const useSongs = (roomId: string | undefined, start?: boolean) => {
     }
 
     const logSongs = () => {
-        console.log(songs);
+        console.log(paginatedSongs);
 
     }
     const nextPage = async () => {
         setLoadingState("loading")
         let next_songs: Song[] = []
 
-        if (songs.next_page.length === pageLimit) {
+        if (paginatedSongs.next_page.length === pageLimit) {
             let next: Query<DocumentData>
             if (currQuery) {
                 next = query(songsCollection!, ...currQuery, orderBy("ARTISTA"), startAfter(lastSongInBatch), limit(pageLimit))
@@ -184,9 +184,9 @@ export const useSongs = (roomId: string | undefined, start?: boolean) => {
             next_songs = pageSongs
         }
         else {
-            next_songs = songs.next_page.slice(pageLimit + 1)
+            next_songs = paginatedSongs.next_page.slice(pageLimit + 1)
         }
-        setSongs(prev => {
+        setPaginatedSongs(prev => {
             return {
                 prev_page: [...prev.prev_page, ...prev.curr_page],
                 curr_page: [...prev.next_page.slice(0, pageLimit + 1)],
@@ -197,8 +197,8 @@ export const useSongs = (roomId: string | undefined, start?: boolean) => {
         setCurrPage(c => c + 1)
     }
     const prevPage = async () => {
-        if (songs.prev_page.length <= 0) return
-        setSongs(prev => {
+        if (paginatedSongs.prev_page.length <= 0) return
+        setPaginatedSongs(prev => {
             return {
                 prev_page: [...prev.prev_page.slice(0, - pageLimit)],
                 curr_page: [...prev.prev_page.slice(- pageLimit)],
@@ -210,7 +210,8 @@ export const useSongs = (roomId: string | undefined, start?: boolean) => {
     }
 
     return {
-        songs, currPage, prevPage, nextPage, info, querySongs, logSongs, filterByArtist
-        , filterByGenre, filterByID
+        paginatedSongs, currPage, prevPage, nextPage, info, querySongs, logSongs, filterByArtist, filterByGenre, filterByID
     }
 }
+
+export type UseSongsReturntype = ReturnType<typeof useSongs>

@@ -1,9 +1,4 @@
-
-export const Language = {
-    EN: "EN",
-    ES: "ES",
-    // FR: "FR",
-} 
+import { Language } from "./Language/text";
 
 export type TLanguages = keyof typeof Language
 

@@ -1,33 +1,32 @@
 import "./UserRoom.css"
-import { useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
-import { clickAway } from "../../../App";
 import FilterSongsForm from "../../../components/FilterSongsForm/FilterSongsForm";
 import SongsTable from "../../../components/SongsList";
 import { LoadingError } from "../landing/UserLanding";
 import { Song } from "../../../myTypes";
 import AddToQueueForm from "../../../components/AddToQueueForm/AddToQueueForm";
 import { useSongs } from "../../../components/Hooks/useSongs";
-
+import * as text from "../../../Language/text";
+import { LanguageContext } from "../../../Contexts";
 
 function UserRoom() {
     const { roomId } = useParams()
-    const [filter, setFilter] = useState(false)
-
-    const { info, songs, filterByArtist,
-        filterByGenre } = useSongs(roomId)
+    const [filter, setFilter] = useState(true)
+    const { language } = useContext(LanguageContext)
+    const songs = useSongs(roomId, true)
 
     const [selectedArtist, setSelectedArtist] = useState("")
     const [selectedGenre, setSelectedGenre] = useState("");
     const [selectedSong, setSelectedSong] = useState<Song>()
 
-    useEffect(() => {
-        document.addEventListener("click", (e) => clickAway(e, "filter-songs", setFilter));
+    // useEffect(() => {
+    //     document.addEventListener("click", (e) => clickAway(e, "filter-songs", setFilter));
 
-        return () => {
-            document.addEventListener("click", (e) => clickAway(e, "filter-songs", setFilter));
-        };
-    }, []);
+    //     return () => {
+    //         document.addEventListener("click", (e) => clickAway(e, "filter-songs", setFilter));
+    //     };
+    // }, []);
 
     return (
         <div className="user-room">
@@ -37,7 +36,7 @@ function UserRoom() {
                 <div onClick={() => setFilter(true)} className={filter ? "filter-songs" : "filter-songs collapse"}>
                     <span className="filter-form-title">
                         <span className="searchButton-span"></span>
-                        <h3>Filtrar</h3>
+                        <h3>{text.filter[language]}</h3>
                         <div className="dummy space-fill" />
                     </span>
                     <div className="filter-forms">
@@ -45,15 +44,17 @@ function UserRoom() {
                             onSubmit={(e) => {
                                 e.preventDefault()
                                 setSelectedGenre("")
-                                filterByArtist(selectedArtist)
-                            }} dataHints={info.artists} selected={selectedArtist} setSelected={setSelectedArtist} title={"Filtrar por Artista"} />
+                                songs.filterByArtist(selectedArtist)
+                            }} dataHints={songs.info.artists}
+                            selected={selectedArtist} setSelected={setSelectedArtist}
+                            title={text.filterByArtist[language]} />
                         <FilterSongsForm
                             onSubmit={(e) => {
                                 e.preventDefault()
                                 setSelectedArtist("")
-                                filterByGenre(selectedGenre)
+                                songs.filterByGenre(selectedGenre)
                             }}
-                            dataHints={info.genres} selected={selectedGenre} setSelected={setSelectedGenre} title={"Filtrar por Genero"} />
+                            dataHints={songs.info.genres} selected={selectedGenre} setSelected={setSelectedGenre} title={text.filterByGenre[language]} />
 
                     </div>
                 </div>

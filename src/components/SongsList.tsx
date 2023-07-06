@@ -1,26 +1,22 @@
 import { useRef, useContext, useEffect } from "react";
-import { LoadingStateContext } from "../Contexts";
+import { LanguageContext, LoadingStateContext } from "../Contexts";
 import { Song } from "../myTypes";
 import { PrevButton, NextButton } from "./Buttons/Buttons";
-import { useSongs } from "./Hooks/useSongs";
-
+import { UseSongsReturntype, useSongs } from "./Hooks/useSongs";
+import * as text from "../Language/text";
 
 interface SongsTableParams {
-    songs: {
-        prev_page: Song[];
-        curr_page: Song[];
-        next_page: Song[];
-    },
+    songs: UseSongsReturntype,
     roomId: string,
     setSelectedSong: React.Dispatch<React.SetStateAction<Song | undefined>>,
 }
 
 
-function SongsTable({ songs, setSelectedSong, roomId }: SongsTableParams) {
+function SongsTable({ songs, setSelectedSong }: SongsTableParams) {
     const tableRef = useRef<HTMLTableElement>(null)
+    const { paginatedSongs, currPage, prevPage, nextPage } = songs
     const { loadingState } = useContext(LoadingStateContext)
-    const { currPage, prevPage, nextPage } = useSongs(roomId)
-
+    const { language } = useContext(LanguageContext)
     useEffect(() => {
         if (tableRef.current) {
             tableRef.current.scrollTop = -10;
@@ -32,28 +28,28 @@ function SongsTable({ songs, setSelectedSong, roomId }: SongsTableParams) {
             <table id="song-list-table" className='song-list'>
                 <caption>
                     <h3 className="header">
-                        Canciones
+                        {text.songs[language]}
                     </h3>
                 </caption>
                 <thead>
                     <tr>
-                        <th data-cell="Artista">Artista</th>
-                        <th data-cell="Titulo">Titulo</th>
-                        {/* <th data-cell="Genero">Genero</th> */}
+                        <th data-cell={text.artist[language]}>{text.artist[language]}</th>
+                        <th data-cell={text.title[language]}>{text.title[language]}</th>
+                        {/* <th data-cell="Genero">{text.genre[language]}</th> */}
                     </tr>
                 </thead>
                 <tbody>
-                    {songs.curr_page.map((s, index) => {
+                    {paginatedSongs.curr_page.map((s, index) => {
                         return (
                             <tr key={index} onClick={() => setSelectedSong(s)
                             }>
-                                <td data-cell="Artista">{s.artist}</td>
-                                <td data-cell="Titulo">{s.song_name}</td>
-                                {/* <td data-cell="Genero">{s.genre}</td> */}
+                                <td data-cell={text.artist[language]}>{s.artist}</td>
+                                <td data-cell={text.title[language]}>{s.song_name}</td>
+                                {/* <td data-cell={text.genre[language]}>{s.genre}</td> */}
                             </tr >
                         )
                     })}
-                    {songs.curr_page.length === 0 &&
+                    {paginatedSongs.curr_page.length === 0 &&
                         <tr>
                             <td style={{ textAlign: "center", fontStyle: "italic" }} >--</td>
                             <td style={{ textAlign: "center", fontStyle: "italic" }} >--</td>
@@ -64,13 +60,13 @@ function SongsTable({ songs, setSelectedSong, roomId }: SongsTableParams) {
             </table>
             <div className="toolbar">
                 <div className="table-buttons">
-                    <PrevButton title={"previus page"}
+                    <PrevButton title={text.previousPage[language]}
                         disabled={loadingState != "loaded" || currPage <= 0}
                         onClick={() => prevPage()} />
-                    Pagina {currPage + 1}
+                    {text.page[language]} {currPage + 1}
                     <NextButton
-                        title={"next page"}
-                        disabled={loadingState != "loaded" || (songs.next_page.length === 0)}
+                        title={text.nextPage[language]}
+                        disabled={loadingState != "loaded" || (paginatedSongs.next_page.length === 0)}
                         onClick={() => nextPage()}
                     />
                 </div>

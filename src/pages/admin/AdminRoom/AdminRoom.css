@@ -24,16 +24,19 @@
 .close-admin-add-song>span {
     height: 2rem;
     width: 2rem;
-    margin: 0;
-    padding: 0;
 }
 
 
+
 .close-admin-add-song {
-    margin: 0;
-    border: 0;
-    background-color: red;
-    display: flex;
+    background-color: rgb(250, 0, 0, .4);
+    position: absolute;
+    top: 5px;
+    right: 5px;
+}
+
+.close-admin-add-song:hover {
+    background-color: rgb(250, 0, 0, .8);
 }
 
 .queue-table-container {
@@ -61,14 +64,15 @@
     border: 1px solid white;
 }
 
-.capltion-utils {
+.caption-utils {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 
 .add-song-to-queue:hover {
-    /* filter: invert(0.3); */
-    box-shadow: 2px 2px 7px 0px rgb(var(--accent2-rgb));
+    filter: invert(0.1);
+    box-shadow: 0px 0px 17px 3px rgb(var(--accent2-rgb)), inset 0px 0px 1px 3px rgb(var(--accent2-rgb));
 }
 
 .order-buttons-container {
@@ -115,7 +119,7 @@
 
 .queue-item {
     position: relative;
-    margin-top: 2px;
+    /* margin-top: 2px; */
 }
 
 .queue-item::before {
@@ -173,7 +177,6 @@ button.mark-done-button {
 
 .preview-line {
     position: relative;
-    height: 2px;
     width: inherit;
 }
 
@@ -182,10 +185,20 @@ button.mark-done-button {
     position: absolute;
     height: 3px;
     width: 80%;
-    transform: translate(10%, -1px);
-    background-color: rgb(var(--accent1-rgb));
+    translate: 10%;
 }
 
+.preview-line.bottom-line.show::before {
+    background-color: rgb(var(--accent1-rgb));
+    transform: translateY(-2px);
+    /* background-color: red; */
+}
+
+.preview-line.top-line.show::before {
+    background-color: rgb(var(--accent1-rgb));
+    /* background-color: yellow; */
+    transform: translateY(-1px);
+}
 
 table table {
     width: 100%;

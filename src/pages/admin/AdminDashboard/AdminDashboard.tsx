@@ -1,5 +1,5 @@
 import { FormEvent, useContext, useEffect, useState } from "react";
-import { AuthContext, ErrorsContext, LoadingStateContext, UserContext } from "../../../Contexts"
+import { AuthContext, ErrorsContext, LanguageContext, LoadingStateContext, UserContext } from "../../../Contexts"
 import "./AdminDashboard.css"
 import { roomsCollectionRef, usersCollectionRef } from "../../../firebase-config";
 import { doc, onSnapshot, setDoc } from "firebase/firestore";
@@ -7,8 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { UserData } from "../../../myTypes";
 import { catchErrorFunction } from "../../users/landing/UserLanding";
 import { changeRoomCode } from "../../../components/HelperFunctions";
-import { usefireAuthProvider } from "../../../components/Hooks/useFireAuth";
-
+import * as text from "../../../Language/text";
 
 
 function AdminDashboard() {
@@ -17,7 +16,7 @@ function AdminDashboard() {
     const { setLoadingState } = useContext(LoadingStateContext)
     const { user, setUser } = useContext(UserContext)
     const [creatingRoom, setCreatigRoom] = useState(false)
-    // const {auth} = useContext() 
+    const { language } = useContext(LanguageContext)
     const [roomCode, setRoomCode] = useState(String(generateRandomNumber()))
     const [roomName, setRoomName] = useState("Karaoke")
     const { signout } = useContext(AuthContext)
@@ -69,25 +68,25 @@ function AdminDashboard() {
     return (
         <>
             <div className="greeting">
-                <p>Hola {user.name} </p>
+                <p>{text.hello[language]} {user.name} </p>
                 <button onClick={() => handleLogout()}>Logout</button>
-                <p>Salar creadas: {user.created_rooms} </p>
+                <p>{text.createdRooms[language]}: {user.created_rooms} </p>
                 {user.active_room === "-1" ?
-                    <p> No hay salas activas</p> :
-                    <p>Codigo de sala activa:  {user.active_room} </p>
+                    <p>{text.noActiveRoom[language]} </p> :
+                    <p>{text.activeRoomCode[language]}:  {user.active_room} </p>
                 }
             </div>
             {(user.permissions === "active" || user.permissions === "ALL") &&
                 < div className="admin-dashboard">
                     {user.active_room === "-1" ?
                         <button className="new-room" onClick={() => setCreatigRoom(true)}>
-                            Crear Sala
+                            {text.createRoom[language]}
                         </button> :
                         <button className="goToRoom" onClick={() => {
                             const url = "/admin/" + user.active_room
                             navigate(url)
                         }}>
-                            Ir a Sala Activa
+                            {text.goToActiveRoom[language]}
                         </button>
                     }
                 </div>
@@ -96,7 +95,7 @@ function AdminDashboard() {
             <dialog id="create-room-dialog" className={creatingRoom ? "create-room-dialog open" : "create-room-dialog"} open={creatingRoom}>
                 <div >
                     <h1>
-                        Crear Sala
+                        {text.createRoom[language]}
                     </h1>
                 </div>
                 <form onSubmit={handleSubmit}>
@@ -110,7 +109,7 @@ function AdminDashboard() {
                             }}
                         />
                         <span className="labelName">
-                            Codigo
+                            {text.code[language]}
                         </span>
                     </label>
                     <label>
@@ -121,12 +120,12 @@ function AdminDashboard() {
                             onChange={(event) => setRoomName(event.target.value)}
                         />
                         <span className="labelName">
-                            Nombre
+                            {text.name[language]}
                         </span>
                     </label>
                     <div className="create-room-buttons">
-                        <button type="button" className="create-room-cancel" onClick={() => setCreatigRoom(false)} >Cancelar</button>
-                        <button type="submit" value="Create" className="create-room-create" >Crear</button>
+                        <button type="button" className="create-room-cancel" onClick={() => setCreatigRoom(false)} >{text.cancel[language]}</button>
+                        <button type="submit" value="Create" className="create-room-create" >{text.create[language]}</button>
                     </div>
                 </form>
             </dialog >

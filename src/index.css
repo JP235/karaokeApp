@@ -77,3 +77,8 @@ button:disabled {
     color: rgb(var(--light-rgb), 50%);
     cursor: default;
 }
+
+.input-without-arrow::-webkit-calendar-picker-indicator,
+.input-without-arrow::-webkit-input-placeholder {
+    display: none !important;
+}

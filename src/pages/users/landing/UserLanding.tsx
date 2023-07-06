@@ -1,6 +1,6 @@
 import "./UserLanding.css"
 import { ErrorsContext, LanguageContext, LoadingStateContext } from "../../../Contexts"
-import * as text from "../../../text"
+import * as text from "../../../Language/text"
 import { useContext, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { doc, getDoc } from "firebase/firestore"

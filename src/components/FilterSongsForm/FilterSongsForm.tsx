@@ -1,5 +1,5 @@
 import "./FilterSongsForm.css"
-
+import * as text from "../../Language/text"
 import { CancelButton, SearchButton } from "../Buttons/Buttons";
 
 interface FilterFormProps {
@@ -17,6 +17,7 @@ function FilterSongsForm({ onSubmit, dataHints, selected, setSelected, title }: 
             <label>
                 <CancelButton title={`cancel ${title}`} onClick={() => { setSelected("") }} />
                 <input type="text"
+                    className="input-without-arrow"
                     value={selected}
                     onChange={(event) => {
                         setSelected(event.target.value)

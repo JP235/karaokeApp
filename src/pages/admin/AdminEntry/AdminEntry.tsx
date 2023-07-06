@@ -1,12 +1,13 @@
 import "./AdminEntry.css"
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import { useContext, useEffect } from "react";
-import { ErrorsContext, LoadingStateContext, UserContext } from "../../../Contexts";
+import { LoadingStateContext, UserContext } from "../../../Contexts";
 import { useNavigate } from "react-router-dom";
 import { LoadingError } from "../../users/landing/UserLanding";
 
 function AdminLanding() {
     const navigate = useNavigate()
+    const location = useLocation()
     const { setLoadingState } = useContext(LoadingStateContext)
     const { loggedIn } = useContext(UserContext)
 
@@ -14,7 +15,9 @@ function AdminLanding() {
         setLoadingState("loading")
         if (loggedIn) {
             setLoadingState("loaded")
-            navigate("/admin/dashboard", { replace: true })
+            if (location.pathname === "/admin/" || location.pathname === "/admin") {
+                navigate("/admin/dashboard", { replace: true })
+            }
         }
     }, [loggedIn])
     return (
