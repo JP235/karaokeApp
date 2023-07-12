@@ -1,20 +1,24 @@
 .admin-queue-song-dialog,
 .queue-song-dialog {
-    /* width: 100%; */
-    z-index: 10;
-    top: 0;
+	/* width: 100%; */
+	z-index: 10;
+	top: 0;
+	bottom: 0;
+    right: 0;
+    left: 0;
+	margin: auto;
 }
 
 .queue-song-dialog form {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1em;
-    justify-items: center;
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 1em;
+	justify-items: center;
 }
 
-.queue-song-dialog>form>label {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    flex-direction: row-reverse;
+.queue-song-dialog > form > label {
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	flex-direction: row-reverse;
 }

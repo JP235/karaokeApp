@@ -21,11 +21,10 @@ function LanguagePicker() {
 
     return (
         <>
-            <nav></nav>
             <div className='language-picker'>
                 <HambButton className="language-hamb" onClick={() => setShow(p => !p)} title={language} />
                 <div className={show ? "language-selector show" : "language-selector"}>
-                    <div className="selector-buttons">
+                    <div className="selector-buttons" n-langs={Object.keys(Language).length}>
                         {Object.keys(Language).map((key, i) => {
                             const k = key as TLanguages
                             return (

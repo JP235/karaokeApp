@@ -5,28 +5,28 @@
 .searchButton,
 .prevButton,
 .nextButton {
-    display: grid;
-    justify-content: center;
-    align-items: center;
-    background-color: transparent;
-    border-color: transparent;
-    padding: 0;
-    border-radius: 50%;
-    height: 2em;
-    width: 2em;
-    margin: 0;
-    border: 0;
+	display: grid;
+	justify-content: center;
+	align-items: center;
+	background-color: transparent;
+	border-color: transparent;
+	padding: 0;
+	border-radius: 50%;
+	height: 2em;
+	width: 2em;
+	margin: 0;
+	border: 0;
 }
 
 .onOffButton {
-    padding: 0.5rem;
-    border-radius: 4px;
+	padding: 0.5rem;
+	border-radius: 4px;
 }
 
 .prevButton:disabled span,
 .nextButton:disabled span {
-    filter: invert(0.3);
-    border: 0px
+	filter: invert(0.3);
+	border: 0px;
 }
 
 .plusButton-span,
@@ -36,55 +36,54 @@
 .searchButton-span,
 .prevButton-span,
 .nextButton-span {
-    border-radius: 50%;
-    display: block;
-    height: 2em;
-    width: 2em;
-    margin: 0;
-    background-repeat: no-repeat;
-    background-size: contain;
-    filter: invert(0.9);
+	border-radius: 50%;
+	display: block;
+	height: 2em;
+	width: 2em;
+	margin: 0;
+	background-repeat: no-repeat;
+	background-size: contain;
+	filter: invert(0.9);
 }
 
 .cancelButton-span,
 .searchButton-span {
-    height: 1.5em;
-    width: 1.5em;
+	height: 1.5em;
+	width: 1.5em;
 }
 
 .prevButton-span {
-    background-image: url(../../assets/arrow-left-circle.svg);
+	background-image: url(../../assets/arrow-left-circle.svg);
 }
 
 .nextButton-span {
-    background-image: url(../../assets/arrow-right-circle.svg);
+	background-image: url(../../assets/arrow-right-circle.svg);
 }
 
 .searchButton-span {
-    background-image: url(../../assets/search.svg);
+	background-image: url(../../assets/search.svg);
 }
 
 .cancelButton-span {
-    background-image: url(../../assets/delete-1.svg);
-    transform: scale(1.3) translate(0, 1px)
-
+	background-image: url(../../assets/delete-1.svg);
+	transform: scale(1.3) translate(0, 1px);
 }
 
 .deleteButton-span {
-    background-image: url(../../assets/delete.svg);
+	background-image: url(../../assets/delete.svg);
 }
 
 .doneButton-span {
-    background-image: url(../../assets/done.svg);
+	background-image: url(../../assets/done.svg);
 }
 
 .plusButton-span {
-    background-image: url(../../assets/plus.svg);
+	background-image: url(../../assets/plus.svg);
 }
 
 .hamb-bar {
-    width: 30px;
-    height: 3px;
-    background-color: rgb(250, 250, 250, 50%);
-    margin: 5px 0;
+	width: 1.5em;
+	height: 3px;
+	background-color: rgb(250, 250, 250, 50%);
+	margin-top: 15% ;
 }
