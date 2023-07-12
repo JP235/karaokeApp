@@ -31,7 +31,7 @@ export const changeRoomCode = (value: string) => {
   let val: string = ""
 
   // code too long
-  if (value.length > 4) return val.slice(0,4)
+  if (value.length > 4) return val.slice(0, 4)
 
   // empty code
   if (value.length <= 0) {
@@ -53,13 +53,13 @@ export const clickAway = (event: MouseEvent, elementName: string, setter: Dispat
   let target = event.target as HTMLElement;
   let shouldSetFalse = true;
   while (target && !target.className.includes('content')) {
-      if (target.className.includes(elementName)) {
-          shouldSetFalse = false;
-          break;
-      }
-      target = target.parentElement as HTMLElement;
+    if (target.className.includes(elementName)) {
+      shouldSetFalse = false;
+      break;
+    }
+    target = target.parentElement as HTMLElement;
   }
   if (shouldSetFalse) {
-      setter(false);
+    setter(false);
   }
 }

@@ -1,84 +1,170 @@
 :root {
-    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-    line-height: 1.5;
-    font-weight: 400;
+	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+	line-height: 1.5;
+	font-weight: 400;
 
-    color-scheme: light dark;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
+	color-scheme: light dark;
+	color: rgba(255, 255, 255, 0.95);
+	background-color: #242424;
 
-    --dark-rgb: 0, 20, 39;
-    --primary-rgb: 64, 121, 140;
-    --accent1-rgb: 198, 216, 255;
-    --accent2-rgb: 224, 141, 121;
-    --error-rgb: 211, 34, 34;
-    --light-rgb: 240, 242, 239;
+	--dark-rgb: 0, 20, 39;
+	--primary-rgb: 64, 121, 140;
+	--accent1-rgb: 198, 216, 255;
+	--accent2-rgb: 224, 141, 121;
+	--error-rgb: 211, 34, 34;
+	--light-rgb: 240, 242, 239;
 
+	--colorDark: rgb(var(--dark-rgb));
+	--colorMain: rgb(var(--primary-rgb));
+	--colorAccent1: rgb(var(--accent1-rgb));
+	--colorAccent2: rgb(var(--accent2-rgb));
+	--colorLight: rgb(var(--ligth-rgb));
 
-    --colorDark: rgb(var(--dark-rgb));
-    --colorMain: rgb(var(--primary-rgb));
-    --colorAccent1: rgb(var(--accent1-rgb));
-    --colorAccent2: rgb(var(--accent2-rgb));
-    --colorLight: rgb(var(--ligth-rgb));
-
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-text-size-adjust: 100%;
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-text-size-adjust: 100%;
 }
 
 html {
-    height: 100vh;
+	height: 100vh;
 }
 
 body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
+	margin: 0;
+	width: 100%;
+	height: 100%;
 }
 
-
 h1 {
-    font-size: 2.2em;
-    line-height: 1.1;
+	font-size: 2.2em;
+	line-height: 1.1;
 }
 
 h3 {
-    margin: 0.5rem;
+	margin: 0.5rem;
 }
 
 select,
 input {
-    border: 0;
-    border-radius: 4px;
-    font-size: 1rem;
+	border: 0;
+	border-radius: 4px;
+	font-size: 1rem;
 }
 
 button {
-    border-radius: 4px;
-    border: 1px solid transparent;
-    padding: 0.5rem 1rem 0.6rem;
-    font-size: 1rem;
-    font-weight: 500;
-    font-family: inherit;
-    background-color: rgb(var(--primary-rgb),90%);
-    color: rgb(var(--light-rgb));
-    cursor: pointer;
-    transition: border-color 0.25s;
+	border-radius: 4px;
+	border: 1px solid transparent;
+	padding: 0.5rem 1rem 0.6rem;
+	font-size: 1rem;
+	font-weight: 500;
+	font-family: inherit;
+	background-color: rgb(var(--primary-rgb));
+	color: rgb(var(--light-rgb));
+	cursor: pointer;
+	transition: border-color 0.25s;
 }
 
-button:hover {
+/* button:hover {
     box-shadow: 0px 0px 7px 0px;
-}
+} */
 
 button:disabled {
-    background-color: gray;
-    color: rgb(var(--light-rgb), 50%);
-    cursor: default;
+	background-color: gray;
+	color: rgb(var(--light-rgb), 50%);
+	cursor: default;
 }
 
 .input-without-arrow::-webkit-calendar-picker-indicator,
 .input-without-arrow::-webkit-input-placeholder {
-    display: none !important;
+	display: none !important;
+}
+
+.text-border-1px {
+	text-shadow: 1px 0 #000, -1px 0 #000, 0 1px #000, 0 -1px #000, 1px 1px #000,
+		-1px -1px #000, 1px -1px #000, -1px 1px #000;
+}
+
+.text-border-2px {
+	text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000, 1px 1px #000,
+		-1px -1px #000, 1px -1px #000, -1px 1px #000;
+}
+
+.loading {
+	position: absolute;
+	z-index: 15;
+	margin: auto;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	height: 2rem;
+	width: 2rem;
+	background-image: url(assets/loading.svg);
+	background-repeat: no-repeat;
+	background-size: contain;
+	animation: spin 1s linear infinite, invert 1.1s linear infinite;
+}
+.loading::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	margin: auto;
+	border-radius: 50%;
+	transform: translateX(-0.5rem);
+	background-color: rgb(0, 0, 0, 0.4);
+	filter: blur(5px);
+	height: 3rem;
+	width: 3rem;
+	animation: pulse 1s ease-in-out infinite;
+}
+
+.loading-error-container > .loading {
+	display: block;
+	bottom: unset;
+	right: unset;
+	left: unset;
+	margin: 0;
+}
+
+@keyframes invert {
+	0% {
+		filter: invert(0.5);
+		/* filter: invert(1); */
+	}
+
+	50% {
+		filter: invert(1);
+	}
+
+	100% {
+		filter: invert(0.5);
+		/* filter: invert(1); */
+	}
+}
+
+@keyframes spin {
+	from {
+		transform: rotate(0deg);
+	}
+
+	to {
+		transform: rotate(360deg);
+	}
+}
+@keyframes pulse {
+	from {
+		filter: blur(5px);
+	}
+
+	to {
+		filter: blur(15px);
+	}
+	to {
+		filter: blur(5px);
+	}
 }

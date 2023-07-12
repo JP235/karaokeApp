@@ -48,13 +48,6 @@
     text-align: right;
 }
 
-
-.App::before {
-    background-position: 80% 42%;
-    background-size: 220%;
-    animation: unset
-}
-
 .create-room-dialog.open {
     position: absolute;
     top: 20%;

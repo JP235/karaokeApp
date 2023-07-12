@@ -1,0 +1,62 @@
+.navbar {
+	grid-area: nav-bar;
+	width: 100%;
+	height: 3rem;
+	position: absolute;
+    top: 0;
+	font-family: "Pacifico";
+	font-size: larger;
+	display: grid;
+	grid-template-areas: "bar menu";
+	grid-template-columns: auto 2rem;
+	align-items: center;
+	justify-items: center;
+    background-color: black;
+}
+.navbar-title {
+	grid-column-start: 1;
+	grid-column-end: 3;
+	grid-row: 1;
+}
+
+.language-picker {
+	grid-area: menu;
+    overflow: hidden;
+}
+
+.language-selector {
+	position: absolute;
+    overflow: hidden;
+    display: grid;
+	right: 0;
+    left: auto;
+}
+
+.selector-buttons {
+	display: grid;
+	grid-template-rows: 0fr;
+	grid-template-columns: 0fr;
+    gap: 2px;
+	visibility: hidden;
+	opacity: 0;
+	overflow: hidden;
+	transition: opacity 600ms;
+}
+.selector-buttons button {
+	width: 3em;
+}
+
+.show .selector-buttons {
+	position: relative;
+	z-index: 10;
+	visibility: visible;
+	opacity: 1;
+}
+
+.show.language-selector {
+	/* grid-template-rows: 1fr; */
+	transition: all 250ms;
+}
+.language-picker:has(.show) * .hamb-bar {
+	background-color: rgb(250, 250, 250, 0.7);
+}

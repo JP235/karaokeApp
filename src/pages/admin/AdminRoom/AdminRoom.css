@@ -1,265 +1,262 @@
 .admin.landingText {
-    font-size: 40px;
+	font-size: 40px;
 }
 
 .admin-add-song-container {
-    max-width: 700px
+	max-width: 700px;
 }
 
 .admin-add-song-container,
 .admin-queue-song-dialog,
 .queue-song-dialog {
-    width: auto;
-    max-width: 500px;
+	width: auto;
+	max-width: 500px;
 }
 
 .admin-add-song-header {
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-    justify-content: center;
+	display: flex;
+	gap: 1.5rem;
+	align-items: center;
+	justify-content: center;
 }
 
 .close-admin-add-song,
-.close-admin-add-song>span {
-    height: 2rem;
-    width: 2rem;
+.close-admin-add-song > span {
+	height: 2rem;
+	width: 2rem;
 }
 
-
-
 .close-admin-add-song {
-    background-color: rgb(250, 0, 0, .4);
-    position: absolute;
-    top: 5px;
-    right: 5px;
+	background-color: rgb(250, 0, 0, 0.4);
+	position: absolute;
+	top: 5px;
+	right: 5px;
 }
 
 .close-admin-add-song:hover {
-    background-color: rgb(250, 0, 0, .8);
+	background-color: rgb(250, 0, 0, 0.8);
 }
 
 .queue-table-container {
-    width: 100%;
-    max-width: 700px;
-    max-height: 700px;
-    padding-bottom: 1rem;
-    border-radius: 15px;
-    overflow-y: scroll;
+	width: 100%;
+	max-width: 700px;
+	max-height: 700px;
+	padding-bottom: 1rem;
+	border-radius: 15px;
+	overflow-y: scroll;
 }
 
 .admin-queue {
-    width: 100%;
-    max-width: 700px;
-    background-color: rgb(var(--light-rgb), 20%);
-    overflow-y: scroll;
+	width: 100%;
+	max-width: 700px;
+	background-color: rgb(var(--light-rgb), 20%);
+	overflow-y: scroll;
 }
 
 .admin-queue caption {
-    /* min-height: 3rem; */
-    background-color: rgb(var(--dark-rgb), 95%);
-    padding: 1rem;
-    color: rgb(var(--light-rgb));
-    border-radius: 15px;
-    border: 1px solid white;
+	/* min-height: 3rem; */
+	background-color: rgb(var(--dark-rgb), 95%);
+	padding: 1rem;
+	color: rgb(var(--light-rgb));
+	border-radius: 15px;
+	border: 1px solid white;
 }
 
 .caption-utils {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 .add-song-to-queue:hover {
-    filter: invert(0.1);
-    box-shadow: 0px 0px 17px 3px rgb(var(--accent2-rgb)), inset 0px 0px 1px 3px rgb(var(--accent2-rgb));
+	filter: invert(0.1);
+	box-shadow: 0px 0px 17px 3px rgb(var(--accent2-rgb)),
+		inset 0px 0px 1px 3px rgb(var(--accent2-rgb));
 }
 
 .order-buttons-container {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    justify-items: center;
+	display: flex;
+	gap: 1rem;
+	align-items: center;
+	justify-items: center;
 }
 
 .admin-queue thead {
-    position: sticky;
-    top: 0;
-    height: 2.5rem;
-    color: rgb(var(--dark-rgb));
-    z-index: 3;
-    font-weight: bold;
-    /* font-style: oblique; */
+	position: sticky;
+	top: 0;
+	height: 2.5rem;
+	color: rgb(var(--dark-rgb));
+	z-index: 3;
+	font-weight: bold;
+	/* font-style: oblique; */
 }
 
 .admin-queue ul {
-    padding: 0;
+	padding: 0;
 }
 
 .admin-queue li {
-    list-style: none;
-    text-align: left;
-    text-transform: capitalize;
+	list-style: none;
+	text-align: left;
+	text-transform: capitalize;
 }
 
 .queue-info {
-    display: flex;
+	display: flex;
 }
 
 .queue-info button {
-    padding: 0.5rem;
-    border-radius: 50%;
-    /* font-weight: 700; */
-    height: 2em;
-    width: 2em;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	padding: 0.5rem;
+	border-radius: 50%;
+	/* font-weight: 700; */
+	height: 2em;
+	width: 2em;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .queue-item {
-    position: relative;
-    /* margin-top: 2px; */
+	position: relative;
+	/* margin-top: 2px; */
 }
 
 .queue-item::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-color: black;
-    background-size: cover;
-    /* border: 1px solid red; */
-    border-radius: 15px;
-    z-index: -1;
+	content: "";
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: black;
+	background-size: cover;
+	/* border: 1px solid red; */
+	border-radius: 15px;
+	z-index: -1;
 }
 
 .admin-queue thead .queue-item::before {
-    background-color: rgb(var(--light-rgb));
+	background-color: rgb(var(--light-rgb));
 }
 
 button.queue-song-move {
-    padding: 0.5rem;
-    background: transparent;
+	padding: 0.5rem;
+	background: transparent;
 }
 
-.queue-song-buttons-container>button {
-    padding: 0.2rem;
+.queue-song-buttons-container > button {
+	padding: 0.2rem;
 }
 
 .queue-song-buttons-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    justify-items: center;
-    gap: 0.5rem;
-    margin-right: 0.2rem;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	align-items: center;
+	justify-items: center;
+	gap: 0.5rem;
+	margin-right: 0.2rem;
 }
 
 button.delete-from-queue-button {
-    background-color: rgb(var(--accent2-rgb));
-    filter: hue-rotate(10deg);
-    border-radius: 4px;
+	background-color: rgb(var(--accent2-rgb));
+	filter: hue-rotate(10deg);
+	border-radius: 4px;
 }
 
 button.mark-done-button {
-    background-color: rgb(var(--primary-rgb));
-    border-radius: 4px;
+	background-color: rgb(var(--primary-rgb));
+	border-radius: 4px;
 }
 
-.mark-done-button>span,
-.delete-from-queue-button>span {
-    height: 1.5rem;
-    width: 1.5rem;
+.mark-done-button > span,
+.delete-from-queue-button > span {
+	height: 1.5rem;
+	width: 1.5rem;
 }
 
 .preview-line {
-    position: relative;
-    width: inherit;
+	position: relative;
+	width: inherit;
 }
 
 .preview-line::before {
-    content: "";
-    position: absolute;
-    height: 3px;
-    width: 80%;
-    translate: 10%;
+	content: "";
+	position: absolute;
+	height: 3px;
+	width: 80%;
+	translate: 10%;
 }
 
 .preview-line.bottom-line.show::before {
-    background-color: rgb(var(--accent1-rgb));
-    transform: translateY(-2px);
-    /* background-color: red; */
+	background-color: rgb(var(--accent1-rgb));
+	transform: translateY(-2px);
+	/* background-color: red; */
 }
 
 .preview-line.top-line.show::before {
-    background-color: rgb(var(--accent1-rgb));
-    /* background-color: yellow; */
-    transform: translateY(-1px);
+	background-color: rgb(var(--accent1-rgb));
+	/* background-color: yellow; */
+	transform: translateY(-1px);
 }
 
 table table {
-    width: 100%;
+	width: 100%;
 }
 
 table table td ul {
-    padding: 0;
-    margin: 0.2rem 0;
+	padding: 0;
+	margin: 0.2rem 0;
 }
 
 table table td:nth-child(3),
 table table td:nth-child(4),
 table table th:nth-child(4),
 table table th:nth-child(4) {
-    width: 30%;
+	width: 30%;
 }
 
 table table td:nth-child(1),
 table table td:nth-child(2),
 table table th:nth-child(1),
 table table th:nth-child(2) {
-    width: 15%;
+	width: 15%;
 }
 
-
-
 @media (max-width: 650px) {
-    table thead {
-        display: none;
-    }
+	table thead {
+		display: none;
+	}
 
-    table table {
-        padding: 0.51rem 0rem;
-    }
+	table table {
+		padding: 0.51rem 0rem;
+	}
 
-    table table tr {
-        padding: 0.5rem 1rem;
-    }
+	table table tr {
+		padding: 0.5rem 1rem;
+	}
 
-    table table td {
-        display: grid;
-        grid-template-columns: 5em 1fr;
-        max-width: 100%;
-        text-align: left;
-        /* align-items: center; */
-    }
+	table table td {
+		display: grid;
+		grid-template-columns: 5em 1fr;
+		max-width: 100%;
+		text-align: left;
+		/* align-items: center; */
+	}
 
-    table table td::before {
-        content: attr(data-cell) ": ";
-        font-weight: 700;
-    }
+	table table td::before {
+		content: attr(data-cell) ": ";
+		font-weight: 700;
+	}
 
-    table table td:nth-child(1),
-    table table td:nth-child(2),
-    table table td:nth-child(3),
-    table table td:nth-child(4) {
-        width: 100%;
-    }
+	table table td:nth-child(1),
+	table table td:nth-child(2),
+	table table td:nth-child(3),
+	table table td:nth-child(4) {
+		width: 100%;
+	}
 
-    table table td ul {
-        padding: 0;
-        margin: 0;
-    }
+	table table td ul {
+		padding: 0;
+		margin: 0;
+	}
 }
