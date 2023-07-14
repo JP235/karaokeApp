@@ -47,71 +47,72 @@ export const title = {
   'it': 'Titolo'
 }
 export const genre = {
-    'es': 'Género',
-    'en': 'Genre',
-    'fr': 'Genre',
-    'it': 'Genere'
+  'es': 'Género',
+  'en': 'Genre',
+  'fr': 'Genre',
+  'it': 'Genere'
 }
 
 export const songs = {
-    'es': 'Canciones',
-    'en': 'Songs',
-    'fr': 'Chansons',
-    'it': 'Canzoni'
+  'es': 'Canciones',
+  'en': 'Songs',
+  'fr': 'Chansons',
+  'it': 'Canzoni'
 }
 
 export const previousPage = {
-    'es': 'Página Anterior',
-    'en': 'Previous Page',
-    'fr': 'Page précédente',
-    'it': 'Pagina precedente'
+  'es': 'Página Anterior',
+  'en': 'Previous Page',
+  'fr': 'Page précédente',
+  'it': 'Pagina precedente'
 }
 
 export const page = {
-    'es': 'Página',
-    'en': 'Page',
-    'fr': 'Page',
-    'it': 'Pagina'
+  'es': 'Página',
+  'en': 'Page',
+  'fr': 'Page',
+  'it': 'Pagina'
 }
 
 export const nextPage = {
-    'es': 'siguiente Página',
-    'en': 'Next Page',
-    'fr': 'Page suivante',
-    'it': 'Pagina successiva'
+  'es': 'siguiente Página',
+  'en': 'Next Page',
+  'fr': 'Page suivante',
+  'it': 'Pagina successiva'
 }
 export const hello = {
-    'es': '¡Hola!',
-    'en': 'Hello!',
-    'fr': 'Salut!',
-    'it': 'Ciao!'
+  'es': '¡Hola!',
+  'en': 'Hello!',
+  'fr': 'Salut!',
+  'it': 'Ciao!'
 }
 
 export const filter = {
-    'es': 'Filtrar',
-    'en': 'Filter',
-    'fr': 'Filtrer',
-    'it': 'Filtro'
+  'es': 'Filtrar',
+  'en': 'Filter',
+  'fr': 'Filtrer',
+  'it': 'Filtro'
 }
+
 export const filterByArtist = {
-    'es': 'Filtrar por Artista',
-    'en': 'Filter by Artist',
-    'fr': 'Filtrer par artiste',
-    'it': 'Filtra per artista'
+  'es': 'Buscar Artista',
+  'en': 'Search Artist',
+  'fr': 'Chercher artiste',
+  'it': 'Cerca artista'
 }
 
 export const filterByGenre = {
-    'es': 'Filtrar por Género',
-    'en': 'Filter by Genre',
-    'fr': 'Filtrer par genre',
-    'it': 'Filtra per genere'
+  'es': 'Filtrar por Género',
+  'en': 'Filter by Genre',
+  'fr': 'Filtrer par genre',
+  'it': 'Filtra per genere'
 }
 
 export const addToQueue = {
-    'es': 'Añadir a la fila',
-    'en': 'Add to Queue',
-    'fr': 'Ajouter à la file d\'attente',
-    'it': 'Aggiungi alla coda'
+  'es': 'Añadir a la fila',
+  'en': 'Add to Queue',
+  'fr': 'Ajouter à la file d\'attente',
+  'it': 'Aggiungi alla coda'
 }
 
 export const table = {
@@ -243,8 +244,8 @@ export const alternatingTables = {
 }
 
 export const searchByID = {
-  'es': 'Buscar Por ID',
-  'en': 'Search By ID',
+  'es': 'Buscar por ID',
+  'en': 'Search by ID',
   'fr': 'Rechercher par ID',
   'it': 'Cerca per ID'
 }

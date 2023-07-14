@@ -150,11 +150,11 @@ button.queue-song-move {
 
 .queue-song-buttons-container {
 	display: grid;
-	grid-template-columns: 1fr 1fr;
+	/* grid-template-columns: 1fr 1fr; */
+	/* margin-right: 0.2rem; */
 	align-items: center;
 	justify-items: center;
 	gap: 0.5rem;
-	margin-right: 0.2rem;
 }
 
 button.delete-from-queue-button {

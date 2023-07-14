@@ -243,7 +243,7 @@ function QueueItem({
 				</td>
 				<td data-cell="queue-song-buttons-col">
 					<div className="queue-song-buttons-container">
-						<DeleteButton className="delete-from-queue-button" />
+						{/* <DeleteButton className="delete-from-queue-button" /> */}
 						<DoneButton
 							onClick={() => {
 								markDone({ item });
