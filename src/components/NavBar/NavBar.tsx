@@ -1,10 +1,9 @@
-import "./NavBar.css";
-import { useContext } from "react";
-import { NavTitleStateContext } from "../../Contexts";
+import { useNavTitle } from "../../Contexts";
 import LanguagePicker from "../../Language/LanguagePicker";
+import "./NavBar.css";
 
 export const Navbar = () => {
-	const { navTitle } = useContext(NavTitleStateContext);
+	const { navTitle } = useNavTitle()
 	return (
 		<nav className="navbar">
 			<div className="navbar-title">{navTitle}</div>

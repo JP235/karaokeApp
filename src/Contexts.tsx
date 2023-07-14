@@ -53,31 +53,25 @@ export function NavTitleStateProvider({
 
 export const useNavTitle = () => useContext(NavTitleStateContext);
 
-interface LoadignStateContextValue {
+interface LoadignContextValue {
 	loadingState: LoadignState;
 	setLoadingState: (loadignState: LoadignState) => void;
 }
 
-export const LoadingStateContext = createContext<LoadignStateContextValue>(
-	null!
-);
+export const LoadingContext = createContext<LoadignContextValue>(null!);
 
-export function LoadignStateProvider({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
+export function LoadignProvider({ children }: { children: React.ReactNode }) {
 	const [loadingState, setLoadingState] = useState<LoadignState>("idle");
 	useEffect(() => {
 		// console.log(loadingState);
 	}, [loadingState]);
 	return (
-		<LoadingStateContext.Provider value={{ loadingState, setLoadingState }}>
+		<LoadingContext.Provider value={{ loadingState, setLoadingState }}>
 			{children}
-		</LoadingStateContext.Provider>
+		</LoadingContext.Provider>
 	);
 }
-export const useLoadingState = () => useContext(LoadingStateContext);
+export const useLoadingState = () => useContext(LoadingContext);
 
 interface ErrorsContextValue {
 	error?: string;

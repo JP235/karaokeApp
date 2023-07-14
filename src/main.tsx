@@ -8,7 +8,7 @@ import {
 	DndProviderTouchAndMouse,
 	ErrorsProvider,
 	LanguageProvider,
-	LoadignStateProvider,
+	LoadignProvider,
 	NavTitleStateProvider,
 	UserAuthProvider,
 } from "./Contexts.tsx";
@@ -18,7 +18,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 		<NavTitleStateProvider>
 			<LanguageProvider>
 				<ErrorsProvider>
-					<LoadignStateProvider>
+					<LoadignProvider>
 						<UserAuthProvider>
 							{/* <UserProvider> */}
 							{/* <AuthProvider> */}
@@ -28,7 +28,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 							{/* </AuthProvider> */}
 							{/* </UserProvider> */}
 						</UserAuthProvider>
-					</LoadignStateProvider>
+					</LoadignProvider>
 				</ErrorsProvider>
 			</LanguageProvider>
 		</NavTitleStateProvider>

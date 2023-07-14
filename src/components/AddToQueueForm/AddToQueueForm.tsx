@@ -1,18 +1,18 @@
 import "./AddToQueueForm.css"
-import { FormEvent, useContext, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { Song } from "../../myTypes";
-import { ErrorsContext, LanguageContext, LoadingStateContext } from "../../Contexts";
 import { LoadingError, catchErrorFunction } from "../../pages/users/landing/UserLanding";
 import { useRoom } from "../Hooks/useRoom";
 import DialogWrapped from "../DialogWrapped/DialogWrapped";
 import * as text from "../../Language/text";
+import { useErrors, useLanguage, useLoadingState } from "../../Contexts";
 
 function AddToQueueForm({ roomId, song, close, admin, open, onSubmit }: { onSubmit?: VoidFunction, open: boolean, admin?: boolean, close: () => void, roomId: string, song?: Song }) {
-    const { language } = useContext(LanguageContext)
+    const { language } = useLanguage() 
+    const { setError } = useErrors()
+    const { setLoadingState } = useLoadingState()
     const [singer, setSinger] = useState("");
     const [tableNumber, setTableNumber] = useState<number>(-1);
-    const { setError } = useContext(ErrorsContext)
-    const { setLoadingState } = useContext(LoadingStateContext)
     const { addToQueue } = useRoom({ roomId, subscribe: false })
 
     const handleSubmit = async (e: FormEvent) => {

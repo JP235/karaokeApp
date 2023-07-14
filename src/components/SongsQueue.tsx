@@ -1,14 +1,9 @@
-import React, { useContext } from "react";
-import {
-	OnOffButton,
-	HambButton,
-	DeleteButton,
-	DoneButton,
-} from "./Buttons/Buttons";
+import { Fragment } from "react";
+import { OnOffButton, HambButton, DoneButton } from "./Buttons/Buttons";
 import { useRoom } from "./Hooks/useRoom";
 import { QueueItem } from "../myTypes";
 import { useDrag, useDrop } from "react-dnd";
-import { LanguageContext } from "../Contexts";
+import { useLanguage } from "../Contexts";
 import * as text from "../Language/text";
 
 function SongsQueue({
@@ -24,7 +19,7 @@ function SongsQueue({
 		roomId,
 		subscribe: true,
 	});
-	const { language } = useContext(LanguageContext);
+	const { language } = useLanguage();
 
 	const tableHead = () => {
 		return canEdit ? (
@@ -175,7 +170,7 @@ function QueueItem({
 	moveItem: (dragIndex: number, hoverIndex: number) => void;
 	markDone: ({ item }: { item: QueueItem }) => Promise<void>;
 }) {
-	const { language } = useContext(LanguageContext);
+	const { language } = useLanguage();
 	const [{ isDragging }, drag] = useDrag(
 		() => ({
 			type: "queue-item",
@@ -268,7 +263,7 @@ function QueueBodyNoEdit({ currentQueue }: { currentQueue: QueueItem[] }) {
 		<tbody>
 			{currentQueue.map((item) => {
 				return (
-					<React.Fragment key={item.created_at}>
+					<Fragment key={item.created_at}>
 						<tr className="queue-item">
 							<td>
 								<table className="row-data">
@@ -291,7 +286,7 @@ function QueueBodyNoEdit({ currentQueue }: { currentQueue: QueueItem[] }) {
 								</table>
 							</td>
 						</tr>
-					</React.Fragment>
+					</Fragment>
 				);
 			})}
 		</tbody>

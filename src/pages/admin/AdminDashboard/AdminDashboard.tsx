@@ -1,10 +1,9 @@
-import { FormEvent, useContext, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import {
-	AuthContext,
-	ErrorsContext,
-	LanguageContext,
-	LoadingStateContext,
-	UserContext,
+	useErrors,
+	useLanguage,
+	useLoadingState,
+	useUserAuth,
 } from "../../../Contexts";
 import "./AdminDashboard.css";
 import {
@@ -20,9 +19,10 @@ import * as text from "../../../Language/text";
 
 function AdminDashboard() {
 	const navigate = useNavigate();
-	const { setError } = useContext(ErrorsContext);
-	const { setLoadingState } = useContext(LoadingStateContext);
-	const { user, setUser } = useContext(UserContext);
+	const { setError } = useErrors();
+	const { language } = useLanguage();
+	const { setLoadingState } = useLoadingState();
+	const { userData, signout } = useUserAuth();
 	const [creatingRoom, setCreatigRoom] = useState(false);
 	const { language } = useContext(LanguageContext);
 	const [roomCode, setRoomCode] = useState(String(generateRandomNumber()));

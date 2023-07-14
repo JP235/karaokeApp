@@ -17,12 +17,12 @@ import {
 	or,
 	and,
 } from "firebase/firestore";
-import { useContext, useState, useEffect } from "react";
-import { LoadingStateContext, ErrorsContext } from "../../Contexts";
+import { useState, useEffect } from "react";
 import { roomsCollectionRef, db } from "../../firebase-config";
 import { Song, Room } from "../../myTypes";
 import { catchErrorFunction } from "../../pages/users/landing/UserLanding";
 import { getSongsFromQuery } from "../HelperFunctions";
+import { useErrors, useLoadingState } from "../../Contexts";
 
 type QueryConstrs = {
 	["CompositeFilt"]: QueryCompositeFilterConstraint | null;
@@ -31,8 +31,8 @@ type QueryConstrs = {
 };
 
 export const useSongs = (roomId?: string, start?: boolean) => {
-	const { setLoadingState } = useContext(LoadingStateContext);
-	const { setError } = useContext(ErrorsContext);
+	const { setLoadingState } = useLoadingState();
+	const { setError } = useErrors();
 	const [info, setInfo] = useState<{
 		artists: Array<string>;
 		genres: Array<string>;

@@ -1,4 +1,5 @@
-import { useState, useContext, useEffect } from "react";
+import "./AdminRoom.css";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import AddToQueueForm from "../../../components/AddToQueueForm/AddToQueueForm";
 import { PlusButton, CancelButton } from "../../../components/Buttons/Buttons";
@@ -7,17 +8,16 @@ import { useSongs } from "../../../components/Hooks/useSongs";
 import SongsList from "../../../components/SongsList";
 import SongsQueue from "../../../components/SongsQueue";
 import { Song } from "../../../myTypes";
-import "./AdminRoom.css";
 import DialogWrapped from "../../../components/DialogWrapped/DialogWrapped";
-import { LanguageContext, NavTitleStateContext } from "../../../Contexts";
 import * as text from "../../../Language/text";
+import { useLanguage, useNavTitle } from "../../../Contexts";
 
 const AdminRoom = () => {
 	const params = useParams();
 	const roomId = params.roomId;
 	const [addingSong, setAddingSong] = useState(false);
-	const { language } = useContext(LanguageContext);
-	const { setNavTitle } = useContext(NavTitleStateContext);
+	const { language } = useLanguage();
+	const { setNavTitle } = useNavTitle();
 
 	if (!roomId) {
 		return <h1 className="admin no-room">{text.roomNotFound[language]}</h1>;
@@ -60,7 +60,7 @@ function AdminAddToQueueDialog({
 	close: VoidFunction;
 }) {
 	const songs = useSongs(roomId);
-	const { language } = useContext(LanguageContext);
+	const { language } = useLanguage();
 	const { info, filterByArtist, filterByGenre, filterByID } = songs;
 	const [selectedId, setSelectedId] = useState("");
 	const [selectedArtist, setSelectedArtist] = useState("");

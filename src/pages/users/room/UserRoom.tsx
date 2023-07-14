@@ -1,5 +1,4 @@
 import "./UserRoom.css";
-import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import FilterSongsForm from "../../../components/FilterSongsForm/FilterSongsForm";
 import SongsTable from "../../../components/SongsList";
@@ -8,13 +7,14 @@ import { Song } from "../../../myTypes";
 import AddToQueueForm from "../../../components/AddToQueueForm/AddToQueueForm";
 import { useSongs } from "../../../components/Hooks/useSongs";
 import * as text from "../../../Language/text";
-import { LanguageContext, NavTitleStateContext } from "../../../Contexts";
+import { useLanguage, useNavTitle } from "../../../Contexts";
+import { useState, useEffect } from "react";
 
 function UserRoom() {
 	const { roomId } = useParams();
 	const [filter, setFilter] = useState(true);
-	const { language } = useContext(LanguageContext);
-	const { setNavTitle } = useContext(NavTitleStateContext);
+	const { language } = useLanguage()
+	const { setNavTitle } = useNavTitle()
 
 	const songs = useSongs(roomId, true);
 

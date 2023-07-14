@@ -1,9 +1,5 @@
 import "./UserLanding.css";
-import {
-	ErrorsContext,
-	LanguageContext,
-	LoadingStateContext,
-} from "../../../Contexts";
+
 import * as text from "../../../Language/text";
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -11,12 +7,13 @@ import { doc, getDoc } from "firebase/firestore";
 import { roomsCollectionRef } from "../../../firebase-config";
 import { LoadignState } from "../../../myTypes";
 import { changeRoomCode } from "../../../components/HelperFunctions";
+import { useErrors, useLanguage, useLoadingState } from "../../../Contexts";
 
 function UserLanding() {
 	const navigate = useNavigate();
-	const { setError } = useContext(ErrorsContext);
-	const { setLoadingState } = useContext(LoadingStateContext);
-	const { language } = useContext(LanguageContext);
+	const { setError } = useErrors();
+	const { setLoadingState } = useLoadingState();
+	const { language } = useLanguage();
 	const [roomCode, setRoomCode] = useState("");
 	const welcomeText = text.landing[language].split(" ");
 
@@ -106,8 +103,8 @@ export function catchErrorFunction({
 }
 
 export function LoadingError() {
-	const { error } = useContext(ErrorsContext);
-	const { loadingState } = useContext(LoadingStateContext);
+	const { error } = useErrors();
+	const { loadingState } = useLoadingState();
 	return (
 		<>
 			{loadingState === "loading" && <span className="loading" />}

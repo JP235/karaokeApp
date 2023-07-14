@@ -1,5 +1,5 @@
-import { useRef, useContext, useEffect } from "react";
-import { LanguageContext, LoadingStateContext } from "../Contexts";
+import { useRef, useEffect } from "react";
+import { useLanguage, useLoadingState } from "../Contexts";
 import { Song } from "../myTypes";
 import { PrevButton, NextButton } from "./Buttons/Buttons";
 import { UseSongsReturntype } from "./Hooks/useSongs";
@@ -14,8 +14,8 @@ interface SongsTableParams {
 function SongsTable({ songs, setSelectedSong }: SongsTableParams) {
 	const tableRef = useRef<HTMLTableElement>(null);
 	const { paginatedSongs, currPage, prevPage, nextPage, numberOfPages } = songs;
-	const { loadingState } = useContext(LoadingStateContext);
-	const { language } = useContext(LanguageContext);
+	const { loadingState } = useLoadingState();
+	const { language } = useLanguage();
 	useEffect(() => {
 		if (tableRef.current) {
 			tableRef.current.scrollTop = -10;
@@ -65,7 +65,9 @@ function SongsTable({ songs, setSelectedSong }: SongsTableParams) {
 					{numberOfPages ? `/${numberOfPages}` : ""}
 					<NextButton
 						title={text.nextPage[language]}
-						disabled={loadingState != "loaded" || currPage >= numberOfPages! -1 }
+						disabled={
+							loadingState != "loaded" || currPage >= numberOfPages! - 1
+						}
 						onClick={() => nextPage()}
 					/>
 				</div>

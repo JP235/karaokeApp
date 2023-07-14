@@ -1,5 +1,5 @@
-import { useState, useContext, useEffect } from "react";
-import { LanguageContext } from "../Contexts";
+import { useState, useEffect } from "react";
+import { useLanguage } from "../Contexts";
 import { HambButton } from "../components/Buttons/Buttons";
 import { TLanguages } from "../myTypes";
 import { clickAway } from "../components/HelperFunctions";
@@ -7,7 +7,7 @@ import { Language } from "./text";
 
 function LanguagePicker() {
 	const [show, setShow] = useState(false);
-	const { language, setLanguage } = useContext(LanguageContext);
+	const { language, setLanguage } = useLanguage();
 
 	useEffect(() => {
 		document.addEventListener("click", (e) =>
