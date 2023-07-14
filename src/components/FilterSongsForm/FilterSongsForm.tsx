@@ -36,9 +36,7 @@ function FilterSongsForm({
 					placeholder={`${title}`}
 				/>
 				<SearchButton
-					disabled={
-						dataHints === undefined ? false : !dataHints.includes(selected)
-					}
+					disabled={selected.length <= 0}
 					type="submit"
 					title={`${title}`}
 				/>

@@ -88,6 +88,9 @@ function AdminAddToQueueDialog({
 					<FilterSongsForm
 						onSubmit={(e) => {
 							e.preventDefault();
+							if (selectedId === "") {
+								return;
+							}
 							setSelectedArtist("");
 							setSelectedGenre("");
 							filterByID(selectedId);
@@ -99,6 +102,9 @@ function AdminAddToQueueDialog({
 					<FilterSongsForm
 						onSubmit={(e) => {
 							e.preventDefault();
+							if (selectedArtist === "") {
+								return;
+							}
 							setSelectedGenre("");
 							setSelectedId("");
 							filterByArtist(selectedArtist);
@@ -111,6 +117,9 @@ function AdminAddToQueueDialog({
 					<FilterSongsForm
 						onSubmit={(e) => {
 							e.preventDefault();
+							if (selectedGenre === "") {
+								return;
+							}
 							setSelectedArtist("");
 							setSelectedId("");
 							filterByGenre(selectedGenre);
@@ -130,7 +139,7 @@ function AdminAddToQueueDialog({
 					song={selectedSong}
 					admin={true}
 					onSubmit={close}
-					open={selectedSong !== undefined && selectedSong.song_name !== ""}
+					open={selectedSong !== undefined && selectedSong.song_name !== "-"}
 					close={() => {
 						setSelectedSong(undefined);
 					}}

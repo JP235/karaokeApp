@@ -65,9 +65,7 @@ function SongsTable({ songs, setSelectedSong }: SongsTableParams) {
 					{numberOfPages ? `/${numberOfPages}` : ""}
 					<NextButton
 						title={text.nextPage[language]}
-						disabled={
-							loadingState != "loaded" || paginatedSongs.next_page.length === 0
-						}
+						disabled={loadingState != "loaded" || currPage >= numberOfPages! -1 }
 						onClick={() => nextPage()}
 					/>
 				</div>
