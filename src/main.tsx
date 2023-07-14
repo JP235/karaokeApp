@@ -3,13 +3,14 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import {
-	AuthProvider,
+	// UserProvider,
+	// AuthProvider,
 	DndProviderTouchAndMouse,
 	ErrorsProvider,
 	LanguageProvider,
 	LoadignStateProvider,
 	NavTitleStateProvider,
-	UserProvider,
+	UserAuthProvider,
 } from "./Contexts.tsx";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
@@ -18,13 +19,15 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 			<LanguageProvider>
 				<ErrorsProvider>
 					<LoadignStateProvider>
-						<UserProvider>
-							<AuthProvider>
-								<DndProviderTouchAndMouse>
-									<App />
-								</DndProviderTouchAndMouse>
-							</AuthProvider>
-						</UserProvider>
+						<UserAuthProvider>
+							{/* <UserProvider> */}
+							{/* <AuthProvider> */}
+							<DndProviderTouchAndMouse>
+								<App />
+							</DndProviderTouchAndMouse>
+							{/* </AuthProvider> */}
+							{/* </UserProvider> */}
+						</UserAuthProvider>
 					</LoadignStateProvider>
 				</ErrorsProvider>
 			</LanguageProvider>
