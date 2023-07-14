@@ -10,14 +10,15 @@ import {
 import { useState, useEffect } from "react";
 import { googleAuthProvider } from "../../firebase-config";
 
+// DEPRECATED, WILL BE REMOVED
 export function usefireAuthProvider(callbacks?: {
 	loggedInCallback: VoidFunction;
 	notLoggedInCallback: VoidFunction;
 }) {
-	const [isAuthenticated, setIsAuth] = useState(false);
-	const [checkingStatus, setCheckingStatus] = useState(true);
-	const [user, setUser] = useState<User | null>(null);
 	const fireAuth = getAuth();
+	const [isAuthenticated, setIsAuth] = useState(false);
+	// const [checkingStatus, setCheckingStatus] = useState(true);
+	const [user, setUser] = useState<User | null>(null);
 
 	useEffect(() => {
 		// auth listener to keep track of user signing in and out
@@ -30,8 +31,6 @@ export function usefireAuthProvider(callbacks?: {
 				setUser(null);
 				setIsAuth(false);
 			}
-
-			setCheckingStatus(false);
 		});
 	}, []);
 
@@ -82,7 +81,6 @@ export function usefireAuthProvider(callbacks?: {
 	};
 	return {
 		user,
-		checkingStatus,
 		isAuthenticated,
 		signinWithGoogle,
 		signInWithPassword,
