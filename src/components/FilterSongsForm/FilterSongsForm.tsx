@@ -1,5 +1,4 @@
 import "./FilterSongsForm.css";
-import * as text from "../../Language/text";
 import { CancelButton, SearchButton } from "../Buttons/Buttons";
 
 interface FilterFormProps {

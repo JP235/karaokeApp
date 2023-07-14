@@ -8,7 +8,6 @@ import {
 import { useState, useEffect } from "react";
 import { roomsCollectionRef } from "../../firebase-config";
 import { QueueItem, Room, Song } from "../../myTypes";
-import { formattedDate } from "../HelperFunctions";
 
 export const useRoom = ({
 	roomId,

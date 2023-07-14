@@ -7,13 +7,6 @@ import AdminDashboard from "./pages/admin/AdminDashboard/AdminDashboard";
 import AdminRoom from "./pages/admin/AdminRoom/AdminRoom";
 import UserRoom from "./pages/users/room/UserRoom";
 import NotFound from "./components/NotFound";
-import LanguagePicker from "./Language/LanguagePicker";
-import {
-	NavTitleStateContext,
-	NavTitleStateProvider,
-	UserContext,
-} from "./Contexts";
-import { useContext } from "react";
 import { Navbar } from "./components/NavBar/NavBar";
 
 function App() {
