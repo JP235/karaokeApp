@@ -1,10 +1,4 @@
-.plusButton,
-.doneButton,
-.deleteButton,
-.cancelButton,
-.searchButton,
-.prevButton,
-.nextButton {
+.customButton {
 	display: grid;
 	justify-content: center;
 	align-items: center;
@@ -29,13 +23,7 @@
 	border: 0px;
 }
 
-.plusButton-span,
-.doneButton-span,
-.deleteButton-span,
-.cancelButton-span,
-.searchButton-span,
-.prevButton-span,
-.nextButton-span {
+.customButton span {
 	border-radius: 50%;
 	display: block;
 	height: 2em;
@@ -45,9 +33,12 @@
 	background-size: contain;
 	filter: invert(0.9);
 }
+span.googleButton-span {
+	filter: none;
+}
 
-.cancelButton-span,
-.searchButton-span {
+span.cancelButton-span,
+span.searchButton-span {
 	height: 1.5em;
 	width: 1.5em;
 }
@@ -80,10 +71,13 @@
 .plusButton-span {
 	background-image: url(../../assets/plus.svg);
 }
+.googleButton-span {
+	background-image: url(../../assets/google-color-svg.svg);
+}
 
 .hamb-bar {
 	width: 1.5em;
 	height: 3px;
 	background-color: rgb(250, 250, 250, 50%);
-	margin-top: 15% ;
+	margin-top: 15%;
 }

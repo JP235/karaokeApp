@@ -9,7 +9,7 @@ function MyButton({ baseClassName, className, ...props }: MyButtonProps) {
     return (
         <button
             type="button"
-            className={`${baseClassName} ${className || ""}`}
+            className={`customButton ${baseClassName} ${className || ""}`}
             {...props}
         >
             <span className={`${baseClassName}-span`}></span>
@@ -17,6 +17,9 @@ function MyButton({ baseClassName, className, ...props }: MyButtonProps) {
     );
 }
 
+export function GoogleButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
+    return <MyButton baseClassName="googleButton" {...props} />;
+}
 export function PrevButton(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
     return <MyButton baseClassName="prevButton" {...props} />;
 }

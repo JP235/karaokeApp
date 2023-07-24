@@ -1,6 +1,8 @@
+import "./LoginForm.css";
 import { useState, useEffect, FormEvent } from "react";
 import { useLocation, Navigate, Outlet, useNavigate } from "react-router-dom";
 import { useUserAuth } from "../../../Contexts";
+import { GoogleButton } from "../../../components/Buttons/Buttons";
 
 export function RequireAuth() {
 	const auth = useUserAuth();
@@ -22,7 +24,7 @@ const LoginForm = () => {
 	const location = useLocation();
 	const auth = useUserAuth();
 	const state = location.state as { from: Location };
-	const from = state.from.pathname ?? "/";
+	const from = state?.from.pathname ?? "/";
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
@@ -30,7 +32,7 @@ const LoginForm = () => {
 
 	useEffect(() => {
 		if (auth.isAuth) {
-			navBackCallback()
+			navBackCallback();
 		}
 	}, [auth.isAuth]);
 
@@ -40,34 +42,42 @@ const LoginForm = () => {
 	};
 
 	return (
-		<div className="admin-login">
-			<form className="login-form" onSubmit={handleSubmit}>
-				<label>
-					<span className="labelName">Email</span>
-					<input
-						className="labelInput"
-						type="email"
-						value={email}
-						onChange={(event) => setEmail(event.target.value)}
-					/>
-				</label>
-				<label>
-					<span className="labelName">Contraseña</span>
-					<input
-						className="labelInput"
-						type="password"
-						value={password}
-						onChange={(event) => setPassword(event.target.value)}
-					/>
-				</label>
-				<button type="submit" value="Sign In">
-					Enviar
-				</button>
-			</form>
-			OR
-			<button onClick={() => auth.signinWithGoogle(navBackCallback)}>
-				login with google
-			</button>
+		<div className="admin-login-container">
+			<div className="admin-login">
+				<h1>Login</h1>
+				<form className="login-form" onSubmit={handleSubmit}>
+					<label>
+						<span className="labelName">Email</span>
+						<input
+							className="labelInput"
+							type="email"
+							value={email}
+							onChange={(event) => setEmail(event.target.value)}
+						/>
+					</label>
+					<label>
+						<span className="labelName">Contraseña</span>
+						<input
+							className="labelInput"
+							type="password"
+							value={password}
+							onChange={(event) => setPassword(event.target.value)}
+						/>
+					</label>
+					<button type="submit" value="Sign In">
+						Enviar
+					</button>
+				</form>
+				or
+				<GoogleButton
+					type="button"
+					className="google-login"
+					title="Login with Google"
+					onClick={() => auth.signinWithGoogle(navBackCallback)}
+				>
+					Login with Google
+				</GoogleButton>
+			</div>
 		</div>
 	);
 };

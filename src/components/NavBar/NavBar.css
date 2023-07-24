@@ -8,7 +8,7 @@
 	font-size: larger;
 	display: grid;
 	grid-template-areas: "bar menu";
-	grid-template-columns: auto 2rem;
+	grid-template-columns: auto calc(3rem + min(1rem, 2vw));
 	align-items: center;
 	justify-items: center;
 	background-color: black;
@@ -28,7 +28,7 @@
 	position: absolute;
 	overflow: hidden;
 	display: grid;
-	right: 0;
+	right: calc(min(1rem, 2vw) / 2);
 	left: auto;
 }
 
@@ -44,8 +44,11 @@
 }
 .selector-buttons button {
 	width: 3em;
+    height: 3em;
+    padding: 0;
 	text-transform: capitalize;
 	background-color: lightslategray;
+    border-color: rgba(0, 0, 0, 0.1);
 }
 
 .show .selector-buttons {

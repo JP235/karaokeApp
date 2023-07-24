@@ -49,6 +49,9 @@ export const useSongs = (roomId?: string, start?: boolean) => {
 	const [songsCollection, setSongsCollection] =
 		useState<CollectionReference<DocumentData>>();
 	const [currPage, setCurrPage] = useState(0);
+	const [currQuery, setCurrQuery] = useState<
+		["GENERO" | "ARTISTA" | "TITULO" | "id" | "", string]
+	>(["", ""]);
 	const [currConstraints, setCurrConstraints] = useState<QueryConstrs>({
 		FiltConsts: [],
 		CompositeFilt: null,
@@ -97,6 +100,7 @@ export const useSongs = (roomId?: string, start?: boolean) => {
 	useEffect(() => {
 		if (songsCollection && start) {
 			startQuery();
+			setLoadingState("loaded");
 		} else {
 			setLoadingState("loaded");
 		}
@@ -131,7 +135,7 @@ export const useSongs = (roomId?: string, start?: boolean) => {
 		let constraints: QueryConstrs = {
 			CompositeFilt: null,
 			FiltConsts: [],
-			NonFiltConsts: [limit(pageLimit)],
+			NonFiltConsts: [orderBy("GENERO"), limit(pageLimit)],
 		};
 
 		if (!field || !val) {
@@ -148,6 +152,7 @@ export const useSongs = (roomId?: string, start?: boolean) => {
 					}
 					return v.includes(val);
 				});
+				setCurrQuery([field, val]);
 				constraints.FiltConsts = [where(field, "in", relevantInfo)];
 				constraints.NonFiltConsts = [
 					orderBy("ARTISTA"),
@@ -156,8 +161,11 @@ export const useSongs = (roomId?: string, start?: boolean) => {
 				];
 				break;
 			case "ARTISTA":
-				relevantInfo = info.artists.filter((v) => v.includes(val));
+				relevantInfo = info.artists.filter((v) =>
+					v.includes(val.toUpperCase())
+				);
 				if (relevantInfo.length > 0) {
+					setCurrQuery([field, val]);
 					constraints.FiltConsts = [where(field, "in", relevantInfo)];
 					constraints.NonFiltConsts = [
 						orderBy("ARTISTA"),
@@ -199,7 +207,8 @@ export const useSongs = (roomId?: string, start?: boolean) => {
 					where(field, ">=", val.toUpperCase()),
 					where(field, "<=", `${val.toUpperCase()}~`),
 				];
-				constraints.NonFiltConsts = [orderBy("TITULO")];
+				setCurrQuery([field, val]);
+				constraints.NonFiltConsts = [orderBy("TITULO"), limit(pageLimit)];
 				break;
 			default:
 				break;
@@ -246,7 +255,6 @@ export const useSongs = (roomId?: string, start?: boolean) => {
 					: query(songsCollection, ...constraints.FiltConsts);
 
 			const qcountdoc = (await getCountFromServer(qcount)).data().count;
-			// console.log(qcountdoc);
 
 			setNumberOfPages(Math.ceil(qcountdoc / pageLimit));
 			setCurrConstraints(constraints);
@@ -258,8 +266,6 @@ export const useSongs = (roomId?: string, start?: boolean) => {
 				curr_page: [...pageSongs],
 				next_page: [],
 			});
-
-			setLoadingState("loaded");
 		} catch (e) {
 			catchErrorFunction({
 				e,
@@ -268,6 +274,7 @@ export const useSongs = (roomId?: string, start?: boolean) => {
 				setError,
 			});
 		}
+		setLoadingState("loaded");
 	};
 
 	const nextPage = async () => {
@@ -311,13 +318,17 @@ export const useSongs = (roomId?: string, start?: boolean) => {
 	};
 
 	const filterByTitle = (title: string) => {
+		if (title === currQuery[1]) return;
+
 		startQuery("TITULO", title);
 	};
 	const filterByArtist = (selectedArtist: string) => {
+		if (selectedArtist === currQuery[1]) return;
 		startQuery("ARTISTA", selectedArtist);
 	};
 	const filterByGenre = (selectedGenre: string) => {
 		if (!info.genres.includes(selectedGenre)) return;
+		if (selectedGenre === currQuery[1]) return;
 		startQuery("GENERO", selectedGenre);
 	};
 	const filterByID = async (id: string) => {
@@ -359,6 +370,7 @@ export const useSongs = (roomId?: string, start?: boolean) => {
 		filterByGenre,
 		filterByID,
 		filterByTitle,
+		currQuery,
 	};
 };
 

@@ -1,0 +1,73 @@
+.songs-table {
+	position: relative;
+	overflow-y: scroll;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-items: center;
+	justify-content: space-between;
+}
+
+.song-list {
+	background-color: rgb(var(--light-rgb), 10%);
+	width: 100%;
+	border-collapse: collapse;
+	text-align: center;
+}
+
+.song-list caption {
+	background: rgb(var(--dark-rgb));
+}
+
+.song-list thead {
+	position: sticky;
+	top: -1px;
+	background: rgb(var(--light-rgb));
+	color: rgb(var(--dark-rgb), 95%);
+}
+
+.song-list td {
+	text-transform: capitalize;
+	height: 1rem;
+}
+
+.song-list tr,
+.song-list th {
+	height: 50px;
+	max-width: 50%;
+}
+.song-list tr td:first-child {
+	font-style: italic;
+	font-weight: bold;
+}
+/* .song-list tr td:last-child {
+	text-align: right;
+} */
+
+.song-list tr.even {
+	background-color: rgb(var(--dark-rgb), 50%);
+}
+.song-list tr.odd {
+	background-color: rgb(var(--dark-rgb), 5%);
+}
+
+.song-list tr td.artist-name {
+	background-color: rgb(var(--light-rgb), 25%);
+	text-align: left;
+	padding-left: 1rem;
+	text-decoration: underline;
+}
+.song-list tr span {
+	cursor: pointer;
+}
+
+.songs-table .toolbar {
+	background-color: black;
+	padding: 0.5rem;
+}
+
+.table-buttons {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}

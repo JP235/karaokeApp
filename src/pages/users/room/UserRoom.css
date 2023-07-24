@@ -3,6 +3,7 @@
 	justify-items: center;
 	gap: 1rem;
 	width: 100%;
+	height: 100%;
 }
 
 .user-room h1 {
@@ -11,131 +12,12 @@
 
 .user-room-content-wrapper {
 	background-color: rgb(var(--dark-rgb), 50%);
-	width: 95%;
-	max-width: 600px;
-	margin: 0 3px;
-}
-
-.filter-songs {
-	margin: 0 auto;
-	padding-bottom: 1rem;
-	background-color: rgb(var(--accent1-rgb), 40%);
-	transition: all 500ms;
-}
-
-.collapse.filter-songs {
-	background-color: rgb(var(--dark-rgb));
-}
-
-.filter-form-title {
-	display: flex;
-	flex-direction: row-reverse;
-	justify-content: center;
-	align-items: center;
-}
-
-.collapse .filter-form-title {
-	display: flex;
-	flex: none;
-}
-
-.filter-form-title {
-	opacity: 0;
-	visibility: hidden;
-	height: 1.5rem;
-	transition: all 500ms;
-}
-
-.collapse .filter-form-title {
-	opacity: 1;
-	height: 2rem;
-	visibility: visible;
-}
-
-.collapse .dummy {
-	flex: auto;
-}
-
-.dummy {
-	flex: 0;
-	transition: flex 500ms;
-}
-
-.filter-forms {
-	display: grid;
-	grid-template-rows: 1fr;
-	gap: 1rem;
-	grid-template-columns: 1fr;
-	transition: grid-template-rows 500ms, grid-template-columns 250ms,
-		margin 500ms;
-}
-
-.collapse .filter-forms {
-	grid-template-rows: 0fr;
-	grid-template-columns: 0fr 0fr;
-}
-
-.filter-forms > form {
-	overflow: hidden;
-}
-
-.songs-table {
-	position: relative;
-	max-height: 500px;
-	overflow-y: scroll;
-	display: flex;
-	flex-direction: column;
-	justify-items: center;
-}
-
-.song-list {
-	background-color: rgb(var(--light-rgb), 10%);
 	width: 100%;
 	height: 100%;
-	border-collapse: collapse;
+	max-width: 600px;
+	display: grid;
+	grid-template-columns: 1fr;
+	overflow-y: hidden;
+	grid-template-rows: auto 1fr auto;
 }
 
-.song-list caption {
-	background: rgb(var(--dark-rgb));
-}
-
-.song-list thead {
-	position: sticky;
-	top: -1px;
-	background: rgb(var(--light-rgb));
-	color: rgb(var(--dark-rgb), 95%);
-}
-
-.song-list td {
-	text-transform: capitalize;
-	padding-left: 0.1rem;
-}
-
-.song-list tr {
-	height: 40px;
-}
-.song-list tr th {
-	height: 40px;
-	width: 50%;
-}
-.song-list tr td:first-child {
-	font-style: italic;
-    font-weight: bold;
-}
-/* .song-list tr td:last-child {
-	text-align: right;
-} */
-
-.song-list tr:nth-child(even) {
-	background-color: rgb(var(--light-rgb), 25%);
-}
-
-.songs-table .toolbar {
-	margin: 5px;
-}
-
-.table-buttons {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-}

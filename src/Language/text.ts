@@ -81,10 +81,10 @@ export const nextPage = {
   'it': 'Pagina successiva'
 }
 export const hello = {
-  'es': '¡Hola!',
-  'en': 'Hello!',
-  'fr': 'Salut!',
-  'it': 'Ciao!'
+  'es': 'Hola',
+  'en': 'Hello',
+  'fr': 'Salut',
+  'it': 'Ciao'
 }
 
 export const filter = {

@@ -2,7 +2,7 @@ import "./App.css";
 import { Routes, Route, BrowserRouter, useLocation } from "react-router-dom";
 import UserLanding from "./pages/users/landing/UserLanding";
 import AdminLanding from "./pages/admin/AdminEntry/AdminEntry";
-import LoginForm, { RequireAuth } from "./pages/admin/auth/auth";
+import LoginForm, { RequireAuth } from "./pages/admin/LoginForm/LoginForm";
 import AdminDashboard from "./pages/admin/AdminDashboard/AdminDashboard";
 import AdminRoom from "./pages/admin/AdminRoom/AdminRoom";
 import UserRoom from "./pages/users/room/UserRoom";

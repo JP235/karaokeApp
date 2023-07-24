@@ -39,6 +39,7 @@ function LanguagePicker() {
 							return (
 								<span key={i}>
 									<button
+										type="button"
 										className={language === k ? "selected-lang" : ""}
 										key={i}
 										onClick={() => setLanguage(k)}

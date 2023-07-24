@@ -1,0 +1,55 @@
+.admin-dash {
+	max-width: 800px;
+	margin: 0 auto;
+	padding: 16px;
+	background-color: rgb(250, 250, 250, 0.5);
+	color: black;
+    border-radius: 15px;
+}
+.admin-dash main {
+    display: grid;
+    gap: 1rem;
+    text-align: center;
+}
+.admin-dash-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.admin-dash-actions {
+	position: relative;
+}
+
+.admin-dash-actions-button {
+	background-color: #007aff;
+	color: white;
+	border: none;
+	padding: 8px 16px;
+	border-radius: 4px;
+}
+
+.admin-dash-actions-dropdown {
+	display: none;
+	margin: 0;
+	position: absolute;
+	/* top: calc(100% + 8px); */
+	right: 0;
+	background-color: #0e4785;
+	border-radius: 4px;
+	box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+.admin-dash-actions-dropdown li {
+	list-style: none;
+}
+
+.admin-dash-actions-dropdown li button {
+	background-color: transparent;
+	border: none;
+	padding: 8px 16px;
+}
+
+.admin-dash-actions:hover .admin-dash-actions-dropdown {
+	display: block;
+}

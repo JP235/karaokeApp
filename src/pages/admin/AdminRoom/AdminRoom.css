@@ -4,6 +4,8 @@
 
 .admin-add-song-container {
 	max-width: 700px;
+	height: 100%;
+	overflow: hidden;
 }
 
 .admin-add-song-container,
@@ -11,6 +13,9 @@
 .queue-song-dialog {
 	width: auto;
 	max-width: 500px;
+}
+.admin-queue-song-dialog {
+	max-height: 100%;
 }
 
 .admin-add-song-header {
@@ -26,31 +31,32 @@
 	width: 2rem;
 }
 
-.close-admin-add-song {
-	background-color: rgb(250, 0, 0, 0.4);
+button.close-admin-add-song {
+	background-color: rgb(250, 0, 0, 0.8);
 	position: absolute;
 	top: 5px;
 	right: 5px;
 }
 
-.close-admin-add-song:hover {
-	background-color: rgb(250, 0, 0, 0.8);
+button.close-admin-add-song:hover {
+	box-shadow: 0px 0px 10px 0px white;
 }
 
 .queue-table-container {
+	margin: 0 auto;
 	width: 100%;
-	max-width: 700px;
-	max-height: 700px;
-	padding-bottom: 1rem;
-	border-radius: 15px;
+	height: 100%;
+	border-radius: 8px;
 	overflow-y: scroll;
+    background-color: rgb(var(--light-rgb), 20%);
 }
 
 .admin-queue {
 	width: 100%;
 	max-width: 700px;
-	background-color: rgb(var(--light-rgb), 20%);
+	
 	overflow-y: scroll;
+    text-align: center;
 }
 
 .admin-queue caption {
@@ -130,8 +136,7 @@
 	left: 0;
 	background-color: black;
 	background-size: cover;
-	/* border: 1px solid red; */
-	border-radius: 15px;
+	border-radius: 8px;
 	z-index: -1;
 }
 
@@ -166,6 +171,7 @@ button.delete-from-queue-button {
 button.mark-done-button {
 	background-color: rgb(var(--primary-rgb));
 	border-radius: 4px;
+    margin: 0.5rem;
 }
 
 .mark-done-button > span,
@@ -237,7 +243,7 @@ table table th:nth-child(2) {
 
 	table table td {
 		display: grid;
-		grid-template-columns: 5em 1fr;
+		grid-template-columns: 40% 1fr;
 		max-width: 100%;
 		text-align: left;
 		/* align-items: center; */

@@ -1,5 +1,5 @@
 import "./FilterSongsForm.css";
-import { CancelButton, SearchButton } from "../Buttons/Buttons";
+import { CancelButton, SearchButton } from "../../Buttons/Buttons";
 
 interface FilterFormProps {
 	onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
