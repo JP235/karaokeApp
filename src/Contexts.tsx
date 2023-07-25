@@ -126,6 +126,7 @@ interface UserAuthContextValue {
 	isAuth: boolean;
 	user: User | null;
 	userData: UserData;
+    refreshUserData: VoidFunction
 	signinWithGoogle: (callback: VoidFunction) => void;
 	signInWithPassword: ({
 		callback,
@@ -142,6 +143,7 @@ interface UserAuthContextValue {
 export const UserAuthContext = createContext<UserAuthContextValue>(null!);
 
 export function UserAuthProvider({ children }: { children: React.ReactNode }) {
+	const { setLoadingState } = useLoadingState();
 	const [user, setUser] = useState<User | null>(null);
 	const [isAuth, setIsAuth] = useState(false);
 	const [userData, setUserData] = useState<UserData>(emptyUser);
@@ -152,6 +154,7 @@ export function UserAuthProvider({ children }: { children: React.ReactNode }) {
 				setUser(null);
 				setIsAuth(false);
 				setUserData(emptyUser);
+				setLoadingState("loaded");
 				return;
 			}
 			if (!fireUser.email) throw new Error("User Email doesn't exist");
@@ -167,6 +170,18 @@ export function UserAuthProvider({ children }: { children: React.ReactNode }) {
 			unsub();
 		};
 	}, []);
+
+	const refreshUserData = () => {
+		const fireUser = fireAuth.currentUser;
+		if (!fireUser || !fireUser.email) return;
+		getDoc(doc(usersCollectionRef, fireUser.email)).then((userDoc) => {
+			if (!userDoc.exists) throw new Error("User Doc doesn't exist");
+			const userData = userDoc.data() as unknown as UserData;
+			setUserData({ ...userData });
+			setUser(fireUser);
+			setIsAuth(true);
+		});
+	};
 
 	const signInWithPassword = ({
 		callback,
@@ -215,6 +230,7 @@ export function UserAuthProvider({ children }: { children: React.ReactNode }) {
 	const value = {
 		user,
 		userData,
+		refreshUserData,
 		isAuth,
 		signinWithGoogle,
 		signInWithPassword,
