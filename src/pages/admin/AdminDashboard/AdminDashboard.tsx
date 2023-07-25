@@ -1,8 +1,9 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import {
 	useErrors,
 	useLanguage,
 	useLoadingState,
+	usePageName,
 	useUserAuth,
 } from "../../../Contexts";
 import "./AdminDashboard.css";
@@ -10,7 +11,7 @@ import {
 	roomsCollectionRef,
 	usersCollectionRef,
 } from "../../../firebase-config";
-import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { changeRoomCode } from "../../../components/HelperFunctions";
 import * as text from "../../../Language/text";
@@ -38,6 +39,7 @@ function AdminDashboard1() {
 				queue: [],
 				created_by: userData.name,
 				song_db: userData.songs_db,
+				order: "1",
 			});
 			await setDoc(
 				doc(usersCollectionRef, userData.email),
@@ -147,17 +149,21 @@ function AdminDashboard1() {
 		</>
 	);
 }
-import React from "react";
 
 function AdminDashboard() {
 	const navigate = useNavigate();
 	const { setError } = useErrors();
 	const { language } = useLanguage();
 	const { setLoadingState } = useLoadingState();
-	const { userData, signout: fireSingOut, user } = useUserAuth();
+	const { userData, signout: fireSingOut, refreshUserData } = useUserAuth();
 	const [creatingRoom, setCreatigRoom] = useState(false);
 	const [roomCode, setRoomCode] = useState(String(generateRandomNumber()));
 	const [roomName, setRoomName] = useState("Karaoke");
+	const { setPageName } = usePageName();
+
+	useEffect(() => {
+		setPageName("KaraokeApp - Admin");
+	}, []);
 
 	const createRoom = async () => {
 		try {
@@ -182,6 +188,26 @@ function AdminDashboard() {
 			});
 		}
 	};
+
+	const deleteRoom = async () => {
+		try {
+			await deleteDoc(doc(roomsCollectionRef, String(userData.active_room)));
+			const userRef = doc(usersCollectionRef, userData.email);
+			updateDoc(userRef, {
+				active_room: "-1",
+			}).then(() => {
+				refreshUserData();
+			});
+		} catch (e) {
+			catchErrorFunction({
+				e,
+				fallbackMsg: "Error deleting room",
+				setLoadingState: setLoadingState,
+				setError: setError,
+			});
+		}
+	};
+
 	function handleLogout() {
 		fireSingOut(() => {});
 	}
@@ -218,6 +244,7 @@ function AdminDashboard() {
 						>
 							{text.goToActiveRoom[language]}
 						</button>
+						<button onClick={() => deleteRoom()}>Delete Room</button>
 					</>
 				) : (
 					<>
