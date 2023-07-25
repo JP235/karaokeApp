@@ -33,7 +33,9 @@ export const useRoom = ({
 					});
 					setPastQueue(roomData.pastQueue ?? []);
 					setCurrentQueue(roomData.currentQueue ?? []);
-				}
+				} else {
+                    throw new Error("Room not found");
+                }
 			});
 			return () => unsubscribe();
 		}

@@ -1,6 +1,6 @@
 import "./AdminEntry.css";
 import { Outlet, useLocation } from "react-router-dom";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { LoadingError } from "../../users/landing/UserLanding";
 import { useLoadingState, useUserAuth } from "../../../Contexts";

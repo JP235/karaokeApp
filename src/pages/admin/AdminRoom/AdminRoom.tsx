@@ -2,9 +2,7 @@ import "./AdminRoom.css";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { PlusButton, CancelButton } from "../../../components/Buttons/Buttons";
-import { useSongs } from "../../../components/Hooks/useSongs";
 import SongsQueue from "../../../components/SongsQueue";
-import { Song } from "../../../myTypes";
 import DialogWrapped from "../../../components/DialogWrapped/DialogWrapped";
 import * as text from "../../../Language/text";
 import { useLanguage, usePageName } from "../../../Contexts";
@@ -74,7 +72,7 @@ function AdminAddToQueueDialog({
 						onClick={() => close()}
 					/>
 				</div>
-				<FilterSongsList roomId={roomId} />
+				<FilterSongsList roomId={roomId} admin/>
 			</DialogWrapped>
 		</div>
 	);

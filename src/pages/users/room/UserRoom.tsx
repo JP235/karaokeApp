@@ -1,12 +1,9 @@
 import "./UserRoom.css";
 import { useParams } from "react-router-dom";
 import { LoadingError } from "../landing/UserLanding";
-import { Song } from "../../../myTypes";
-import { useSongs } from "../../../components/Hooks/useSongs";
 import * as text from "../../../Language/text";
 import { useLanguage, usePageName } from "../../../Contexts";
-import { useState, useEffect } from "react";
-import useDebounced from "../../../components/Hooks/useDebouncedInput";
+import { useEffect } from "react";
 import FilterSongsList from "../../../components/FilterSongsList/FilterSongsList";
 
 function UserRoom() {

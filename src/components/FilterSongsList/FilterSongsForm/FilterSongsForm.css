@@ -70,7 +70,6 @@
 	border-radius: 4px;
 	border-width: 2px;
 	display: grid;
-	grid-template-columns: 2em 1fr;
 	grid-template-areas: "del textinput search";
 	justify-items: end;
 }
