@@ -152,7 +152,6 @@ export const useSongs = (roomId?: string, start?: boolean) => {
 					}
 					return v.includes(val);
 				});
-				setCurrQuery([field, val]);
 				constraints.FiltConsts = [where(field, "in", relevantInfo)];
 				constraints.NonFiltConsts = [
 					orderBy("ARTISTA"),
@@ -165,7 +164,6 @@ export const useSongs = (roomId?: string, start?: boolean) => {
 					v.includes(val.toUpperCase())
 				);
 				if (relevantInfo.length > 0) {
-					setCurrQuery([field, val]);
 					constraints.FiltConsts = [where(field, "in", relevantInfo)];
 					constraints.NonFiltConsts = [
 						orderBy("ARTISTA"),
@@ -207,7 +205,6 @@ export const useSongs = (roomId?: string, start?: boolean) => {
 					where(field, ">=", val.toUpperCase()),
 					where(field, "<=", `${val.toUpperCase()}~`),
 				];
-				setCurrQuery([field, val]);
 				constraints.NonFiltConsts = [orderBy("TITULO"), limit(pageLimit)];
 				break;
 			default:
@@ -319,16 +316,18 @@ export const useSongs = (roomId?: string, start?: boolean) => {
 
 	const filterByTitle = (title: string) => {
 		if (title === currQuery[1]) return;
-
+		setCurrQuery(["TITULO", title]);
 		startQuery("TITULO", title);
 	};
 	const filterByArtist = (selectedArtist: string) => {
 		if (selectedArtist === currQuery[1]) return;
+		setCurrQuery(["ARTISTA", selectedArtist]);
 		startQuery("ARTISTA", selectedArtist);
 	};
 	const filterByGenre = (selectedGenre: string) => {
 		if (!info.genres.includes(selectedGenre)) return;
 		if (selectedGenre === currQuery[1]) return;
+		setCurrQuery(["GENERO", selectedGenre]);
 		startQuery("GENERO", selectedGenre);
 	};
 	const filterByID = async (id: string) => {
@@ -338,7 +337,7 @@ export const useSongs = (roomId?: string, start?: boolean) => {
 			curr_page: [song],
 			next_page: [],
 		});
-		setLoadingState("loaded");
+		setCurrQuery(["id", id]);
 	};
 
 	const logSongs = () => {
