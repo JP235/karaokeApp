@@ -1,21 +1,16 @@
 import "./LoginForm.css";
 import { useState, useEffect, FormEvent } from "react";
 import { useLocation, Navigate, Outlet, useNavigate } from "react-router-dom";
-import { useUserAuth } from "../../../Contexts";
+import { useLoadingState, useUserAuth } from "../../../Contexts";
 import { GoogleButton } from "../../../components/Buttons/Buttons";
 
 export function RequireAuth() {
 	const auth = useUserAuth();
 	const location = useLocation();
-
-	if (!auth.user) {
-		// Redirect them to the /login page, but save the current location they were
-		// trying to go to when they were redirected. This allows us to send them
-		// along to that page after they login, which is a nicer user experience
-		// than dropping them off on the home page.
+	const { loadingState } = useLoadingState();
+	if (!auth.user && loadingState === "loaded") {
 		return <Navigate to="/login" state={{ from: location }} />;
 	}
-
 	return <Outlet />;
 }
 
