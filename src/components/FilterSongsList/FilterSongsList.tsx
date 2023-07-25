@@ -123,6 +123,7 @@ function FilterSongsList({
 						setSelectedSong={setSelectedSong}
 						roomId={roomId}
 						songs={songs}
+                        admin={admin}
 					/>
 
 					<AddToQueueForm

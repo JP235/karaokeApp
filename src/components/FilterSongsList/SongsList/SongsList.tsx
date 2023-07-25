@@ -10,9 +10,10 @@ interface SongsTableProps {
 	songs: UseSongsReturntype;
 	roomId: string;
 	setSelectedSong: React.Dispatch<React.SetStateAction<Song | undefined>>;
+	admin?: boolean;
 }
 
-function SongsTable({ songs, setSelectedSong }: SongsTableProps) {
+function SongsTable({ songs, setSelectedSong, admin }: SongsTableProps) {
 	const tableRef = useRef<HTMLTableElement>(null);
 	const {
 		paginatedSongs,
@@ -24,6 +25,7 @@ function SongsTable({ songs, setSelectedSong }: SongsTableProps) {
 	} = songs;
 	const { loadingState } = useLoadingState();
 	const { language } = useLanguage();
+
 	const paginatedByArtist = paginatedSongs.curr_page.reduce((acc, curr) => {
 		if (!acc[curr.artist]) {
 			acc[curr.artist] = [];
@@ -40,8 +42,6 @@ function SongsTable({ songs, setSelectedSong }: SongsTableProps) {
 
 	const handleClickArtist = (artist: string) => {
 		filterByArtist(artist);
-		// if (e.detail === 2) {
-		// }
 	};
 
 	return (
@@ -81,6 +81,9 @@ function SongsTable({ songs, setSelectedSong }: SongsTableProps) {
 						})}
 						{paginatedSongs.curr_page.length === 0 && (
 							<tr>
+								{loadingState === "loaded" && admin !== true && (
+									<span className="loading" />
+								)}
 								<td colSpan={2}>--</td>
 							</tr>
 						)}
