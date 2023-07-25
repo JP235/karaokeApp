@@ -7,8 +7,7 @@ import SongsQueue from "../../../components/SongsQueue";
 import { Song } from "../../../myTypes";
 import DialogWrapped from "../../../components/DialogWrapped/DialogWrapped";
 import * as text from "../../../Language/text";
-import { useLanguage, useNavTitle } from "../../../Contexts";
-import useDebounced from "../../../components/Hooks/useDebouncedInput";
+import { useLanguage, usePageName } from "../../../Contexts";
 import FilterSongsList from "../../../components/FilterSongsList/FilterSongsList";
 
 const AdminRoom = () => {
@@ -16,18 +15,14 @@ const AdminRoom = () => {
 	const roomId = params.roomId;
 	const [addingSong, setAddingSong] = useState(false);
 	const { language } = useLanguage();
-	const { setNavTitle } = useNavTitle();
+	const { setPageName } = usePageName();
 
 	if (!roomId) {
 		return <h1 className="admin no-room">{text.roomNotFound[language]}</h1>;
 	}
 
 	useEffect(() => {
-		setNavTitle(
-			<>
-				Admin {text.room[language]} {roomId}
-			</>
-		);
+		setPageName(`Admin ${text.room[language]} ${roomId}`);
 	}, [language, roomId]);
 
 	return (

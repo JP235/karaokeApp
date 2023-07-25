@@ -28,30 +28,27 @@ export function DndProviderTouchAndMouse({
 	return <DndProvider backend={backend}>{children}</DndProvider>;
 }
 
-interface NavTitleContextValue {
-	navTitle: JSX.Element;
-	setNavTitle: (loadignState: JSX.Element) => void;
+interface PageNameContextValue {
+	pageName: string;
+	setPageName: (navTitle: string) => void;
 }
 
-export const NavTitleStateContext = createContext<NavTitleContextValue>(null!);
+export const PageNameContext = createContext<PageNameContextValue>(null!);
 
-export function NavTitleStateProvider({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
-	const [navTitle, setNavSub] = useState<JSX.Element>(<>KaraokeApp</>);
-	const setNavTitle = (navTitle: JSX.Element) => {
-		setNavSub(<>KaraokeApp - {navTitle}</>);
-	};
+export function PageNameProvider({ children }: { children: React.ReactNode }) {
+	const [pageName, setPageName] = useState<string>("KaraokeApp");
+
+	useEffect(() => {
+		document.title = pageName ?? "KaraokeApp";
+	}, [pageName]);
 	return (
-		<NavTitleStateContext.Provider value={{ navTitle, setNavTitle }}>
+		<PageNameContext.Provider value={{ pageName, setPageName }}>
 			{children}
-		</NavTitleStateContext.Provider>
+		</PageNameContext.Provider>
 	);
 }
 
-export const useNavTitle = () => useContext(NavTitleStateContext);
+export const usePageName = () => useContext(PageNameContext);
 
 interface LoadignContextValue {
 	loadingState: LoadignState;
@@ -62,9 +59,7 @@ export const LoadingContext = createContext<LoadignContextValue>(null!);
 
 export function LoadignProvider({ children }: { children: React.ReactNode }) {
 	const [loadingState, setLoadingState] = useState<LoadignState>("idle");
-	useEffect(() => {
-		// console.log(loadingState);
-	}, [loadingState]);
+
 	return (
 		<LoadingContext.Provider value={{ loadingState, setLoadingState }}>
 			{children}

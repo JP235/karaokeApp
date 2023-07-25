@@ -4,7 +4,7 @@ import { LoadingError } from "../landing/UserLanding";
 import { Song } from "../../../myTypes";
 import { useSongs } from "../../../components/Hooks/useSongs";
 import * as text from "../../../Language/text";
-import { useLanguage, useNavTitle } from "../../../Contexts";
+import { useLanguage, usePageName } from "../../../Contexts";
 import { useState, useEffect } from "react";
 import useDebounced from "../../../components/Hooks/useDebouncedInput";
 import FilterSongsList from "../../../components/FilterSongsList/FilterSongsList";
@@ -13,14 +13,10 @@ function UserRoom() {
 	const { roomId } = useParams();
 
 	const { language } = useLanguage();
-	const { setNavTitle } = useNavTitle();
+	const { setPageName } = usePageName();
 
 	useEffect(() => {
-		setNavTitle(
-			<>
-				{text.room[language]} {roomId}
-			</>
-		);
+		setPageName(`${text.room[language]} ${roomId}`);
 	}, [language, roomId]);
 
 	return (

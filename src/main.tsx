@@ -9,13 +9,13 @@ import {
 	ErrorsProvider,
 	LanguageProvider,
 	LoadignProvider,
-	NavTitleStateProvider,
+	PageNameProvider,
 	UserAuthProvider,
 } from "./Contexts.tsx";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 	<React.StrictMode>
-		<NavTitleStateProvider>
+		<PageNameProvider>
 			<LanguageProvider>
 				<ErrorsProvider>
 					<LoadignProvider>
@@ -31,6 +31,6 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 					</LoadignProvider>
 				</ErrorsProvider>
 			</LanguageProvider>
-		</NavTitleStateProvider>
+		</PageNameProvider>
 	</React.StrictMode>
 );
