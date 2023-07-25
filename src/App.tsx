@@ -1,11 +1,11 @@
 import "./App.css";
-import { Routes, Route, BrowserRouter, useLocation } from "react-router-dom";
-import UserLanding from "./pages/users/landing/UserLanding";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import Landing from "./pages/users/landing/Landing";
 import AdminLanding from "./pages/admin/AdminEntry/AdminEntry";
 import LoginForm, { RequireAuth } from "./pages/admin/LoginForm/LoginForm";
 import AdminDashboard from "./pages/admin/AdminDashboard/AdminDashboard";
 import AdminRoom from "./pages/admin/AdminRoom/AdminRoom";
-import UserRoom from "./pages/users/room/UserRoom";
+import UserRoom from "./pages/users/room/Room";
 import NotFound from "./components/NotFound";
 import { Navbar } from "./components/NavBar/NavBar";
 
@@ -23,8 +23,7 @@ function App() {
 								<Route path=":roomId" element={<AdminRoom />} />
 							</Route>
 						</Route>
-						<Route path="/" element={<UserLanding />} />
-						<Route path="/sala/:roomId" element={<UserRoom />} />
+						<Route path="/" element={<Landing />} />
 						<Route path="/room/:roomId" element={<UserRoom />} />
 						<Route path="*" element={<NotFound />} />
 					</Routes>
@@ -35,4 +34,3 @@ function App() {
 }
 
 export default App;
-
