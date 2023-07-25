@@ -8,8 +8,14 @@ import { useLanguage } from "../../Contexts";
 import { Song } from "../../myTypes";
 import useDebounced from "../Hooks/useDebouncedInput";
 
-function FilterSongsList({ roomId }: { roomId?: string }) {
-	const songs = useSongs(roomId);
+function FilterSongsList({
+	roomId,
+	admin,
+}: {
+	roomId?: string;
+	admin?: boolean;
+}) {
+	const songs = useSongs(roomId, admin ? false : true);
 	const { info, filterByArtist, filterByGenre, filterByID, filterByTitle } =
 		songs;
 	const { language } = useLanguage();
@@ -20,32 +26,36 @@ function FilterSongsList({ roomId }: { roomId?: string }) {
 	const [selectedTitle, setSelectedTitle] = useState("");
 	const [selectedSong, setSelectedSong] = useState<Song>();
 
-	const debouncedTitle = useDebounced(selectedTitle, 300);
+	const debouncedTitle = useDebounced(selectedTitle);
 
 	useEffect(() => {
 		debouncedTitle && songs.filterByTitle(selectedTitle);
 	}, [debouncedTitle]);
 
 	useEffect(() => {
-		if (songs.currQuery[0] == "ARTISTA") {
+		if (songs.currQuery[0] == "id") {
+			setSelectedArtist("");
+			setSelectedGenre("");
+			setSelectedTitle("");
+			setSelectedId(songs.currQuery[1]);
+		} else if (songs.currQuery[0] == "ARTISTA") {
 			setSelectedTitle("");
 			setSelectedId("");
 			setSelectedGenre("");
 			setSelectedArtist(songs.currQuery[1]);
-		}
-		if (songs.currQuery[0] == "GENERO") {
+		} else if (songs.currQuery[0] == "GENERO") {
 			setSelectedArtist("");
 			setSelectedId("");
 			setSelectedTitle("");
 			setSelectedGenre(songs.currQuery[1]);
-		}
-		if (songs.currQuery[0] == "TITULO") {
+		} else if (songs.currQuery[0] == "TITULO") {
 			setSelectedArtist("");
 			setSelectedId("");
 			setSelectedGenre("");
 			setSelectedTitle(songs.currQuery[1]);
 		}
-	}, [songs.currQuery]);
+	}, [songs.currQuery[0], songs.currQuery[1]]);
+
 	return (
 		<>
 			<div
@@ -89,20 +99,22 @@ function FilterSongsList({ roomId }: { roomId?: string }) {
 						setSelected={setSelectedGenre}
 						title={text.filterByGenre[language]}
 					/>
-					<FilterSongsForm
-						onSubmit={(e) => {
-							e.preventDefault();
-							if (selectedId === "") {
-								return;
-							}
-							setSelectedArtist("");
-							setSelectedGenre("");
-							filterByID(selectedId);
-						}}
-						selected={selectedId}
-						setSelected={setSelectedId}
-						title={text.searchByID[language]}
-					/>
+					{admin && (
+						<FilterSongsForm
+							onSubmit={(e) => {
+								e.preventDefault();
+								if (selectedId === "") {
+									return;
+								}
+								setSelectedArtist("");
+								setSelectedGenre("");
+								filterByID(selectedId);
+							}}
+							selected={selectedId}
+							setSelected={setSelectedId}
+							title={text.searchByID[language]}
+						/>
+					)}
 				</div>
 			</div>
 			{roomId && (
