@@ -18,8 +18,10 @@ export const useRoom = ({
 }) => {
 	const [currentQueue, setCurrentQueue] = useState<QueueItem[]>([]);
 	const [pastQueue, setPastQueue] = useState<QueueItem[]>([]);
-	const [room, setRoom] = useState<Omit<Room, "currentQueue" | "pastQueue">>();
-	const [sortMethod, setSortMethod] = useState<"1" | "2">("1");
+	const [room, setRoom] =
+		useState<Omit<Room, "currentQueue" | "pastQueue" | "order">>();
+	const [sortMethod, setSortMethod] = useState<"1" | "2" | "3">();
+	const roomRef = doc(roomsCollectionRef, roomId);
 
 	useEffect(() => {
 		if (roomId && subscribe) {
@@ -31,11 +33,27 @@ export const useRoom = ({
 						created_by: roomData.created_by,
 						song_db: roomData.song_db,
 					});
+					setSortMethod(roomData.order);
+
+					switch (roomData.order) {
+						case "1":
+							const sortedAlter = sortWithAlternatingTables(
+								roomData.currentQueue
+							);
+							setCurrentQueue(sortedAlter);
+							break;
+						case "2":
+							const sorted = sortByTime(roomData.currentQueue);
+							setCurrentQueue(sorted);
+							break;
+						default:
+							setCurrentQueue(roomData.currentQueue ?? []);
+							break;
+					}
 					setPastQueue(roomData.pastQueue ?? []);
-					setCurrentQueue(roomData.currentQueue ?? []);
 				} else {
-                    throw new Error("Room not found");
-                }
+					throw new Error("Room not found");
+				}
 			});
 			return () => unsubscribe();
 		}
@@ -54,7 +72,25 @@ export const useRoom = ({
 			default:
 				break;
 		}
-	}, [sortMethod, currentQueue.length]);
+	}, [currentQueue.length]);
+
+	useEffect(() => {
+		switch (sortMethod) {
+			case "1":
+				updateDoc(roomRef, { order: "1" });
+				const sortedAlter = sortWithAlternatingTables(currentQueue);
+				setCurrentQueue(sortedAlter);
+				break;
+			case "2":
+				updateDoc(roomRef, { order: "2" });
+				const sorted = sortByTime(currentQueue);
+				setCurrentQueue(sorted);
+				break;
+			default:
+				updateDoc(roomRef, { order: "3" });
+				break;
+		}
+	}, [sortMethod]);
 
 	async function addToQueue({
 		singer,
@@ -66,7 +102,7 @@ export const useRoom = ({
 		tableNumber?: number;
 	}) {
 		if (!roomId) throw new Error("RoomId not defined");
-		const roomRef = doc(roomsCollectionRef, roomId);
+
 		const now = new Date();
 		const item: QueueItem = {
 			singer,
@@ -81,7 +117,6 @@ export const useRoom = ({
 
 	async function markDone({ item }: { item: QueueItem }) {
 		if (!roomId) throw new Error("RoomId not defined");
-		const roomRef = doc(roomsCollectionRef, roomId);
 		await updateDoc(roomRef, {
 			currentQueue: arrayRemove(item),
 			pastQueue: arrayUnion(item),
@@ -92,14 +127,13 @@ export const useRoom = ({
 		if (!roomId) throw new Error("RoomId not defined");
 		if (!queue) return;
 		const roomRef = doc(roomsCollectionRef, roomId);
+		setCurrentQueue(queue);
 		await updateDoc(roomRef, { currentQueue: queue });
 	}
 
 	function sortByTime(currQueue: QueueItem[]) {
 		const sortedQueue = [...currQueue];
 		sortedQueue.sort((a, b) => a.created_at - b.created_at);
-		// console.log("time");
-		// console.log(sortedQueue.map(s => s.created_at));
 		return sortedQueue;
 	}
 
@@ -124,6 +158,7 @@ export const useRoom = ({
 		// Create a new queue with alternating tables
 		const result: QueueItem[] = [];
 		let done = false;
+		// queues are short enough that using a while is not dangerous
 		while (!done) {
 			done = true;
 			for (const group of groups.values()) {
@@ -153,5 +188,6 @@ export const useRoom = ({
 		setCurrentQueue,
 		setQueue,
 		setSortMethod,
+		sortMethod,
 	};
 };
