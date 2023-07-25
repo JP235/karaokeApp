@@ -25,12 +25,13 @@ const AdminRoom = () => {
 
 	return (
 		<>
-			<SongsQueue roomId={roomId} canEdit={true}>
+			<SongsQueueEdit roomId={roomId}>
 				<PlusButton
 					className="add-song-to-queue"
+					title="add-song-to-queue"
 					onClick={() => setAddingSong(true)}
 				/>
-			</SongsQueue>
+			</SongsQueueEdit>
 			{addingSong && (
 				<AdminAddToQueueDialog
 					roomId={roomId}
@@ -56,24 +57,24 @@ function AdminAddToQueueDialog({
 	const { language } = useLanguage();
 
 	return (
-		<div className="admin-add-song-container">
-			<DialogWrapped
-				id="admin-queue-song-dialog"
-				className={
-					open ? "admin-queue-song-dialog open" : "admin-queue-song-dialog"
-				}
-				open={open}
-				onClose={() => close()}
-			>
-				<div className="admin-add-song-header">
-					<h1>{text.addSong[language]}</h1>
-					<CancelButton
-						className="close-admin-add-song"
-						onClick={() => close()}
-					/>
-				</div>
-				<FilterSongsList roomId={roomId} admin/>
-			</DialogWrapped>
-		</div>
+		// <div className="admin-add-song-container">
+		<DialogWrapped
+			id="admin-queue-song-dialog"
+			className={
+				open ? "admin-queue-song-dialog open" : "admin-queue-song-dialog"
+			}
+			open={open}
+			onClose={() => close()}
+		>
+			<div className="admin-add-song-header">
+				<h1>{text.addSong[language]}</h1>
+				<CancelButton
+					className="close-admin-add-song"
+					onClick={() => close()}
+				/>
+			</div>
+			<FilterSongsList roomId={roomId} admin />
+		</DialogWrapped>
+		// </div>
 	);
 }
