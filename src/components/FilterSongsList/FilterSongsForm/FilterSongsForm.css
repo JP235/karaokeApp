@@ -4,11 +4,72 @@
 	justify-items: center;
 }
 
+.filter-songs {
+	padding: 1rem;
+	background-color: rgb(var(--dark-rgb), 90%);
+	transition: all 500ms;
+}
+
+.collapse.filter-songs {
+	background-color: rgb(var(--dark-rgb));
+}
+
+.filter-form-title {
+	display: flex;
+	flex-direction: row-reverse;
+	justify-content: center;
+	align-items: center;
+}
+
+.collapse .filter-form-title {
+	display: flex;
+	flex: none;
+}
+
+.filter-form-title {
+	opacity: 0;
+	visibility: hidden;
+	height: 1.5rem;
+	transition: all 500ms;
+}
+
+.collapse .filter-form-title {
+	opacity: 1;
+	height: 2rem;
+	visibility: visible;
+}
+
+.collapse .dummy {
+	flex: auto;
+}
+
+.dummy {
+	flex: 0;
+	transition: flex 500ms;
+}
+
+.filter-forms {
+	display: grid;
+	grid-template-rows: 1fr;
+	gap: 1rem;
+	grid-template-columns: 1fr;
+	transition: grid-template-rows 500ms, grid-template-columns 250ms,
+		margin 500ms;
+}
+
+.collapse .filter-forms {
+	grid-template-rows: 0fr;
+	grid-template-columns: 0fr 0fr;
+}
+
+.filter-forms > form {
+	overflow: hidden;
+}
+
 .filter-songs-form label {
 	border-radius: 4px;
 	border-width: 2px;
 	display: grid;
-	grid-template-columns: 2em 1fr;
 	grid-template-areas: "del textinput search";
 	justify-items: end;
 }

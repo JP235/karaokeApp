@@ -3,40 +3,60 @@
 	width: 100%;
 	height: 3rem;
 	position: absolute;
-    top: 0;
+	z-index: 2;
+	top: 0;
 	font-family: "Pacifico";
 	font-size: larger;
 	display: grid;
 	grid-template-areas: "bar menu";
-	grid-template-columns: auto 2rem;
+	grid-template-columns: auto calc(3rem + min(1rem, 2vw));
 	align-items: center;
 	justify-items: center;
-    background-color: black;
+	background-color: black;
 }
 .navbar-title {
 	grid-column-start: 1;
 	grid-column-end: 3;
 	grid-row: 1;
 }
+.navbar-title a {
+	color: white;
+	text-decoration: none;
+}
 
 .language-picker {
 	grid-area: menu;
-    overflow: hidden;
+	overflow: hidden;
 }
 
 .language-selector {
 	position: absolute;
-    overflow: hidden;
-    display: grid;
-	right: 0;
-    left: auto;
+	overflow: hidden;
+	display: grid;
+	grid-template-rows: 0;
+	right: calc(min(1rem, 2vw) / 2);
+	left: auto;
+}
+.show .selector-buttons {
+	visibility: visible;
+	opacity: 1;
 }
 
+.show.language-selector {
+	grid-template-rows: 1fr;
+	z-index: 4;
+	transition: all 250ms;
+}
+.language-picker:has(.show) * .hamb-bar {
+	background-color: rgb(250, 250, 250, 0.7);
+}
 .selector-buttons {
 	display: grid;
+	position: relative;
 	grid-template-rows: 0fr;
 	grid-template-columns: 0fr;
-    gap: 2px;
+	gap: 2px;
+	z-index: -1;
 	visibility: hidden;
 	opacity: 0;
 	overflow: hidden;
@@ -44,19 +64,9 @@
 }
 .selector-buttons button {
 	width: 3em;
-}
-
-.show .selector-buttons {
-	position: relative;
-	z-index: 10;
-	visibility: visible;
-	opacity: 1;
-}
-
-.show.language-selector {
-	/* grid-template-rows: 1fr; */
-	transition: all 250ms;
-}
-.language-picker:has(.show) * .hamb-bar {
-	background-color: rgb(250, 250, 250, 0.7);
+	height: 3em;
+	padding: 0;
+	text-transform: capitalize;
+	background-color: lightslategray;
+	border-color: rgba(0, 0, 0, 0.1);
 }

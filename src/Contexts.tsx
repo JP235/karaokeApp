@@ -1,13 +1,20 @@
-import React, { createContext, useEffect, useState } from "react";
-import { TLanguages, LoadignState, Room, UserData } from "./myTypes";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { TLanguages, LoadignState, UserData } from "./myTypes";
 import { getDoc, doc } from "firebase/firestore";
-import { User, getAuth, onAuthStateChanged } from "firebase/auth";
-import { usersCollectionRef } from "./firebase-config";
-import { usefireAuthProvider } from "./components/Hooks/useFireAuth";
+import {
+	User,
+	browserLocalPersistence,
+	getAuth,
+	setPersistence,
+	signInWithEmailAndPassword,
+	signInWithPopup,
+	signOut,
+} from "firebase/auth";
+import { googleAuthProvider, usersCollectionRef } from "./firebase-config";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { TouchBackend } from "react-dnd-touch-backend";
-import useLanguageOrLocal from "./components/Hooks/useLanguage";
+import useLanguageOrLocal from "./components/Hooks/useLanguageOrLocal";
 
 export function DndProviderTouchAndMouse({
 	children,
@@ -21,57 +28,45 @@ export function DndProviderTouchAndMouse({
 	return <DndProvider backend={backend}>{children}</DndProvider>;
 }
 
-interface NavTitleStateContextValue {
-	navTitle: JSX.Element;
-	setNavTitle: (loadignState: JSX.Element) => void;
+interface PageNameContextValue {
+	pageName: string;
+	setPageName: (navTitle: string) => void;
 }
 
-export const NavTitleStateContext = createContext<NavTitleStateContextValue>({
-	navTitle: <></>,
-	setNavTitle: () => {},
-});
+export const PageNameContext = createContext<PageNameContextValue>(null!);
 
-export function NavTitleStateProvider({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
-	const [navTitle, setNavSub] = useState<JSX.Element>(<>KaraokeApp</>);
-	const setNavTitle = (navTitle: JSX.Element) => {
-		setNavSub(<>KaraokeApp - {navTitle}</>);
-	};
+export function PageNameProvider({ children }: { children: React.ReactNode }) {
+	const [pageName, setPageName] = useState<string>("KaraokeApp");
+
+	useEffect(() => {
+		document.title = pageName ?? "KaraokeApp";
+	}, [pageName]);
 	return (
-		<NavTitleStateContext.Provider value={{ navTitle, setNavTitle }}>
+		<PageNameContext.Provider value={{ pageName, setPageName }}>
 			{children}
-		</NavTitleStateContext.Provider>
+		</PageNameContext.Provider>
 	);
 }
 
-interface LoadignStateContextValue {
+export const usePageName = () => useContext(PageNameContext);
+
+interface LoadignContextValue {
 	loadingState: LoadignState;
 	setLoadingState: (loadignState: LoadignState) => void;
 }
 
-export const LoadingStateContext = createContext<LoadignStateContextValue>({
-	loadingState: "idle",
-	setLoadingState: () => {},
-});
+export const LoadingContext = createContext<LoadignContextValue>(null!);
 
-export function LoadignStateProvider({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
+export function LoadignProvider({ children }: { children: React.ReactNode }) {
 	const [loadingState, setLoadingState] = useState<LoadignState>("idle");
-	useEffect(() => {
-		// console.log(loadingState);
-	}, [loadingState]);
+
 	return (
-		<LoadingStateContext.Provider value={{ loadingState, setLoadingState }}>
+		<LoadingContext.Provider value={{ loadingState, setLoadingState }}>
 			{children}
-		</LoadingStateContext.Provider>
+		</LoadingContext.Provider>
 	);
 }
+export const useLoadingState = () => useContext(LoadingContext);
 
 interface ErrorsContextValue {
 	error?: string;
@@ -79,10 +74,7 @@ interface ErrorsContextValue {
 }
 
 // Create a context for the language preference
-export const ErrorsContext = createContext<ErrorsContextValue>({
-	error: undefined,
-	setError: () => {},
-});
+export const ErrorsContext = createContext<ErrorsContextValue>(null!);
 
 // Create a provider component for the language context
 export function ErrorsProvider({ children }: { children: React.ReactNode }) {
@@ -97,16 +89,15 @@ export function ErrorsProvider({ children }: { children: React.ReactNode }) {
 	);
 }
 
+export const useErrors = () => useContext(ErrorsContext);
+
 interface LanguageContextValue {
 	language: TLanguages;
 	setLanguage: (language: TLanguages) => void;
 }
 
 // Create a context for the language preference
-export const LanguageContext = createContext<LanguageContextValue>({
-	language: "es",
-	setLanguage: () => {},
-});
+export const LanguageContext = createContext<LanguageContextValue>(null!);
 
 // Create a provider component for the language context
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
@@ -120,102 +111,22 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 		</LanguageContext.Provider>
 	);
 }
+export const useLanguage = () => useContext(LanguageContext);
 
-// interface RoomContextValue {
-//     room: Room;
-//     setRoom: (room: Room) => void;
-// }
+const emptyUser: UserData = {
+	name: "",
+	email: "",
+	permissions: "",
+	active_room: "-1",
+	songs_db: "",
+	created_rooms: -1,
+} as const;
 
-// export const RoomContext = createContext<RoomContextValue>({
-//     setRoom: () => { },
-//     room: {
-//         queue: [],
-//         created_by: '',
-//         song_db: ''
-//     }
-// });
-
-// export function RoomProvider({ children }: { children: React.ReactNode }) {
-//     const [room, setRoom] = useState<Room>({
-//         queue: [],
-//         created_by: '',
-//         song_db: ''
-//     });
-
-//     return (
-//         <RoomContext.Provider value={{ room, setRoom }}>
-//             {children}
-//         </RoomContext.Provider>
-//     );
-// };
-
-interface UserContextValue {
-	loggedIn: boolean;
-	setLoggedIn: (loggedIn: boolean) => void;
-	user: UserData;
-	setUser: (user: UserData) => void;
-	// refreshUser: () => Promise<void>
-}
-
-export const UserContext = createContext<UserContextValue>({
-	loggedIn: false,
-	// refreshUser: async () => { },
-	setLoggedIn: () => {},
-	user: {
-		name: "",
-		email: "",
-		permissions: "",
-		active_room: "-1",
-		songs_db: "",
-		created_rooms: -1,
-	},
-	setUser: () => {},
-});
-
-export function UserProvider({ children }: { children: React.ReactNode }) {
-	const [loggedIn, setLoggedIn] = useState(false);
-	const [user, setUser] = useState<UserData>({
-		name: "",
-		email: "",
-		permissions: "",
-		active_room: "-1",
-		songs_db: "",
-		created_rooms: 0,
-	});
-
-	useEffect(() => {
-		const fireAuth = getAuth();
-		const unsub = onAuthStateChanged(fireAuth, (currUser) => {
-			if (currUser?.email) {
-				getDoc(doc(usersCollectionRef, currUser.email)).then((user) => {
-					if (!user.exists) throw new Error("User Doc doesn't exist");
-					const userData = user.data() as unknown as UserData;
-					setLoggedIn(true);
-					setUser({ ...userData });
-				});
-			}
-		});
-		return () => {
-			unsub();
-		};
-	}, []);
-
-	return (
-		<UserContext.Provider
-			value={{
-				loggedIn,
-				setLoggedIn,
-				user,
-				setUser,
-			}}
-		>
-			{children}
-		</UserContext.Provider>
-	);
-}
-
-interface AuthContextValue {
+interface UserAuthContextValue {
+	isAuth: boolean;
 	user: User | null;
+	userData: UserData;
+    refreshUserData: VoidFunction
 	signinWithGoogle: (callback: VoidFunction) => void;
 	signInWithPassword: ({
 		callback,
@@ -229,14 +140,49 @@ interface AuthContextValue {
 	signout: (callback: VoidFunction) => void;
 }
 
-export const AuthContext = React.createContext<AuthContextValue>(null!);
+export const UserAuthContext = createContext<UserAuthContextValue>(null!);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-	const fireAuthProvider = usefireAuthProvider();
+export function UserAuthProvider({ children }: { children: React.ReactNode }) {
+	const { setLoadingState } = useLoadingState();
+	const [user, setUser] = useState<User | null>(null);
+	const [isAuth, setIsAuth] = useState(false);
+	const [userData, setUserData] = useState<UserData>(emptyUser);
+	const fireAuth = getAuth();
+	useEffect(() => {
+		const unsub = fireAuth.onAuthStateChanged((fireUser) => {
+			if (!fireUser) {
+				setUser(null);
+				setIsAuth(false);
+				setUserData(emptyUser);
+				setLoadingState("loaded");
+				return;
+			}
+			if (!fireUser.email) throw new Error("User Email doesn't exist");
+			getDoc(doc(usersCollectionRef, fireUser.email)).then((userDoc) => {
+				if (!userDoc.exists) throw new Error("User Doc doesn't exist");
+				const userData = userDoc.data() as unknown as UserData;
+				setUserData({ ...userData });
+				setUser(fireUser);
+				setIsAuth(true);
+			});
+		});
+		return () => {
+			unsub();
+		};
+	}, []);
 
-	const signinWithGoogle = (callback: VoidFunction) => {
-		return fireAuthProvider.signinWithGoogle({ callback });
+	const refreshUserData = () => {
+		const fireUser = fireAuth.currentUser;
+		if (!fireUser || !fireUser.email) return;
+		getDoc(doc(usersCollectionRef, fireUser.email)).then((userDoc) => {
+			if (!userDoc.exists) throw new Error("User Doc doesn't exist");
+			const userData = userDoc.data() as unknown as UserData;
+			setUserData({ ...userData });
+			setUser(fireUser);
+			setIsAuth(true);
+		});
 	};
+
 	const signInWithPassword = ({
 		callback,
 		email,
@@ -245,26 +191,57 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 		callback: VoidFunction;
 		email: string;
 		password: string;
-	}) => fireAuthProvider.signInWithPassword({ callback, email, password });
-
+	}) => {
+		if (isAuth) {
+			callback();
+			return;
+		}
+		setPersistence(fireAuth, browserLocalPersistence).then(async () => {
+			const result = await signInWithEmailAndPassword(
+				fireAuth,
+				email,
+				password
+			);
+			const user = result.user;
+			setUser(user);
+			callback();
+		});
+	};
+	const signinWithGoogle = (callback: VoidFunction) => {
+		if (isAuth) {
+			callback();
+			return;
+		}
+		setPersistence(fireAuth, browserLocalPersistence).then(async () => {
+			const result = await signInWithPopup(fireAuth, googleAuthProvider);
+			const user = result.user;
+			setUser(user);
+			callback();
+		});
+	};
 	const signout = (callback: VoidFunction) => {
-		return fireAuthProvider.signout(() => {
+		signOut(fireAuth).then(() => {
+			setUser(null);
+			setIsAuth(false);
 			callback();
 		});
 	};
 
 	const value = {
-		user: fireAuthProvider.user,
-		signInWithPassword,
+		user,
+		userData,
+		refreshUserData,
+		isAuth,
 		signinWithGoogle,
+		signInWithPassword,
 		signout,
 	};
-	// console.log(value.user);
-	// console.log(fireAuthProvider.user);
-
-	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+	return (
+		<UserAuthContext.Provider value={value}>
+			{children}
+		</UserAuthContext.Provider>
+	);
 }
-
-export function useAuth() {
-	return React.useContext(AuthContext);
+export function useUserAuth() {
+	return useContext(UserAuthContext);
 }

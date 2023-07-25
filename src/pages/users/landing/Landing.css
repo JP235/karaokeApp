@@ -1,0 +1,72 @@
+.user-landing {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	text-align: center;
+	gap: 5rem;
+	/* Set the animation properties */
+	animation-name: fadeIn;
+	animation-duration: 1s;
+	animation-fill-mode: forwards;
+
+	/* Set the initial opacity to 0 */
+	opacity: 0;
+}
+
+.landingText {
+	display: grid;
+	grid-template-columns: 1fr;
+	font-size: 95px;
+	line-height: 1em;
+	font-family: "Pacifico";
+}
+
+.room-code-container,
+.room-code-form {
+	display: grid;
+	justify-items: center;
+	gap: 1.5rem;
+}
+
+.set-room {
+	height: max-content;
+	width: fit-content;
+	text-align: center;
+}
+
+input.set-room {
+	padding: 1rem;
+	background-color: field;
+}
+.admin-link {
+	position: absolute;
+	z-index: 3;
+	bottom: 0;
+	right: 0;
+}
+.admin-link a {
+	color: transparent;
+	text-decoration: none;
+    padding: 0.5rem;
+}
+.admin-link a:hover {
+	color: white;
+	text-shadow: 1px 0 #000, -1px 0 #000, 0 1px #000, 0 -1px #000, 1px 1px #000,
+		-1px -1px #000, 1px -1px #000, -1px 1px #000;
+}
+/* Define a keyframe animation */
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}

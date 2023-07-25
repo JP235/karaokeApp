@@ -3,31 +3,34 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import {
-	AuthProvider,
+	// UserProvider,
+	// AuthProvider,
 	DndProviderTouchAndMouse,
 	ErrorsProvider,
 	LanguageProvider,
-	LoadignStateProvider,
-	NavTitleStateProvider,
-	UserProvider,
+	LoadignProvider,
+	PageNameProvider,
+	UserAuthProvider,
 } from "./Contexts.tsx";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 	<React.StrictMode>
-		<NavTitleStateProvider>
+		<PageNameProvider>
 			<LanguageProvider>
 				<ErrorsProvider>
-					<LoadignStateProvider>
-						<UserProvider>
-							<AuthProvider>
-								<DndProviderTouchAndMouse>
-									<App />
-								</DndProviderTouchAndMouse>
-							</AuthProvider>
-						</UserProvider>
-					</LoadignStateProvider>
+					<LoadignProvider>
+						<UserAuthProvider>
+							{/* <UserProvider> */}
+							{/* <AuthProvider> */}
+							<DndProviderTouchAndMouse>
+								<App />
+							</DndProviderTouchAndMouse>
+							{/* </AuthProvider> */}
+							{/* </UserProvider> */}
+						</UserAuthProvider>
+					</LoadignProvider>
 				</ErrorsProvider>
 			</LanguageProvider>
-		</NavTitleStateProvider>
+		</PageNameProvider>
 	</React.StrictMode>
 );

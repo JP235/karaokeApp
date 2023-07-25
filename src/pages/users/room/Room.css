@@ -1,0 +1,21 @@
+.user-room {
+	display: grid;
+	justify-items: center;
+	gap: 1rem;
+	width: 100%;
+	height: 100%;
+}
+
+.user-room h1 {
+	margin: 0;
+}
+
+.user-room-content-wrapper {
+	width: 100%;
+	height: 100%;
+	max-width: 600px;
+	display: grid;
+	grid-template-columns: 1fr;
+	overflow-y: hidden;
+	grid-template-rows: auto 1fr auto;
+}

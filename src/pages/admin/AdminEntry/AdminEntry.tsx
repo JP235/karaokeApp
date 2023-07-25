@@ -1,25 +1,25 @@
 import "./AdminEntry.css";
 import { Outlet, useLocation } from "react-router-dom";
-import { useContext, useEffect } from "react";
-import { LoadingStateContext, UserContext } from "../../../Contexts";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { LoadingError } from "../../users/landing/UserLanding";
+import { useLoadingState, useUserAuth } from "../../../Contexts";
+import { LoadingError } from "../../../components/LoadingError";
 
 function AdminLanding() {
 	const navigate = useNavigate();
 	const location = useLocation();
-	const { setLoadingState } = useContext(LoadingStateContext);
-	const { loggedIn } = useContext(UserContext);
+	const { setLoadingState } = useLoadingState();
+	const { isAuth } = useUserAuth();
 
 	useEffect(() => {
 		setLoadingState("loading");
-		if (loggedIn) {
+		if (isAuth) {
 			setLoadingState("loaded");
 			if (location.pathname === "/admin/" || location.pathname === "/admin") {
 				navigate("/admin/dashboard", { replace: true });
 			}
 		}
-	}, [loggedIn]);
+	}, [isAuth]);
 	return (
 		<div className="admin">
 			<Outlet />

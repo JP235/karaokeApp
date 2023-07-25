@@ -1,16 +1,17 @@
 #root {
 	height: 100%;
+	font-size: large;
+	font-size: 1.2rem;
 }
 
 .App {
-    position: relative;
-	height: calc(100% + 3rem);
-	overflow-x: hidden;
+	position: relative;
 	display: grid;
 	grid-template-areas:
 		"nav-bar"
 		"content";
-	gap: 0.5rem;
+	height: 100%;
+	height: calc(100% + 3rem);
 	grid-template-rows: 3rem auto;
 	align-items: center;
 }
@@ -23,6 +24,8 @@
 	bottom: 0;
 	left: 0;
 	background-image: url("/pexels-neosiam-593467.jpg");
+	/* background-color: rgb(var(--light-rgb), 0.1); */
+	/* background-color: gainsboro; */
 	background-size: contain;
 	background-repeat: repeat;
 	filter: blur(1px);
@@ -35,16 +38,23 @@
 .App::after {
 	content: "";
 	position: absolute;
-	/* background-color: rgb(var(--light-rgb), 8%); */
-	/* filter: blur(5px); */
-	z-index: -1;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background-color: rgb(var(--light-rgb), 0.2);
+	/* background-color: gainsboro; */
+	filter: blur(1px);
+	z-index: 0;
 }
 
 .content {
+	z-index: 1;
 	grid-area: content;
-	position: relative;
-	margin: 0;
-	width: 100%;
+	margin: 0 auto;
+	height: calc(100% - 0.5rem);
+	width: calc(100% - 0.5rem);
+	overflow: hidden;
 }
 
 .language-hamb {

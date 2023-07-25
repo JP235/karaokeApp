@@ -1,64 +1,49 @@
-import { FormEvent, useContext, useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import {
-	AuthContext,
-	ErrorsContext,
-	LanguageContext,
-	LoadingStateContext,
-	UserContext,
+	useErrors,
+	useLanguage,
+	useLoadingState,
+	usePageName,
+	useUserAuth,
 } from "../../../Contexts";
 import "./AdminDashboard.css";
 import {
 	roomsCollectionRef,
 	usersCollectionRef,
 } from "../../../firebase-config";
-import { doc, onSnapshot, setDoc } from "firebase/firestore";
+import { deleteDoc, doc, setDoc, updateDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-import { UserData } from "../../../myTypes";
-import { catchErrorFunction } from "../../users/landing/UserLanding";
 import { changeRoomCode } from "../../../components/HelperFunctions";
 import * as text from "../../../Language/text";
+import { catchErrorFunction } from "../../../components/catchErrorFunction";
 
-function AdminDashboard() {
+function AdminDashboard1() {
 	const navigate = useNavigate();
-	const { setError } = useContext(ErrorsContext);
-	const { setLoadingState } = useContext(LoadingStateContext);
-	const { user, setUser } = useContext(UserContext);
+	const { setError } = useErrors();
+	const { language } = useLanguage();
+	const { setLoadingState } = useLoadingState();
+	const { userData, signout: fireSingOut } = useUserAuth();
 	const [creatingRoom, setCreatigRoom] = useState(false);
-	const { language } = useContext(LanguageContext);
 	const [roomCode, setRoomCode] = useState(String(generateRandomNumber()));
 	const [roomName, setRoomName] = useState("Karaoke");
-	const { signout } = useContext(AuthContext);
 
 	function handleLogout() {
-		signout(() => {
+		fireSingOut(() => {
 			navigate("/");
 		});
 	}
-	useEffect(() => {
-		if (user.email) {
-			const unsubscribe = onSnapshot(
-				doc(usersCollectionRef, user.email),
-				(snapshot) => {
-					if (snapshot.exists()) {
-						const userData = snapshot.data() as unknown as UserData;
-						setUser({ ...userData });
-					}
-				}
-			);
-			return () => unsubscribe();
-		}
-	}, [user.email]);
 
 	const createRoom = async () => {
 		try {
 			await setDoc(doc(roomsCollectionRef, String(roomCode)), {
 				queue: [],
-				created_by: user.name,
-				song_db: user.songs_db,
+				created_by: userData.name,
+				song_db: userData.songs_db,
+				order: "1",
 			});
 			await setDoc(
-				doc(usersCollectionRef, user.email),
-				{ created_rooms: user.created_rooms + 1, active_room: roomCode },
+				doc(usersCollectionRef, userData.email),
+				{ created_rooms: userData.created_rooms + 1, active_room: roomCode },
 				{ merge: true }
 			);
 			const url = "/admin/" + roomCode;
@@ -72,7 +57,7 @@ function AdminDashboard() {
 			});
 		}
 	};
-	const handleSubmit = (event: FormEvent) => {
+	const handleCreateRoomSubmit = (event: FormEvent) => {
 		event.preventDefault();
 		createRoom();
 	};
@@ -81,23 +66,24 @@ function AdminDashboard() {
 		<>
 			<div className="greeting">
 				<p>
-					{text.hello[language]} {user.name}{" "}
+					{text.hello[language]} {userData.name}{" "}
 				</p>
 				<button onClick={() => handleLogout()}>Logout</button>
 				<p>
-					{text.createdRooms[language]}: {user.created_rooms}{" "}
+					{text.createdRooms[language]}: {userData.created_rooms}{" "}
 				</p>
-				{user.active_room === "-1" ? (
+				{userData.active_room === "-1" ? (
 					<p>{text.noActiveRoom[language]} </p>
 				) : (
 					<p>
-						{text.activeRoomCode[language]}: {user.active_room}{" "}
+						{text.activeRoomCode[language]}: {userData.active_room}{" "}
 					</p>
 				)}
 			</div>
-			{(user.permissions === "active" || user.permissions === "ALL") && (
+			{(userData.permissions === "active" ||
+				userData.permissions === "ALL") && (
 				<div className="admin-dashboard">
-					{user.active_room === "-1" ? (
+					{userData.active_room === "-1" ? (
 						<button className="new-room" onClick={() => setCreatigRoom(true)}>
 							{text.createRoom[language]}
 						</button>
@@ -105,7 +91,7 @@ function AdminDashboard() {
 						<button
 							className="goToRoom"
 							onClick={() => {
-								const url = "/admin/" + user.active_room;
+								const url = "/admin/" + userData.active_room;
 								navigate(url);
 							}}
 						>
@@ -125,7 +111,7 @@ function AdminDashboard() {
 				<div>
 					<h1>{text.createRoom[language]}</h1>
 				</div>
-				<form onSubmit={handleSubmit}>
+				<form onSubmit={handleCreateRoomSubmit}>
 					<label>
 						<input
 							className="labelInput"
@@ -161,6 +147,166 @@ function AdminDashboard() {
 				</form>
 			</dialog>
 		</>
+	);
+}
+
+function AdminDashboard() {
+	const navigate = useNavigate();
+	const { setError } = useErrors();
+	const { language } = useLanguage();
+	const { setLoadingState } = useLoadingState();
+	const { userData, signout: fireSingOut, refreshUserData } = useUserAuth();
+	const [creatingRoom, setCreatigRoom] = useState(false);
+	const [roomCode, setRoomCode] = useState(String(generateRandomNumber()));
+	const [roomName, setRoomName] = useState("Karaoke");
+	const { setPageName } = usePageName();
+
+	useEffect(() => {
+		setPageName("KaraokeApp - Admin");
+	}, []);
+
+	const createRoom = async () => {
+		try {
+			await setDoc(doc(roomsCollectionRef, String(roomCode)), {
+				queue: [],
+				created_by: userData.name,
+				song_db: userData.songs_db,
+			});
+			const userRef = doc(usersCollectionRef, userData.email);
+			await updateDoc(userRef, {
+				created_rooms: userData.created_rooms + 1,
+				active_room: roomCode,
+			});
+			const url = "/admin/" + roomCode;
+			navigate(url);
+		} catch (e) {
+			catchErrorFunction({
+				e,
+				fallbackMsg: "Error creating room",
+				setLoadingState: setLoadingState,
+				setError: setError,
+			});
+		}
+	};
+
+	const deleteRoom = async () => {
+		try {
+			await deleteDoc(doc(roomsCollectionRef, String(userData.active_room)));
+			const userRef = doc(usersCollectionRef, userData.email);
+			updateDoc(userRef, {
+				active_room: "-1",
+			}).then(() => {
+				refreshUserData();
+			});
+		} catch (e) {
+			catchErrorFunction({
+				e,
+				fallbackMsg: "Error deleting room",
+				setLoadingState: setLoadingState,
+				setError: setError,
+			});
+		}
+	};
+
+	function handleLogout() {
+		fireSingOut(() => {});
+	}
+	const handleCreateRoomSubmit = (event: FormEvent) => {
+		event.preventDefault();
+		createRoom();
+	};
+	return (
+		<div className="admin-dash">
+			<header className="admin-dash-header">
+				<h1>
+					{text.hello[language]} {userData.name}!
+				</h1>
+				<div className="admin-dash-actions">
+					<button onClick={() => handleLogout()}>Logout</button>
+					{/* <button className="admin-dash-actions-button">Actions</button> */}
+				</div>
+			</header>
+			<main className="admin-dash-body">
+				<p>
+					{text.createdRooms[language]}: {userData.created_rooms}{" "}
+				</p>
+				{userData.active_room !== "-1" ? (
+					<>
+						<p>
+							{text.activeRoomCode[language]}: {userData.active_room}
+						</p>
+						<button
+							className="goToRoom"
+							onClick={() => {
+								const url = "/admin/" + userData.active_room;
+								navigate(url);
+							}}
+						>
+							{text.goToActiveRoom[language]}
+						</button>
+						<button onClick={() => deleteRoom()}>Delete Room</button>
+					</>
+				) : (
+					<>
+						<p>{text.noActiveRoom[language]}</p>
+						{userData.permissions === "active" && (
+							<button className="new-room" onClick={() => setCreatigRoom(true)}>
+								{text.createRoom[language]}
+							</button>
+						)}
+					</>
+				)}
+				<dialog
+					id="create-room-dialog"
+					className={
+						creatingRoom ? "create-room-dialog open" : "create-room-dialog"
+					}
+					open={creatingRoom}
+				>
+					<div>
+						<h1>{text.createRoom[language]}</h1>
+					</div>
+					<form onSubmit={handleCreateRoomSubmit}>
+						<label>
+							<input
+								className="labelInput"
+								type="number"
+								value={roomCode}
+								onChange={(event) => {
+									setRoomCode(changeRoomCode(event.target.value));
+								}}
+							/>
+							<span className="labelName">{text.code[language]}</span>
+						</label>
+						<label>
+							<input
+								className="labelInput"
+								type="text"
+								value={roomName}
+								onChange={(event) => setRoomName(event.target.value)}
+							/>
+							<span className="labelName">{text.name[language]}</span>
+						</label>
+						<div className="create-room-buttons">
+							<button
+								type="button"
+								className="create-room-cancel"
+								onClick={() => setCreatigRoom(false)}
+							>
+								{text.cancel[language]}
+							</button>
+							<button
+								type="submit"
+								value="Create"
+								className="create-room-create"
+							>
+								{text.create[language]}
+							</button>
+						</div>
+					</form>
+				</dialog>
+			</main>
+		</div>
 	);
 }
 

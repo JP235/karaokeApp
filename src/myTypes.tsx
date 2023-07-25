@@ -31,6 +31,7 @@ export type QueueItem = {
 export type Room = {
     currentQueue: QueueItem[];
     pastQueue: QueueItem[],
+    order: "1" | "2" | "3" 
     created_by: string;
     song_db: string;
 }

@@ -1,6 +1,5 @@
 import "./FilterSongsForm.css";
-import * as text from "../../Language/text";
-import { CancelButton, SearchButton } from "../Buttons/Buttons";
+import { CancelButton, SearchButton } from "../../Buttons/Buttons";
 
 interface FilterFormProps {
 	onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
@@ -36,9 +35,7 @@ function FilterSongsForm({
 					placeholder={`${title}`}
 				/>
 				<SearchButton
-					disabled={
-						dataHints === undefined ? false : !dataHints.includes(selected)
-					}
+					disabled={selected.length <= 0}
 					type="submit"
 					title={`${title}`}
 				/>

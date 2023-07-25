@@ -1,31 +1,38 @@
 import {
-	CollectionReference,
-	DocumentData,
-	QueryFieldFilterConstraint,
-	QueryDocumentSnapshot,
-	getDoc,
-	doc,
-	collection,
-	where,
-	documentId,
-	query,
-	orderBy,
-	limit,
-	getCountFromServer,
-	startAfter,
-	Query,
-	FieldPath,
+    CollectionReference,
+    DocumentData,
+    QueryDocumentSnapshot,
+    getDoc,
+    doc,
+    collection,
+    where,
+    query,
+    orderBy,
+    limit,
+    getCountFromServer,
+    startAfter,
+    QueryCompositeFilterConstraint,
+    QueryNonFilterConstraint,
+    QueryFieldFilterConstraint,
+    or,
+    and,
 } from "firebase/firestore";
-import { useContext, useState, useEffect } from "react";
-import { LoadingStateContext, ErrorsContext } from "../../Contexts";
+import { useState, useEffect } from "react";
 import { roomsCollectionRef, db } from "../../firebase-config";
 import { Song, Room } from "../../myTypes";
-import { catchErrorFunction } from "../../pages/users/landing/UserLanding";
 import { getSongsFromQuery } from "../HelperFunctions";
+import { useErrors, useLoadingState } from "../../Contexts";
+import { catchErrorFunction } from "../catchErrorFunction";
+
+type QueryConstrs = {
+	["CompositeFilt"]: QueryCompositeFilterConstraint | null;
+	["NonFiltConsts"]: QueryNonFilterConstraint[];
+	["FiltConsts"]: QueryFieldFilterConstraint[];
+};
 
 export const useSongs = (roomId?: string, start?: boolean) => {
-	const { setLoadingState } = useContext(LoadingStateContext);
-	const { setError } = useContext(ErrorsContext);
+	const { setLoadingState } = useLoadingState();
+	const { setError } = useErrors();
 	const [info, setInfo] = useState<{
 		artists: Array<string>;
 		genres: Array<string>;
@@ -36,13 +43,20 @@ export const useSongs = (roomId?: string, start?: boolean) => {
 		curr_page: Song[];
 		next_page: Song[];
 	}>({ prev_page: [], curr_page: [], next_page: [] });
-	const [pageLimit, setPageLimit] = useState(35);
+	const [pageLimit, setPageLimit] = useState(30);
 	const [numberOfPages, setNumberOfPages] = useState<number>();
 
 	const [songsCollection, setSongsCollection] =
 		useState<CollectionReference<DocumentData>>();
 	const [currPage, setCurrPage] = useState(0);
-	const [currQuery, setCurrQuery] = useState<QueryFieldFilterConstraint[]>();
+	const [currQuery, setCurrQuery] = useState<
+		["GENERO" | "ARTISTA" | "TITULO" | "id" | "", string]
+	>(["", ""]);
+	const [currConstraints, setCurrConstraints] = useState<QueryConstrs>({
+		FiltConsts: [],
+		CompositeFilt: null,
+		NonFiltConsts: [],
+	});
 
 	const [lastSongInBatch, setLastSongInBatch] =
 		useState<QueryDocumentSnapshot<DocumentData>>();
@@ -85,130 +99,170 @@ export const useSongs = (roomId?: string, start?: boolean) => {
 
 	useEffect(() => {
 		if (songsCollection && start) {
-			querySongs();
+			startQuery();
+			setLoadingState("loaded");
 		} else {
 			setLoadingState("loaded");
 		}
 	}, [songsCollection]);
 
-	const querySongs = async (
-		field?: "GENERO" | "ARTISTA" | "TITULO" | "id",
-		val?: string,
-		lastDocRef?: QueryDocumentSnapshot<DocumentData>
+	const getFromId = async (val: string) => {
+		if (!songsCollection) throw new Error("no songs collection");
+		const songq = await getDoc(doc(songsCollection, val));
+		if (songq.exists()) {
+			const data = songq.data();
+			const song = {
+				id: val,
+				artist: String(data.ARTISTA),
+				song_name: String(data.TITULO).toLowerCase(),
+				genre: String(data.GENERO).toLowerCase(),
+			} as Song;
+			return song;
+		}
+		const s: Song = {
+			id: "-",
+			song_name: "-",
+			artist: "-",
+			genre: "-",
+		};
+		return s;
+	};
+
+	const makeConstraints = (
+		field?: "GENERO" | "ARTISTA" | "TITULO",
+		val?: string
+	) => {
+		let constraints: QueryConstrs = {
+			CompositeFilt: null,
+			FiltConsts: [],
+			NonFiltConsts: [orderBy("GENERO"), limit(pageLimit)],
+		};
+
+		if (!field || !val) {
+			return constraints;
+		}
+
+		let relevantInfo: string[];
+
+		switch (field) {
+			case "GENERO":
+				relevantInfo = info.genres.filter((v) => {
+					if (val === "BALADA") {
+						return v.includes(val) || v.includes("B.") || v.includes("B ");
+					}
+					return v.includes(val);
+				});
+				constraints.FiltConsts = [where(field, "in", relevantInfo)];
+				constraints.NonFiltConsts = [
+					orderBy("ARTISTA"),
+					orderBy("TITULO"),
+					limit(pageLimit),
+				];
+				break;
+			case "ARTISTA":
+				relevantInfo = info.artists.filter((v) =>
+					v.includes(val.toUpperCase())
+				);
+				if (relevantInfo.length > 0) {
+					constraints.FiltConsts = [where(field, "in", relevantInfo)];
+					constraints.NonFiltConsts = [
+						orderBy("ARTISTA"),
+						orderBy("TITULO"),
+						limit(pageLimit),
+					];
+				} else {
+					constraints.CompositeFilt = or(
+						and(
+							where(field, ">=", val.toUpperCase()),
+							where(field, "<=", `${val.toUpperCase()}~`)
+						),
+						and(
+							where(field, ">=", `THE ${val.toUpperCase()}`),
+							where(field, "<=", `THE ${val.toUpperCase()}~`)
+						),
+						and(
+							where(field, ">=", `LOS ${val.toUpperCase()}`),
+							where(field, "<=", `LOS ${val.toUpperCase()}~`)
+						),
+						and(
+							where(field, ">=", `LAS ${val.toUpperCase()}`),
+							where(field, "<=", `LAS ${val.toUpperCase()}~`)
+						),
+						and(
+							where(field, ">=", `LA ${val.toUpperCase()}`),
+							where(field, "<=", `LA ${val.toUpperCase()}~`)
+						)
+					);
+					constraints.NonFiltConsts = [
+						orderBy("ARTISTA"),
+						orderBy("TITULO"),
+						limit(pageLimit),
+					];
+				}
+				break;
+			case "TITULO":
+				constraints.FiltConsts = [
+					where(field, ">=", val.toUpperCase()),
+					where(field, "<=", `${val.toUpperCase()}~`),
+				];
+				constraints.NonFiltConsts = [orderBy("TITULO"), limit(pageLimit)];
+				break;
+			default:
+				break;
+		}
+
+		return constraints;
+	};
+
+	const makeQuery = async (constraints: QueryConstrs) => {
+		if (!songsCollection) throw new Error("no songs collection");
+		const q =
+			constraints.CompositeFilt != null
+				? query(
+						songsCollection,
+						constraints.CompositeFilt,
+						...constraints.NonFiltConsts
+				  )
+				: query(
+						songsCollection,
+						...constraints.FiltConsts,
+						...constraints.NonFiltConsts
+				  );
+
+		const { pageSongs, lastDoc } = await getSongsFromQuery(q);
+
+		return { pageSongs, lastDoc };
+	};
+
+	const startQuery = async (
+		field?: "GENERO" | "ARTISTA" | "TITULO",
+		val?: string
 	) => {
 		setLoadingState("loading");
 		setCurrPage(0);
 
 		if (!songsCollection) throw new Error("no songs collection");
 
-		const queryWithFieldValue = async (
-			field: "GENERO" | "ARTISTA" | "TITULO",
-			val: string
-		) => {
-			let whereQ: QueryFieldFilterConstraint[];
-			let relevantInfo: string[];
-
-			switch (field) {
-				case "GENERO":
-					relevantInfo = info.genres.filter((v) => {
-						if (val === "BALADA") {
-							return v.includes(val) || v.includes("B.") || v.includes("B ");
-						}
-						return v.includes(val);
-					});
-					whereQ = [where(field, "in", relevantInfo)];
-					break;
-				case "ARTISTA":
-					relevantInfo = info.artists.filter((v) => v.includes(val));
-					whereQ = [where(field, "in", relevantInfo)];
-					break;
-				case "TITULO":
-					whereQ = [where(field, ">=", val), where(field, "<", `${val}~`)];
-					break;
-				default:
-					whereQ = [];
-					break;
-			}
-
-			setCurrQuery(whereQ);
-			const q = query(
-				songsCollection!,
-				...whereQ,
-				orderBy(field),
-				limit(pageLimit)
-			);
-			const qcount = query(songsCollection!, ...whereQ, orderBy("ARTISTA"));
-			const qcountdoc = (await getCountFromServer(qcount)).data().count;
-			setNumberOfPages(Math.ceil(qcountdoc / pageLimit));
-			console.log("count: ", qcountdoc);
-			const { pageSongs, lastDoc } = await getSongsFromQuery(q);
-
-			const nextq = query(
-				songsCollection!,
-				...whereQ,
-				orderBy("ARTISTA"),
-				orderBy("TITULO"),
-				limit(pageLimit),
-				startAfter(lastDoc)
-			);
-			const { pageSongs: page2Songs, lastDoc: lastDoc2 } =
-				await getSongsFromQuery(nextq);
-
-			return { pageSongs, page2Songs, lastDoc2 };
-		};
-		const queryAllSongs = async () => {
-			const q = query(songsCollection, orderBy("ARTISTA"), limit(pageLimit));
-			const { pageSongs, lastDoc } = await getSongsFromQuery(q);
-
-			const nextq = query(
-				songsCollection,
-				orderBy("ARTISTA"),
-				startAfter(lastDoc),
-				limit(pageLimit)
-			);
-			const { pageSongs: page2Songs, lastDoc: lastDoc2 } =
-				await getSongsFromQuery(nextq);
-			return { pageSongs, page2Songs, lastDoc2 };
-		};
-
 		try {
-			// "preload" next page
-			if (field == "id") {
-				const songq = await getDoc(doc(songsCollection, val));
-				if (songq.exists()) {
-					const data = songq.data();
-					const song = {
-						id: val,
-						artist: String(data.ARTISTA),
-						song_name: String(data.TITULO).toLowerCase(),
-						genre: String(data.GENERO).toLowerCase(),
-					} as Song;
-					setPaginatedSongs({
-						prev_page: [],
-						curr_page: [song],
-						next_page: [],
-					});
-					setLoadingState("loaded");
-				}
-				return {
-					id: "",
-					artist: "",
-					song_name: "",
-					genre: "",
-				};
-			}
-			const { pageSongs, page2Songs, lastDoc2 } =
-				field && val
-					? await queryWithFieldValue(field, val)
-					: await queryAllSongs();
+			const constraints = makeConstraints(field, val);
 
+			const qcount =
+				constraints.CompositeFilt != null
+					? query(songsCollection, constraints.CompositeFilt)
+					: query(songsCollection, ...constraints.FiltConsts);
+
+			const qcountdoc = (await getCountFromServer(qcount)).data().count;
+
+			setNumberOfPages(Math.ceil(qcountdoc / pageLimit));
+			setCurrConstraints(constraints);
+			const { pageSongs, lastDoc } = await makeQuery(constraints);
+
+			setLastSongInBatch(lastDoc);
 			setPaginatedSongs({
 				prev_page: [],
 				curr_page: [...pageSongs],
-				next_page: page2Songs,
+				next_page: [],
 			});
-			setLastSongInBatch(lastDoc2);
-			setLoadingState("loaded");
 		} catch (e) {
 			catchErrorFunction({
 				e,
@@ -216,64 +270,80 @@ export const useSongs = (roomId?: string, start?: boolean) => {
 				setLoadingState,
 				setError,
 			});
-			// throw new Error(e)
 		}
+		setLoadingState("loaded");
 	};
 
+	const nextPage = async () => {
+		setLoadingState("loading");
+		try {
+			if (
+				paginatedSongs.next_page.length === 0 &&
+				lastSongInBatch != undefined
+			) {
+				const { pageSongs, lastDoc } = await makeQuery({
+					...currConstraints,
+					NonFiltConsts: [
+						...currConstraints.NonFiltConsts,
+						startAfter(lastSongInBatch),
+					],
+				});
+
+				if (pageSongs.length === 0) return;
+				setLastSongInBatch(lastDoc);
+				setPaginatedSongs((prev) => {
+					return {
+						prev_page: [...prev.prev_page, ...prev.curr_page],
+						curr_page: [...pageSongs],
+						next_page: [],
+					};
+				});
+			} else {
+				setPaginatedSongs((prev) => {
+					return {
+						prev_page: [...prev.prev_page, ...prev.curr_page],
+						curr_page: [...prev.next_page.slice(0, pageLimit)],
+						next_page: [...prev.next_page.slice(pageLimit)],
+					};
+				});
+			}
+			setCurrPage((c) => c + 1);
+		} catch (error) {
+			console.log(error);
+		}
+		setLoadingState("loaded");
+	};
+
+	const filterByTitle = (title: string) => {
+		if (title === currQuery[1]) return;
+		setCurrQuery(["TITULO", title]);
+		startQuery("TITULO", title);
+	};
 	const filterByArtist = (selectedArtist: string) => {
-		if (!info.artists.includes(selectedArtist)) return;
-		// filterSongs("ARTISTA", selectedArtist)
-		querySongs("ARTISTA", selectedArtist);
+		if (selectedArtist === currQuery[1]) return;
+		setCurrQuery(["ARTISTA", selectedArtist]);
+		startQuery("ARTISTA", selectedArtist);
 	};
 	const filterByGenre = (selectedGenre: string) => {
 		if (!info.genres.includes(selectedGenre)) return;
-		querySongs("GENERO", selectedGenre);
+		if (selectedGenre === currQuery[1]) return;
+		setCurrQuery(["GENERO", selectedGenre]);
+		startQuery("GENERO", selectedGenre);
 	};
-	const filterByID = (id: string) => {
-		querySongs("id", id);
+	const filterByID = async (id: string) => {
+		const song = await getFromId(id);
+		setPaginatedSongs({
+			prev_page: [],
+			curr_page: [song],
+			next_page: [],
+		});
+		setCurrQuery(["id", id]);
 	};
 
 	const logSongs = () => {
 		console.log(paginatedSongs);
 	};
-	const nextPage = async () => {
-		setLoadingState("loading");
-		let next_songs: Song[] = [];
 
-		if (paginatedSongs.next_page.length === pageLimit) {
-			let next: Query<DocumentData>;
-			if (currQuery) {
-				next = query(
-					songsCollection!,
-					...currQuery,
-					orderBy("ARTISTA"),
-					startAfter(lastSongInBatch),
-					limit(pageLimit)
-				);
-			} else {
-				next = query(
-					songsCollection!,
-					orderBy("ARTISTA"),
-					startAfter(lastSongInBatch),
-					limit(pageLimit)
-				);
-			}
-			const { pageSongs, lastDoc } = await getSongsFromQuery(next);
-			setLastSongInBatch(lastDoc);
-			next_songs = pageSongs;
-		} else {
-			next_songs = paginatedSongs.next_page.slice(pageLimit + 1);
-		}
-		setPaginatedSongs((prev) => {
-			return {
-				prev_page: [...prev.prev_page, ...prev.curr_page],
-				curr_page: [...prev.next_page.slice(0, pageLimit + 1)],
-				next_page: [...next_songs],
-			};
-		});
-		setLoadingState("loaded");
-		setCurrPage((c) => c + 1);
-	};
 	const prevPage = async () => {
 		if (paginatedSongs.prev_page.length <= 0) return;
 		setPaginatedSongs((prev) => {
@@ -292,12 +362,14 @@ export const useSongs = (roomId?: string, start?: boolean) => {
 		prevPage,
 		nextPage,
 		numberOfPages,
+		setPageLimit,
 		info,
-		querySongs,
 		logSongs,
 		filterByArtist,
 		filterByGenre,
 		filterByID,
+		filterByTitle,
+		currQuery,
 	};
 };
 
