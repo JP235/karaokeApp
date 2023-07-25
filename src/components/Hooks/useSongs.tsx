@@ -1,28 +1,28 @@
 import {
-	CollectionReference,
-	DocumentData,
-	QueryDocumentSnapshot,
-	getDoc,
-	doc,
-	collection,
-	where,
-	query,
-	orderBy,
-	limit,
-	getCountFromServer,
-	startAfter,
-	QueryCompositeFilterConstraint,
-	QueryNonFilterConstraint,
-	QueryFieldFilterConstraint,
-	or,
-	and,
+    CollectionReference,
+    DocumentData,
+    QueryDocumentSnapshot,
+    getDoc,
+    doc,
+    collection,
+    where,
+    query,
+    orderBy,
+    limit,
+    getCountFromServer,
+    startAfter,
+    QueryCompositeFilterConstraint,
+    QueryNonFilterConstraint,
+    QueryFieldFilterConstraint,
+    or,
+    and,
 } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { roomsCollectionRef, db } from "../../firebase-config";
 import { Song, Room } from "../../myTypes";
-import { catchErrorFunction } from "../../pages/users/landing/UserLanding";
 import { getSongsFromQuery } from "../HelperFunctions";
 import { useErrors, useLoadingState } from "../../Contexts";
+import { catchErrorFunction } from "../catchErrorFunction";
 
 type QueryConstrs = {
 	["CompositeFilt"]: QueryCompositeFilterConstraint | null;

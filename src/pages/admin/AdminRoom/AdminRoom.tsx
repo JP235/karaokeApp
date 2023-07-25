@@ -2,11 +2,11 @@ import "./AdminRoom.css";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { PlusButton, CancelButton } from "../../../components/Buttons/Buttons";
-import SongsQueue from "../../../components/SongsQueue";
 import DialogWrapped from "../../../components/DialogWrapped/DialogWrapped";
 import * as text from "../../../Language/text";
 import { useLanguage, usePageName } from "../../../Contexts";
 import FilterSongsList from "../../../components/FilterSongsList/FilterSongsList";
+import SongsQueueEdit from "../../../components/SongsQueue/SongsQueueEdit/SongsQueueEdit";
 
 const AdminRoom = () => {
 	const params = useParams();

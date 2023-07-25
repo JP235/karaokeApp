@@ -1,11 +1,11 @@
 import "./AddToQueueForm.css";
 import { FormEvent, useState } from "react";
 import { Song } from "../../../myTypes";
-import { catchErrorFunction } from "../../../pages/users/landing/UserLanding";
 import { useRoom } from "../../Hooks/useRoom";
 import DialogWrapped from "../../DialogWrapped/DialogWrapped";
 import { useErrors, useLanguage, useLoadingState } from "../../../Contexts";
 import * as text from "../../../Language/text";
+import { catchErrorFunction } from "../../catchErrorFunction";
 
 interface AddToQueueFormProps {
 	onSubmit?: VoidFunction;

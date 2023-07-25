@@ -2,8 +2,8 @@ import "./AdminEntry.css";
 import { Outlet, useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { LoadingError } from "../../users/landing/UserLanding";
 import { useLoadingState, useUserAuth } from "../../../Contexts";
+import { LoadingError } from "../../../components/LoadingError";
 
 function AdminLanding() {
 	const navigate = useNavigate();

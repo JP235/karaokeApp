@@ -12,9 +12,9 @@ import {
 } from "../../../firebase-config";
 import { doc, setDoc, updateDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
-import { catchErrorFunction } from "../../users/landing/UserLanding";
 import { changeRoomCode } from "../../../components/HelperFunctions";
 import * as text from "../../../Language/text";
+import { catchErrorFunction } from "../../../components/catchErrorFunction";
 
 function AdminDashboard1() {
 	const navigate = useNavigate();
