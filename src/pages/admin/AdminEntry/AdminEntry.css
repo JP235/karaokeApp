@@ -35,11 +35,11 @@
 .add-cancel-cancel,
 .create-room-cancel {
 	background-color: rgb(var(--error-rgb), 0.8);
-	width: 100px;
+	min-width: 100px;
 }
 
 .add-cancel-create,
 .create-room-create {
 	background-color: rgb(var(--primary-rgb));
-	width: 100px;
+	min-width: 100px;
 }

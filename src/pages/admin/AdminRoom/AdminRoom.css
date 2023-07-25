@@ -1,7 +1,10 @@
 .admin.landingText {
 	font-size: 40px;
 }
+.admin-room-title {
+    text-align: center;
 
+}
 .admin-add-song-container {
 	max-width: 700px;
 	height: 100%;
@@ -13,9 +16,6 @@
 .queue-song-dialog {
 	width: auto;
 	max-width: 500px;
-}
-.admin-queue-song-dialog {
-	max-height: 100%;
 }
 
 .admin-add-song-header {
@@ -47,16 +47,16 @@ button.close-admin-add-song:hover {
 	width: 100%;
 	height: 100%;
 	border-radius: 8px;
-	overflow-y: scroll;
-    background-color: rgb(var(--light-rgb), 20%);
+	overflow-y: auto;
 }
 
 .admin-queue {
 	width: 100%;
 	max-width: 700px;
-	
-	overflow-y: scroll;
-    text-align: center;
+	background-color: rgb(var(--light-rgb), 20%);
+	/* overflow-y: scroll; */
+	text-align: center;
+    border-radius: 8px;
 }
 
 .admin-queue caption {
@@ -171,7 +171,7 @@ button.delete-from-queue-button {
 button.mark-done-button {
 	background-color: rgb(var(--primary-rgb));
 	border-radius: 4px;
-    margin: 0.5rem;
+	margin: 0.5rem;
 }
 
 .mark-done-button > span,

@@ -1,17 +1,17 @@
 .admin-queue-song-dialog,
 .queue-song-dialog {
 	z-index: 10;
-	top: 0;
+	top: 4rem;
 	right: 0;
 	left: 0;
 	margin: auto;
 	border-radius: 6px;
+    max-height: calc(100% - 8rem);
+    /* margin-top: ; */
 }
 
 .admin-queue-song-dialog {
-	max-height: calc(100% - 3rem);
-	bottom: 0;
-	display: grid;
+    display: grid;
 	grid-template-rows: auto auto 1fr;
 }
 
