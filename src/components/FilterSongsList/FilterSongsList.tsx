@@ -23,9 +23,9 @@ function FilterSongsList({
 	const [selectedId, setSelectedId] = useState("");
 	const [selectedArtist, setSelectedArtist] = useState("");
 	const [selectedGenre, setSelectedGenre] = useState("");
-	const [selectedTitle, setSelectedTitle] = useState("");
 	const [selectedSong, setSelectedSong] = useState<Song>();
-
+    
+	const [selectedTitle, setSelectedTitle] = useState("");
 	const debouncedTitle = useDebounced(selectedTitle);
 
 	useEffect(() => {

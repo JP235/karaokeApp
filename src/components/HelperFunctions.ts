@@ -4,6 +4,11 @@ import { Dispatch, SetStateAction } from "react";
 
 export const formattedDate = (date: Date) => `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')} - ${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`
 
+export function generateRandomNumber() {
+	return Math.floor(1000 + Math.random() * 9000);
+}
+
+
 export const getSongsFromQuery = async (q: Query<DocumentData>) => {
   const docSnapshots = await getDocs(q);
   if (docSnapshots.docs.length === 0) {

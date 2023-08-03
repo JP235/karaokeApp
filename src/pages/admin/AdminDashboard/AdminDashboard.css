@@ -4,12 +4,12 @@
 	padding: 16px;
 	background-color: rgb(250, 250, 250, 0.5);
 	color: black;
-    border-radius: 15px;
+	border-radius: 15px;
 }
 .admin-dash main {
-    display: grid;
-    gap: 1rem;
-    text-align: center;
+	display: grid;
+	gap: 1rem;
+	text-align: center;
 }
 .admin-dash-header {
 	display: flex;
@@ -52,4 +52,34 @@
 
 .admin-dash-actions:hover .admin-dash-actions-dropdown {
 	display: block;
+}
+.create-room-dialog.open {
+	position: absolute;
+	z-index: 6;
+	top: 20%;
+	max-width: 70vw;
+	display: grid;
+	gap: 2rem;
+	align-items: center;
+	justify-items: center;
+}
+.create-room-form {
+	display: grid;
+	gap: 1rem;
+}
+.create-room-form .label-span-input {
+	display: grid;
+	grid-template-columns: 40% 60%;
+	text-align: center;
+}
+.label-span-input > span,
+.label-span-input > input {
+	text-align: center;
+}
+.create-room-buttons {
+    margin-top: 2rem;
+	display: grid;
+	grid-template-columns: repeat(2, calc(45% - 1rem));
+    gap: 1rem;
+    justify-content: center;
 }

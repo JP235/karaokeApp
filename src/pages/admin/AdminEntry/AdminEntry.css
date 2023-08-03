@@ -12,18 +12,7 @@
 	padding: 0.5rem;
 }
 
-.create-room-dialog.open {
-	position: absolute;
-	top: 20%;
-	width: 70vw;
-	display: grid;
-	gap: 2rem;
-	align-items: center;
-	justify-items: center;
-}
-
-.add-cancel-buttons,
-.create-room-buttons {
+.add-cancel-buttons {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	gap: 1rem;
